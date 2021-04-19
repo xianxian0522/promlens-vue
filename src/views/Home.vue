@@ -155,7 +155,7 @@
                                </a-form-item>
                              </div>
                              <div v-if="formState.queryType === 'BinaryOperation'">
-                               <a-form-item label="Operator">
+                               <a-form-item label="Operator:">
                                  <a-select
                                      v-model:value="formState.operator"
                                      style="width: 100%"
@@ -165,7 +165,7 @@
                                      {{ item.name }}</a-select-option>
                                  </a-select>
                                </a-form-item>
-                               <div v-if="formState.operator === '==' || formState.operator === '!=' || formState.operator === '>' || formState.operator === '<' || formState.operator === '>=' || formState.operator === '<='">
+                               <div v-if="matchState(formState.operator, /[==,!=,>,<,<=,>=]/) ">
                                  <a-form-item >
                                    <label class="label-svg">Comparison behavior: <QuestionCircleOutlined /></label>
                                    <div>
@@ -180,7 +180,7 @@
                                  </a-form-item>
                                </div>
                                <a-form-item>
-                                 <label class="label-svg">
+                                 <label class="label-svg" style="justify-content: flex-start;">
                                    <a-switch size="small" v-model:checked="formState.switchOpen" />Customize vector matching options
                                  </label>
                                  <div class="switch-open" v-if="formState.switchOpen">
@@ -209,21 +209,26 @@
                                          </div>
                                        </div>
                                      </a-form-item>
-                                     <a-form-item>
-                                       <label class="label-svg">Match type: <QuestionCircleOutlined /></label>
-                                       <a-select
-                                           v-model:value="formState.matchType"
-                                           style="width: 100%"
-                                           ref="select"
-                                       >
-                                         <a-select-option value="one-to-one">one-to-one</a-select-option>
-                                         <a-select-option value="many-to-one">many-to-one</a-select-option>
-                                         <a-select-option value="one-to-many">one-to-many</a-select-option>
-                                       </a-select>
-                                     </a-form-item>
+                                     <div v-if="matchState(formState.operator, /[-,+,*,/,%,^,>,>=,<,<=,==,!=]/)">
+                                       <a-form-item >
+                                         <label class="label-svg">Match type: <QuestionCircleOutlined /></label>
+                                         <a-select
+                                             v-model:value="formState.matchType"
+                                             style="width: 100%"
+                                             ref="select"
+                                         >
+                                           <a-select-option value="one-to-one">one-to-one</a-select-option>
+                                           <a-select-option value="many-to-one">many-to-one</a-select-option>
+                                           <a-select-option value="one-to-many">one-to-many</a-select-option>
+                                         </a-select>
+                                       </a-form-item>
+                                     </div>
                                    </a-form>
                                  </div>
                                </a-form-item>
+                             </div>
+                             <div v-if="formState.queryType === 'CallFunction'">
+                               <a-form-item label="Function:"></a-form-item>
                              </div>
                            </a-form>
                            <a-button class="btn btn-secondary btn-sm">
@@ -335,6 +340,9 @@ export default {
         {name: 'unless', value: 'unless'},
       ],
     })
+    const matchState = (state = '', reg: any) => {
+      return !!String(state).match(reg) //返回true/false
+    }
     const submit = async () => {
       const data = await promRepository.queryLabel()
       console.log(data);
@@ -342,6 +350,7 @@ export default {
 
     return {
       submit,
+      matchState,
       activeKey,
       formState,
       ...toRefs(state),
