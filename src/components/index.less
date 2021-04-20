@@ -41,6 +41,10 @@
   flex-basis: 0;
   flex-grow: 1;
   max-width: 100%;
+  position: relative;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
 }
 .ast-visualizer {
   margin: 15px;
@@ -48,6 +52,7 @@
   outline: 1px solid rgba(52,79,113,.2);
   outline-offset: -1px;
   overflow-x: auto;
+  text-align: left;
 }
 .query-top-bar {
   display: flex;
@@ -121,11 +126,6 @@ button:focus {
   line-height: 1.5;
   border-radius: .2rem;
 }
-.btn-light {
-  color: #212529;
-  background-color: #f8f9fa;
-  border-color: #f8f9fa;
-}
 .btn {
   display: inline-block;
   font-weight: 400;
@@ -142,6 +142,11 @@ button:focus {
   line-height: 1.5;
   border-radius: .25rem;
   transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.btn-light {
+  color: #212529;
+  background-color: #f8f9fa;
+  border-color: #f8f9fa;
 }
 .ast-node-inner-placeholder .ast-node-inner-action-btn, .ast-node-inner:hover .ast-node-inner-action-btn {
   display: block;
@@ -379,4 +384,16 @@ p {
 }
 .tab-content .ant-input-number {
   width: 200px;
+}
+.pl-4, .px-4 {
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+  svg {
+    font-size: 18px;
+    margin-top: -6px;
+  }
+}
+.col-select .ant-select-show-search.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+  border: 1px dashed #d9d9d9;
+  min-width: 180px;
 }
