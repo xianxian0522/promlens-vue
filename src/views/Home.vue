@@ -66,21 +66,21 @@
                                </a-form-item>
                                <a-form-item>
                                  <label class="label-svg">Label matchers: <QuestionCircleOutlined /></label>
-                                 <div class="mb-1 row no-gutters">
+                                 <div class="mb-1 row no-gutters" v-for="(label, index) in formState.labelMatchers" :key="index">
                                    <div class="col-6">
                                      <div class="row no-gutters">
                                        <div class="col">
-                                         <a-input v-model:value="formState.labelName" class="pending-input-item" placeholder="label name"></a-input>
+                                         <a-input v-model:value="label.labelName" class="pending-input-item" placeholder="label name"></a-input>
                                        </div>
                                        <div class="col-auto" style="margin-right: 3px; margin-left: 3px">
                                          <a-select
-                                             v-model:value="formState.sign"
+                                             v-model:value="label.sign"
                                              style="width: 80px"
                                              ref="select"
                                          >
                                            <a-select-option value="=">=</a-select-option>
                                            <a-select-option value="!=">!=</a-select-option>
-                                           <a-select-option value="=~" disabled>=~</a-select-option>
+                                           <a-select-option value="=~">=~</a-select-option>
                                            <a-select-option value="!~">!~</a-select-option>
                                          </a-select>
                                        </div>
@@ -89,7 +89,7 @@
                                    <div class="col-6">
                                      <div class="row no-gutters">
                                        <div class="col">
-                                         <a-input v-model:value="formState.labelValue" class="pending-input-item" placeholder="label value"></a-input>
+                                         <a-input v-model:value="label.labelValue" class="pending-input-item" placeholder="label value"></a-input>
                                        </div>
                                        <div class="col-auto" style="margin-right: 3px; margin-left: 3px">
                                          <a-button class="btn btn-secondary btn-sm">
@@ -253,6 +253,32 @@
                                  <a-input v-model:value="formState.stringValue"></a-input>
                                </a-form-item>
                              </div>
+                             <div v-if="formState.queryType === 'Subquery'">
+                               <a-form-item>
+                                 <label class="label-svg">Range: <QuestionCircleOutlined /></label>
+                                 <a-input v-model:value="formState.range"></a-input>
+                               </a-form-item>
+                               <a-form-item>
+                                 <label class="label-svg">Offset: <QuestionCircleOutlined /></label>
+                                 <a-input v-model:value="formState.offset"></a-input>
+                               </a-form-item>
+                               <a-form-item>
+                                 <label class="label-svg">Resolution step: <QuestionCircleOutlined /></label>
+                                 <a-input v-model:value="formState.step"></a-input>
+                               </a-form-item>
+                             </div>
+                             <div v-if="formState.queryType === 'UnaryExpression'">
+                               <a-form-item label="Unary operator type:">
+                                 <a-select
+                                     v-model:value="formState.unaryOperator"
+                                     style="width: 100%"
+                                     ref="select"
+                                 >
+                                   <a-select-option value="+">+</a-select-option>
+                                   <a-select-option value="-">-</a-select-option>
+                                 </a-select>
+                               </a-form-item>
+                             </div>
                            </a-form>
                            <a-button class="btn btn-secondary btn-sm" @click="onSubmit">
                              <CheckOutlined />Apply changes
@@ -285,7 +311,7 @@
 
 <script lang="ts">
 
-import {ref, reactive, toRefs, toRaw} from 'vue'
+import {ref, reactive, toRefs, toRaw, onMounted, watch} from 'vue'
 import promRepository from "@/api/promRepository";
 import { ReadOutlined, CloseOutlined, SyncOutlined, EnterOutlined, PlusOutlined,
   SwapOutlined, EditOutlined, QuestionCircleOutlined, CheckOutlined } from '@ant-design/icons-vue'
@@ -312,15 +338,19 @@ export default {
     const activeKey = ref('1')
     const formRef = ref();
     const formState = reactive({
+      preview: 'nnnn',
       queryType: 'SelectData',
       metricName: '',
-      preview: 'nnnn',
-      labelName: '',
-      labelValue: '',
-      sign: '=',
+      labelMatchers: [
+        { labelName: '', labelValue: '', sign: '=' },
+      ],
+      // labelName: '',
+      // labelValue: '',
+      // sign: '=',
       select: 'instance',
       offset: '0s',
       range: '5m',
+      step: '0s',
       aggregationType: 'sum',
       preserve: 'by',
       operator: '/',
@@ -334,6 +364,7 @@ export default {
       valueType: 'numberLiteral',
       numValue: 0,
       stringValue: '',
+      unaryOperator: '-',
     });
     const rules = {
       numValue: [{
@@ -441,6 +472,15 @@ export default {
             console.log('error', error);
           });
     };
+    onMounted(() => {
+      watch(() => formState.queryType, () => {
+        if (formState.queryType === 'Subquery') {
+          formState.range = '1h'
+        } else if (formState.queryType === 'SelectData') {
+          formState.range = '5m'
+        }
+      })
+    })
 
     return {
       onSubmit,
