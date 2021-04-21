@@ -11,8 +11,8 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../views/Home.vue'),
     },
     {
-        path: '/about',
-        component: () => import('../views/About.vue'),
+        path: '/promql',
+        component: () => import('../views/PromQL.vue'),
     },
     { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound }
 ];
