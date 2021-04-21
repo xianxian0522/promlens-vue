@@ -39,7 +39,9 @@
                 </div>
                 <div class="ast-node-infos"></div>
               </div>
-              <div class="ast-node"></div>
+              <div class="ast-node">
+                <!-- expr组件 里面就是ast-node-inner-wrapper  -->
+              </div>
             </div>
           </div>
         </div>
