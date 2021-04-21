@@ -17,28 +17,28 @@ export default {
   setup() {
     const ql: PromQL = reactive({
       expr: {
-        functionCall: {
-          functionIdentifier: 'sum',
-          functionArgs: [
-            {
-              matrixSelector: {
-                expr: {
-                  vectorSelector: {
-                    metricIdentifier: 'node_memory_MemAvailable_bytes',
-                    labelMatchers: [
-                      {
-                        labelName: 'instance',
-                        matchOp: '=',
-                        labelValue: 'node-exporter-172-18-11-45',
-                      }
-                    ],
-                  }
-                },
-                duration: '5m'
-              }
-            }
-          ],
-        },
+        // functionCall: {
+        //   functionIdentifier: 'sum',
+        //   functionArgs: [
+        //     {
+        //       matrixSelector: {
+        //         expr: {
+        //           vectorSelector: {
+        //             metricIdentifier: 'node_memory_MemAvailable_bytes',
+        //             labelMatchers: [
+        //               {
+        //                 labelName: 'instance',
+        //                 matchOp: '=',
+        //                 labelValue: 'node-exporter-172-18-11-45',
+        //               }
+        //             ],
+        //           }
+        //         },
+        //         duration: '5m'
+        //       }
+        //     }
+        //   ],
+        // },
         binaryExpr: {
           left: {
             functionCall: {

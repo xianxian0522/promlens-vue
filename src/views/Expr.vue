@@ -3,17 +3,38 @@
   <div v-if="expr.functionCall">
     <FunctionCall :functionCall="expr.functionCall" />
   </div>
-  <div v-if="expr.matrixSelector">
+  <div v-else-if="expr.matrixSelector">
     <MatrixSelector :matrixSelector="expr.matrixSelector" />
   </div>
-  <div v-if="expr.vectorSelector">
+  <div v-else-if="expr.vectorSelector">
     <VectorSelector :vectorSelector="expr.vectorSelector" />
   </div>
-  <div v-if="expr.binaryExpr">
+  <div v-else-if="expr.binaryExpr">
     <BinaryExpr :binaryExpr="expr.binaryExpr" />
   </div>
-  <div v-if="expr.numberLiteral">
+  <div v-else-if="expr.numberLiteral">
     {{ expr.numberLiteral }}
+  </div>
+  <div v-else-if="expr.stringLiteral">
+    {{ expr.stringLiteral }}
+  </div>
+  <div v-else-if="expr.aggregateExpr">
+    {{ expr.aggregateExpr }}
+  </div>
+  <div v-else-if="expr.offsetExpr">
+    {{ expr.offsetExpr }}
+  </div>
+  <div v-else-if="expr.parenExpr">
+    {{ expr.parenExpr }}
+  </div>
+  <div v-else-if="expr.subqueryExpr">
+    {{ expr.subqueryExpr }}
+  </div>
+  <div v-else-if="expr.unaryExpr">
+    {{ expr.unaryExpr }}
+  </div>
+  <div v-else-if="expr.stepInvariantExpr">
+    {{ expr.stepInvariantExpr }}
   </div>
 </div>
 </template>
