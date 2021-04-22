@@ -1,5 +1,6 @@
 <template>
 <div>
+  <slot name="nodeLeftChild"></slot>
   <div class="ast-node-inner-wrapper">
     <slot name="connector"></slot>
 <!--    <div class="ast-connector ast-connector-up" style="top: -4px"></div>-->
@@ -36,7 +37,7 @@
       </div>
     </div>
   </div>
-<!--  <slot name="nodeChild"></slot>-->
+  <slot name="nodeRightChild"></slot>
 <!--  <div class="ast-node">-->
 <!--  </div>-->
 </div>

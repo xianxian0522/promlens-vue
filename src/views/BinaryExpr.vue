@@ -1,16 +1,19 @@
 <template>
-<div>
-  <Expr :expr="binaryExpr.left" />
   <TreeCommon>
-<!--    <template v-slot:connector>-->
-<!--      <div class="ast-connector ast-connector-down" style="bottom: -81px;"></div>-->
-<!--    </template>-->
+    <template v-slot:nodeLeftChild>
+      <div class="ast-node">
+        <Expr :expr="binaryExpr.left" />
+      </div>
+    </template>
     <template v-slot:innerText>
       <div>{{ binaryExpr.operator }}</div>
     </template>
+    <template v-slot:nodeRightChild>
+      <div class="ast-node">
+        <Expr :expr="binaryExpr.right" />
+      </div>
+    </template>
   </TreeCommon>
-  <Expr :expr="binaryExpr.right" />
-</div>
 </template>
 
 <script lang="ts">
