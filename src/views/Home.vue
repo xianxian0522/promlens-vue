@@ -35,7 +35,7 @@
                       <EditOutlined />PromQL
                     </a-button>
                   </div>
-                  <FormCommon v-if="isShow" :metricNameData="metricNameData" :labelNameData="labelNameData" />
+                  <FormCommon v-if="isShow" />
                 </div>
                 <div class="ast-node-infos"></div>
               </div>
@@ -98,7 +98,7 @@
 <script lang="ts">
 
 import {ref, reactive, toRefs, toRaw, onMounted, watch} from 'vue'
-import promRepository from "@/api/promRepository";
+import {promRepository} from "@/api/promRepository";
 import { ReadOutlined, CloseOutlined, SyncOutlined, EnterOutlined, PlusOutlined,
   SwapOutlined, EditOutlined, QuestionCircleOutlined, CheckOutlined } from '@ant-design/icons-vue'
 import FormCommon from "@/components/FormCommon.vue";
@@ -139,12 +139,12 @@ export default {
     }
 
     const queryLabelValue = async () => {
-      const data = await promRepository.queryLabelName()
-      state.metricNameData = data.data;
+      await promRepository.queryLabelName()
+      // state.metricNameData = data.data;
     }
     const queryLabels = async () => {
       const data = await promRepository.queryLabel()
-      state.labelNameData = data.data;
+      // state.labelNameData = data.data;
     }
 
     onMounted(() => {
@@ -154,7 +154,6 @@ export default {
 
     return {
       isShowForm,
-      ...toRefs(state),
       addAnotherQuery,
       deleteAnotherQuery,
     }
