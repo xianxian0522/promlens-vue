@@ -13,10 +13,10 @@
     <BinaryExpr :binaryExpr="expr.binaryExpr" />
   </div>
   <div v-else-if="expr.numberLiteral">
-    {{ expr.numberLiteral }}
+    <NumberLiteral :numberLiteral="expr.numberLiteral" />
   </div>
   <div v-else-if="expr.stringLiteral">
-    {{ expr.stringLiteral }}
+    <StringLiteral :stringLiteral="expr.stringLiteral" />
   </div>
   <div v-else-if="expr.aggregateExpr">
     {{ expr.aggregateExpr }}
@@ -44,6 +44,8 @@ import FunctionCall from "@/views/FunctionCall.vue";
 import MatrixSelector from "@/views/MatrixSelector.vue";
 import VectorSelector from "@/views/VectorSelector.vue";
 import BinaryExpr from "@/views/BinaryExpr.vue";
+import NumberLiteral from "@/views/NumberLiteral.vue";
+import StringLiteral from "@/views/StringLiteral.vue";
 import {reactive, ref, toRefs} from "vue";
 
 export default {
@@ -60,6 +62,8 @@ export default {
     MatrixSelector,
     VectorSelector,
     BinaryExpr,
+    NumberLiteral,
+    StringLiteral,
   },
   setup(props: any) {
     console.log(props, 'expr')

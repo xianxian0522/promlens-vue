@@ -1,7 +1,8 @@
 <template>
 <div>
   <div class="ast-node-inner-wrapper">
-    <div class="ast-connector ast-connector-up" style="top: -4px"></div>
+    <slot name="connector"></slot>
+<!--    <div class="ast-connector ast-connector-up" style="top: -4px"></div>-->
     <PlusOutlined class="ast-connector-plus ast-connector-plus-up" />
     <div class="ast-node-inner ast-node-inner-tree-view" style="opacity: 1;">
       <div class="ast-node-inner-top">
@@ -35,6 +36,7 @@
       </div>
     </div>
   </div>
+<!--  <slot name="nodeChild"></slot>-->
 <!--  <div class="ast-node">-->
 <!--  </div>-->
 </div>

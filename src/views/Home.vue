@@ -21,6 +21,7 @@
         <div class="row">
           <div class="col">
             <div class="ast-node ast-node-selected ast-node-root">
+<!--              <PromQL />-->
               <div class="ast-node-inner-wrapper">
                 <PlusOutlined class="ast-connector-plus ast-connector-plus-up" />
                 <div class="ast-node-inner ast-node-inner-placeholder ast-node-inner-tree-view">
@@ -41,7 +42,6 @@
               </div>
               <div class="ast-node">
                 <PromQL />
-                <!--                <TreeCommon />-->
               </div>
             </div>
           </div>
@@ -90,7 +90,6 @@ export default {
     // QuestionCircleOutlined,
     // CheckOutlined,
     FormCommon,
-    // TreeCommon,
     PromQL,
   },
   setup() {

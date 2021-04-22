@@ -1,18 +1,27 @@
 <template>
 <div>
   <Expr :expr="binaryExpr.left" />
-  <div>{{ binaryExpr.operator }}</div>
+  <TreeCommon>
+<!--    <template v-slot:connector>-->
+<!--      <div class="ast-connector ast-connector-down" style="bottom: -81px;"></div>-->
+<!--    </template>-->
+    <template v-slot:innerText>
+      <div>{{ binaryExpr.operator }}</div>
+    </template>
+  </TreeCommon>
   <Expr :expr="binaryExpr.right" />
 </div>
 </template>
 
 <script lang="ts">
 import {defineAsyncComponent} from "vue";
+import TreeCommon from "@/components/TreeCommon.vue";
 
 export default {
   name: "BinaryExpr",
   props: ['binaryExpr'],
   components: {
+    TreeCommon,
     Expr: defineAsyncComponent(() => import('./Expr.vue'))
   },
   setup(props: any) {

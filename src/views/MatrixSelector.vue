@@ -4,6 +4,9 @@
     <Expr :expr="matrixSelector.expr" />
 <!--    <div>[ {{matrixSelector.duration}} ]</div>-->
     <TreeCommon >
+      <template v-slot:connector>
+        <div class="ast-connector ast-connector-up" style="top: -4px"></div>
+      </template>
       <template v-slot:innerText>
         [<span class="ast-duration">{{ matrixSelector.duration }}</span>:<span class="ast-duration">1m</span>]
       </template>
