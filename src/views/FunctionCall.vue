@@ -1,13 +1,30 @@
 <template>
 <div>
   <div>
-    <span>{{functionCall.functionIdentifier}}</span>
-    <div>
-      <span>(</span>
+<!--    <span>{{functionCall.functionIdentifier}}</span>-->
+    <TreeCommon >
+      <template v-slot:innerText>
+        <span class="promql-code">
+          <span class="promql-keyword">{{functionCall.functionIdentifier}}</span>
+        </span>
+      </template>
+<!--    需要判断是否有  -->
+<!--      <template v-slot:infoLabel>-->
+<!--        16 results - 91ms - -->
+<!--        <div class="ast-node-label-stats">-->
+<!--          <span class="ast-label-name" style="color: green;">host</span>-->
+<!--          :16,-->
+<!--        </div>-->
+<!--        <div class="ast-node-label-stats">-->
+<!--          <span class="ast-label-name" style="color: green;">instance</span>-->
+<!--          :16,-->
+<!--        </div>-->
+<!--      </template>-->
+    </TreeCommon>
+    <div class="ast-node">
       <div v-for="(fun, index) in functionCall.functionArgs" :key="index">
         <Expr :expr="fun"/>
       </div>
-      <span>)</span>
     </div>
   </div>
 </div>
@@ -15,11 +32,13 @@
 
 <script lang="ts">
 import {Component, defineAsyncComponent} from "vue";
+import TreeCommon from "@/components/TreeCommon.vue";
 
 export default {
   name: "FunctionCall",
   props: ['functionIdentifier', 'functionArgs', 'functionCall'],
   components: {
+    TreeCommon,
     Expr: defineAsyncComponent(() => import('./Expr.vue'))
   },
   setup(props) {

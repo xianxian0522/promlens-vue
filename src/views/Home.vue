@@ -40,41 +40,8 @@
                 <div class="ast-node-infos"></div>
               </div>
               <div class="ast-node">
-                <TreeCommon />
-                <!-- expr组件 里面就是TreeCommon  -->
-<!--                <div class="ast-node-inner-wrapper">-->
-<!--                  <div class="ast-connector ast-connector-up" style="top: -4px"></div>-->
-<!--                  <PlusOutlined class="ast-connector-plus ast-connector-plus-up" />-->
-<!--                  <div class="ast-node-inner ast-node-inner-tree-view" style="opacity: 1;">-->
-<!--                    <div class="ast-node-inner-top">-->
-<!--                      <div class="ast-node-inner-text">-->
-<!--                        [<span class="ast-duration">1h</span>: <span class="ast-duration">1m</span>]-->
-<!--                      </div>-->
-<!--                      <a-button class="ast-node-inner-action-btn btn btn-outline-secondary btn-sm">-->
-<!--                        <SwapOutlined />Form-->
-<!--                      </a-button>-->
-<!--                      <a-button class="ast-node-inner-action-btn btn btn-outline-secondary btn-sm">-->
-<!--                        <EditOutlined />PromQL-->
-<!--                      </a-button>-->
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                  <div class="ast-node-infos">-->
-<!--                    <div class="ast-node-query-info">-->
-<!--                      <span class="ast-node-stats">-->
-<!--                        16 results - 91ms - -->
-<!--                        <div class="ast-node-label-stats">-->
-<!--                          <span class="ast-label-name" style="color: green;">host</span>-->
-<!--                          :16,-->
-<!--                        </div>-->
-<!--                        <div class="ast-node-label-stats">-->
-<!--                          <span class="ast-label-name" style="color: green;">instance</span>-->
-<!--                          :16,-->
-<!--                        </div>-->
-<!--                      </span>-->
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--                <div class="ast-node"></div>-->
+                <PromQL />
+                <!--                <TreeCommon />-->
               </div>
             </div>
           </div>
@@ -103,6 +70,7 @@ import { ReadOutlined, CloseOutlined, SyncOutlined, EnterOutlined, PlusOutlined,
   SwapOutlined, EditOutlined, QuestionCircleOutlined, CheckOutlined } from '@ant-design/icons-vue'
 import FormCommon from "@/components/FormCommon.vue";
 import TreeCommon from "@/components/TreeCommon.vue";
+import PromQL from "@/views/PromQL.vue";
 
 interface Item {
   name: string;
@@ -122,7 +90,8 @@ export default {
     // QuestionCircleOutlined,
     // CheckOutlined,
     FormCommon,
-    TreeCommon,
+    // TreeCommon,
+    PromQL,
   },
   setup() {
     const isShowForm = ref<boolean[]>([false]);

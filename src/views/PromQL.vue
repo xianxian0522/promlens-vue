@@ -56,6 +56,7 @@ export default {
                             labelValue: 'node-exporter-172-18-11-45',
                           }
                         ],
+                        duration: '5m',
                       }
                     },
                     duration: '5m'
