@@ -7,7 +7,7 @@
         <div class="ast-connector ast-connector-up" style="top: -4px"></div>
       </template>
       <template v-slot:innerText>
-        [<span class="ast-duration">{{ matrixSelector.duration }}</span>:<span class="ast-duration">1m</span>]
+        [<span class="ast-duration">{{ matrixSelector.duration }}</span>:<span class="ast-duration"></span>]
       </template>
       <template v-slot:infoLabel>
         16 results - 91ms -
