@@ -60,7 +60,7 @@ export default {
                     },
                     duration: '5m'
                   }
-                }
+                },
               ],
             },
           },

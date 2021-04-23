@@ -18,7 +18,7 @@
           <a-radio-group v-model:value="formState.ComparisonBehavior">
             <a-radio style="display: block" value="filter">Filter (omit non-matching series from result)
             </a-radio>
-            <a-radio style="display: block"  value="bool">Return boolean values
+            <a-radio style="display: block" value="bool">Return boolean values
               (<span class="ast-keyword">bool</span>)
             </a-radio>
           </a-radio-group>
@@ -46,11 +46,14 @@
           </a-form-item>
           <a-form-item>
             <label class="label-svg">Ignore labels: <QuestionCircleOutlined /></label>
-            <div class="input-group" v-for="(ignore, index) in formState.ignoreLabels" :key="index">
-              <a-input v-model:value="formState.ignoreLabels[index]" class="pending-input-item" placeholder="add label name"></a-input>
+            <div class="input-group my-bottom" v-for="(ignore, index) in ignoreLabels" :key="index">
+              <a-input v-model:value="ignoreLabels[index].name" class="pending-input-item" placeholder="add label name"></a-input>
               <div class="input-group-append">
-                <a-button class="btn btn-outline-secondary btn-sm" style="padding: 4px 8px">
+                <a-button v-if="ignore.isShow" @click="addIgnoreLabel(ignore, index)" class="btn btn-outline-secondary btn-sm" style="padding: 4px 8px">
                   <PlusOutlined style="font-size: 18px;" />
+                </a-button>
+                <a-button v-else @click="deleteIgnoreLabel(index)" class="btn btn-outline-secondary btn-sm" style="padding: 4px 8px">
+                  <DeleteOutlined  style="font-size: 18px;" />
                 </a-button>
               </div>
             </div>
@@ -69,6 +72,20 @@
               </a-select>
             </a-form-item>
           </div>
+          <a-form-item v-if="formState.matchType !== 'one-to-one'">
+            <label class="label-svg">Include labels: <QuestionCircleOutlined /></label>
+            <div class="input-group my-bottom" v-for="(include, index) in includeLabels" :key="index">
+              <a-input v-model:value="includeLabels[index].name" class="pending-input-item" placeholder="add label name"></a-input>
+              <div class="input-group-append ">
+                <a-button v-if="include.isShow" @click="addIncludeLabel(include, index)" class="btn btn-outline-secondary btn-sm" style="padding: 4px 8px">
+                  <PlusOutlined style="font-size: 18px;" />
+                </a-button>
+                <a-button v-else @click="deleteIncludeLabel(index)" class="btn btn-outline-secondary btn-sm" style="padding: 4px 8px">
+                  <DeleteOutlined style="font-size: 18px;" />
+                </a-button>
+              </div>
+            </div>
+          </a-form-item>
         </a-form>
       </div>
     </a-form-item>
@@ -77,23 +94,33 @@
 </template>
 
 <script lang="ts">
-import {QuestionCircleOutlined, PlusOutlined, } from '@ant-design/icons-vue'
-import {reactive, toRefs} from "vue";
+import {QuestionCircleOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons-vue'
+import {onMounted, reactive, ref, toRefs, watch} from "vue";
+
+export interface Item {
+  name: string;
+  isShow: boolean;
+}
 
 export default {
   name: "FormBinaryOperation",
+  props: ['binaryExpr'],
+  emits: ['previewChange'],
   components: {
     QuestionCircleOutlined,
     PlusOutlined,
+    DeleteOutlined,
   },
-  setup() {
+  setup(props: any, content) {
+    // console.log(props.binaryExpr.operator, 'binaryExpr')
     const formState = reactive({
-      operator: '/',
+      operator: props.binaryExpr.operator || '/',
       switchOpen: false,
       matchOn: 'on',
       ComparisonBehavior: 'filter',
-      ignoreLabels: [''],
+      ignoreLabels: [] as string[],
       matchType: 'one-to-one',
+      includeLabels: [] as string[],
     })
     const state = reactive({
       operatorList: [
@@ -113,16 +140,52 @@ export default {
         {name: 'or', value: 'or'},
         {name: 'unless', value: 'unless'},
       ],
+      ignoreLabels: [{name: '', isShow: true}],
+      includeLabels: [{name: '', isShow: true}],
     })
+
+    content.emit('previewChange', {operator: formState.operator})
 
     const matchState = (state = '', reg: any) => {
       return !!String(state).match(reg) //返回true/false
     }
+    const addIgnoreLabel = (item: Item, index: number) => {
+      if (item.name) {
+        state.ignoreLabels.push({name: '', isShow: true})
+        state.ignoreLabels[index].isShow = false;
+        formState.ignoreLabels.splice(index, 0, item.name)
+      }
+    }
+    const deleteIgnoreLabel = (index: number) => {
+      formState.ignoreLabels.splice(index, 1)
+      state.ignoreLabels.splice(index, 1)
+    }
+    const addIncludeLabel = (item: Item, index: number) => {
+      if (item.name) {
+        state.includeLabels.push({name: '', isShow: true})
+        state.includeLabels[index].isShow = false
+        formState.includeLabels.splice(index, 0, item.name)
+      }
+    }
+    const deleteIncludeLabel = (index: number) => {
+      formState.includeLabels.splice(index, 1)
+      state.includeLabels.splice(index, 1)
+    }
+
+    onMounted(() => {
+      watch(formState, (value => {
+        content.emit('previewChange', value)
+      }))
+    })
 
     return {
       formState,
       ...toRefs(state),
       matchState,
+      addIgnoreLabel,
+      deleteIgnoreLabel,
+      addIncludeLabel,
+      deleteIncludeLabel,
     }
   }
 }

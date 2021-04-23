@@ -7,7 +7,9 @@
             <div>
               <a-form layout="vertical" ref="formRef" :model="formState" class="small">
                 <a-form-item label="Preview:">
-                  <p class="ast-formatted"><span>{{formState.preview}}</span></p>
+                  <p class="ast-formatted">
+                    <PreviewBinary :preview="formState.preview" />
+                  </p>
                 </a-form-item>
                 <a-form-item label="Query type:">
                   <a-select
@@ -33,10 +35,10 @@
                 <FormAggregate />
               </div>
               <div v-if="formState.queryType === 'BinaryOperation'">
-                <FormBinaryOperation />
+                <FormBinaryOperation @previewChange="previewChange" :binaryExpr="formChildValue.binaryExpr" />
               </div>
               <div v-if="formState.queryType === 'CallFunction'">
-                <FormFunction />
+                <FormFunction :functionCall="formChildValue.functionCall" />
               </div>
               <div v-if="formState.queryType === 'LiteralValue'">
                 <FormLiteralValue />
@@ -76,6 +78,7 @@ import FormFunction from "@/components/FormFunction.vue";
 import FormLiteralValue from "@/components/FormLiteralValue.vue";
 import FormSubquery from "@/components/FormSubquery.vue";
 import FormUnaryExpression from "@/components/FormUnaryExpression.vue";
+import PreviewBinary from "@/components/PreviewBinary.vue";
 
 export default {
   name: "FormCommon",
@@ -91,6 +94,7 @@ export default {
     FormLiteralValue,
     FormSubquery,
     FormUnaryExpression,
+    PreviewBinary,
   },
   props: {
     // metricNameData: Array,
@@ -127,6 +131,10 @@ export default {
             console.log('error', error);
           });
     };
+    const previewChange = (value) => {
+      console.log(value, 'value');
+      formState.preview = value
+    }
 
     onMounted(() => {
       watch(() => formState.queryType, () => {
@@ -139,11 +147,13 @@ export default {
     })
 
     return {
+      previewChange,
       onSubmit,
       activeKey,
       formRef,
       formState,
       rules,
+      formChildValue,
     }
   }
 }
