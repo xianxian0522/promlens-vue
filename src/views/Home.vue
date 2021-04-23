@@ -21,28 +21,28 @@
         <div class="row">
           <div class="col">
             <div class="ast-node ast-node-selected ast-node-root">
-<!--              <PromQL />-->
-              <div class="ast-node-inner-wrapper">
-                <PlusOutlined class="ast-connector-plus ast-connector-plus-up" />
-                <div class="ast-node-inner ast-node-inner-placeholder ast-node-inner-tree-view">
-                  <div class="ast-node-inner-top">
-                    <div class="ast-node-inner-text">
-                      <span>start query:</span>
-                    </div>
-                    <a-button @click="isShowForm[index] = !isShowForm[index]" class="ast-node-inner-action-btn btn btn-outline-secondary btn-sm">
-                      <SwapOutlined />Form
-                    </a-button>
-                    <a-button class="ast-node-inner-action-btn btn btn-outline-secondary btn-sm">
-                      <EditOutlined />PromQL
-                    </a-button>
-                  </div>
-                  <FormCommon v-if="isShow" />
-                </div>
-                <div class="ast-node-infos"></div>
-              </div>
-              <div class="ast-node">
-                <PromQL />
-              </div>
+              <PromQL />
+<!--              <div class="ast-node-inner-wrapper">-->
+<!--                <PlusOutlined class="ast-connector-plus ast-connector-plus-up" />-->
+<!--                <div class="ast-node-inner ast-node-inner-placeholder ast-node-inner-tree-view">-->
+<!--                  <div class="ast-node-inner-top">-->
+<!--                    <div class="ast-node-inner-text">-->
+<!--                      <span>start query:</span>-->
+<!--                    </div>-->
+<!--                    <a-button @click="isShowForm[index] = !isShowForm[index]" class="ast-node-inner-action-btn btn btn-outline-secondary btn-sm">-->
+<!--                      <SwapOutlined />Form-->
+<!--                    </a-button>-->
+<!--                    <a-button class="ast-node-inner-action-btn btn btn-outline-secondary btn-sm">-->
+<!--                      <EditOutlined />PromQL-->
+<!--                    </a-button>-->
+<!--                  </div>-->
+<!--                  <FormCommon v-if="isShow" />-->
+<!--                </div>-->
+<!--                <div class="ast-node-infos"></div>-->
+<!--              </div>-->
+<!--              <div class="ast-node">-->
+<!--                <PromQL />-->
+<!--              </div>-->
             </div>
           </div>
         </div>
@@ -85,11 +85,11 @@ export default {
     SyncOutlined,
     EnterOutlined,
     PlusOutlined,
-    SwapOutlined,
-    EditOutlined,
+    // SwapOutlined,
+    // EditOutlined,
     // QuestionCircleOutlined,
     // CheckOutlined,
-    FormCommon,
+    // FormCommon,
     PromQL,
   },
   setup() {

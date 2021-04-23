@@ -2,7 +2,7 @@
   <TreeCommon>
     <template v-slot:nodeLeftChild>
       <div class="ast-node">
-        <Expr :expr="binaryExpr.left" />
+        <Expr :expr="binaryExpr.left" :isLeft="true" />
       </div>
     </template>
     <template v-slot:innerText>
@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import {defineAsyncComponent} from "vue";
+import {defineAsyncComponent, inject, provide} from "vue";
 import TreeCommon from "@/components/TreeCommon.vue";
 
 export default {

@@ -4,21 +4,21 @@
   <div class="ast-node-inner-wrapper">
     <slot name="connector"></slot>
 <!--    <div class="ast-connector ast-connector-up" style="top: -4px"></div>-->
-    <PlusOutlined class="ast-connector-plus ast-connector-plus-up" />
+    <PlusOutlined @click="addExpr" class="ast-connector-plus ast-connector-plus-up" />
     <div class="ast-node-inner ast-node-inner-tree-view" style="opacity: 1;">
       <div class="ast-node-inner-top">
         <div class="ast-node-inner-text">
 <!--          [<span class="ast-duration">1h</span>: <span class="ast-duration">1m</span>]-->
           <slot name="innerText"></slot>
         </div>
-        <a-button class="ast-node-inner-action-btn btn btn-outline-secondary btn-sm">
+        <a-button @click="isShowForm = !isShowForm" class="ast-node-inner-action-btn btn btn-outline-secondary btn-sm">
           <SwapOutlined />Form
         </a-button>
         <a-button class="ast-node-inner-action-btn btn btn-outline-secondary btn-sm">
           <EditOutlined />PromQL
         </a-button>
       </div>
-<!--      表单-->
+      <FormCommon v-if="isShowForm" />
     </div>
     <div class="ast-node-infos">
       <div class="ast-node-query-info">
@@ -45,6 +45,8 @@
 
 <script lang="ts">
 import {PlusOutlined, SwapOutlined, EditOutlined} from '@ant-design/icons-vue'
+import FormCommon from "@/components/FormCommon.vue";
+import {inject, ref} from "vue";
 
 export default {
   name: "TreeCommon",
@@ -52,9 +54,20 @@ export default {
     PlusOutlined,
     SwapOutlined,
     EditOutlined,
+    FormCommon,
   },
   setup() {
+    const isShowForm = ref(false)
 
+    const formValue = inject('addExpr')
+    const addExpr = () => {
+      console.log('aa add child', formValue)
+    }
+
+    return {
+      isShowForm,
+      addExpr,
+    }
   }
 }
 </script>

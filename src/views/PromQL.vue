@@ -57,7 +57,7 @@ export default {
                           }
                         ],
                         duration: '5m',
-                      }
+                      },
                     },
                     duration: '5m'
                   }

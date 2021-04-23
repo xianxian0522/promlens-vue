@@ -67,7 +67,7 @@
 
 <script lang="ts">
 import { PlusOutlined, QuestionCircleOutlined, CheckOutlined, DeleteOutlined } from '@ant-design/icons-vue'
-import {ref, toRaw, toRefs, onMounted, reactive, watch} from 'vue'
+import {ref, toRaw, toRefs, onMounted, reactive, watch, inject} from 'vue'
 import {labelNameData, metricNameData, promRepository} from "@/api/promRepository";
 import FormSelectData from "@/components/FormSelectData.vue";
 import FormAggregate from "@/components/FormAggregate.vue";
@@ -97,21 +97,13 @@ export default {
     // labelNameData: Array,
   },
   setup(props: any) {
-    console.log(props, 'props')
+    console.log(props, 'props', inject('addExpr'))
+    const formChildValue: any = inject('addExpr')
     const activeKey = ref('1')
     const formRef = ref();
     const formState = reactive({
       preview: 'nnnn',
       queryType: 'SelectData',
-
-      // offset: '0s',
-      // range: '5m',
-      // step: '0s',
-
-      // valueType: 'numberLiteral',
-      // numValue: 0,
-      // stringValue: '',
-      // unaryOperator: '-',
     });
     const rules = {
       numValue: [{
@@ -120,6 +112,10 @@ export default {
         message: 'Invalid number format',
       }]
     };
+    formState.queryType = formChildValue.functionCall ? 'CallFunction' : formChildValue.binaryExpr ? 'BinaryOperation'
+        : formChildValue.aggregateExpr ? 'AggregateOverLabels' : formChildValue.subqueryExpr ? 'Subquery'
+            : formChildValue.unaryExpr ? 'UnaryExpression' : formChildValue.parenExpr ? 'Parentheses'
+                : formChildValue.numberLiteral ? 'LiteralValue' : formChildValue.stringLiteral ? 'LiteralValue' : 'SelectData'
 
     const onSubmit = () => {
       formRef.value

@@ -1,7 +1,7 @@
 <template>
 <div>
   <div v-if="expr.functionCall">
-    <FunctionCall :functionCall="expr.functionCall" />
+    <FunctionCall :functionCall="expr.functionCall" :isLeft="isLeft" />
   </div>
   <div v-else-if="expr.matrixSelector">
     <MatrixSelector :matrixSelector="expr.matrixSelector" />
@@ -28,7 +28,7 @@
     {{ expr.parenExpr }}
   </div>
   <div v-else-if="expr.subqueryExpr">
-    {{ expr.subqueryExpr }}
+    <SubqueryExpr :subqueryExpr="expr.subqueryExpr" />
   </div>
   <div v-else-if="expr.unaryExpr">
     {{ expr.unaryExpr }}
@@ -46,7 +46,8 @@ import VectorSelector from "@/views/VectorSelector.vue";
 import BinaryExpr from "@/views/BinaryExpr.vue";
 import NumberLiteral from "@/views/NumberLiteral.vue";
 import StringLiteral from "@/views/StringLiteral.vue";
-import {reactive, ref, toRefs} from "vue";
+import SubqueryExpr from "@/views/SubqueryExpr.vue";
+import {provide, reactive, ref, toRefs} from "vue";
 
 export default {
   name: "Expr",
@@ -56,6 +57,7 @@ export default {
     // 'matrixSelector',
     // 'binaryExpr',
     'expr',
+    'isLeft',
   ],
   components: {
     FunctionCall,
@@ -64,9 +66,15 @@ export default {
     BinaryExpr,
     NumberLiteral,
     StringLiteral,
+    SubqueryExpr,
   },
   setup(props: any) {
-    console.log(props, 'expr')
+    // console.log(props, 'expr')
+    const addExpr = () => {
+      console.log('add')
+      return props.expr
+    }
+    provide('addExpr', addExpr())
 
     return {
     }

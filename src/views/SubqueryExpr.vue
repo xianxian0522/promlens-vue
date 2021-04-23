@@ -1,13 +1,12 @@
 <template>
   <div>
-    <Expr :expr="matrixSelector.expr" />
-    <!--    <div>[ {{matrixSelector.duration}} ]</div>-->
+    <Expr :expr="subqueryExpr.expr" />
     <TreeCommon >
       <template v-slot:connector>
         <div class="ast-connector ast-connector-up" style="top: -4px"></div>
       </template>
       <template v-slot:innerText>
-        [<span class="ast-duration">{{ matrixSelector.duration }}</span>:<span class="ast-duration">1m</span>]
+        [<span class="ast-duration">{{ subqueryExpr.duration }}</span>:<span class="ast-duration">1m</span>]
       </template>
       <template v-slot:infoLabel>
         16 results - 91ms -
@@ -25,26 +24,19 @@
 </template>
 
 <script lang="ts">
+import TreeCommon from '@/components/TreeCommon.vue'
 import {defineAsyncComponent} from "vue";
-import TreeCommon from "@/components/TreeCommon.vue";
 
 export default {
-  name: "MatrixSelector",
-  props: ['matrixSelector'],
+  name: "SubqueryExpr",
+  props: ['subqueryExpr'],
   components: {
     TreeCommon,
     Expr: defineAsyncComponent(() => import('./Expr.vue'))
   },
-  setup(props: any) {
-    console.log(props, 'matrix')
-
-    return {
-
-    }
-  }
 }
 </script>
 
-<style scoped lang="less">
-@import "../components/index.less";
+<style scoped>
+
 </style>

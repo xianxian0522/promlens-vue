@@ -4,7 +4,8 @@
 <!--    <span>{{functionCall.functionIdentifier}}</span>-->
     <TreeCommon >
       <template v-slot:connector>
-        <div class="ast-connector ast-connector-up" style="top: -4px"></div>
+        <div v-if="isLeft" class="ast-connector ast-connector-down" style="bottom: -80px"></div>
+        <div v-else class="ast-connector ast-connector-up" style="top: -4px"></div>
       </template>
       <template v-slot:innerText>
         <span class="promql-code">
@@ -39,7 +40,7 @@ import TreeCommon from "@/components/TreeCommon.vue";
 
 export default {
   name: "FunctionCall",
-  props: ['functionIdentifier', 'functionArgs', 'functionCall'],
+  props: ['isLeft', 'functionCall'],
   components: {
     TreeCommon,
     Expr: defineAsyncComponent(() => import('./Expr.vue'))
