@@ -3,7 +3,7 @@
   <a-form layout="vertical" :model="formState" class="small">
     <a-form-item label="Function:">
       <a-select
-          v-model:value="formState.fun"
+          v-model:value="formState.functionIdentifier"
           style="width: 680px"
           ref="select"
       >
@@ -16,13 +16,17 @@
 </template>
 
 <script lang="ts">
-import {reactive, toRefs} from "vue";
+import {onMounted, reactive, toRefs, watch} from "vue";
 
 export default {
   name: "FormFunction",
-  setup() {
+  props: ['functionCall'],
+  emits: ['previewChange'],
+  setup(props: any, content) {
+    console.log(props, 'function')
     const formState = reactive({
-      fun: 'rate',
+      functionIdentifier: props.functionCall.functionIdentifier || 'rate',
+      functionArgs: props.functionCall.functionArgs
     })
     const state = reactive({
       functionList: [
@@ -76,6 +80,13 @@ export default {
       ],
     })
 
+    onMounted(() => {
+      content.emit('previewChange', formState)
+
+      watch(formState, (value) => {
+        content.emit('previewChange', value)
+      })
+    })
 
     return {
       formState,

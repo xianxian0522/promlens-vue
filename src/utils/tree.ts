@@ -4,12 +4,12 @@ export interface PromQL {
 export interface Expr {
     functionCall?: FunctionCall;
     vectorSelector?: VectorSelector;
-    matrixSelector?: MatrixSelector;
+    // matrixSelector?: MatrixSelector;
     aggregateExpr?: AggregateExpr;
     binaryExpr?: BinaryExpr;
     numberLiteral?: number;
     stringLiteral?: string;
-    offsetExpr?: OffsetExpr;
+    // offsetExpr?: OffsetExpr;
     parenExpr?: Expr;
     subqueryExpr?: SubqueryExpr;
     unaryExpr?: UnaryExpr;
@@ -21,7 +21,9 @@ export interface FunctionCall {
 }
 export interface VectorSelector {
     metricIdentifier: string;
-    labelMatchers: Array<LabelMatcher>
+    labelMatchers: Array<LabelMatcher>;
+    matrixSelector?: MatrixSelector;
+    offsetExpr?: OffsetExpr;
 }
 export interface LabelMatcher {
     labelName: string;
@@ -29,7 +31,7 @@ export interface LabelMatcher {
     labelValue: string;
 }
 export interface MatrixSelector {
-    expr: Expr;
+    expr?: Expr;
     duration: string;
 }
 export interface AggregateExpr {
@@ -63,8 +65,8 @@ export interface BinModifiers {
 }
 
 export interface OffsetExpr {
-    expr: Expr;
-    offset: string;
+    expr?: Expr;
+    offset: boolean;
     duration: string;
 }
 export interface SubqueryExpr {

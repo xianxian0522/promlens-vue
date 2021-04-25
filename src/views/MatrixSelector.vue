@@ -1,27 +1,27 @@
 <template>
-  <div>
-    <Expr :expr="matrixSelector.expr" />
-    <!--    <div>[ {{matrixSelector.duration}} ]</div>-->
-    <TreeCommon >
-      <template v-slot:connector>
-        <div class="ast-connector ast-connector-up" style="top: -4px"></div>
-      </template>
-      <template v-slot:innerText>
-        [<span class="ast-duration">{{ matrixSelector.duration }}</span>:<span class="ast-duration"></span>]
-      </template>
-      <template v-slot:infoLabel>
-        16 results - 91ms -
-        <div class="ast-node-label-stats">
-          <span class="ast-label-name" style="color: green;">host</span>
-          :16,
-        </div>
-        <div class="ast-node-label-stats">
-          <span class="ast-label-name" style="color: green;">instance</span>
-          :16,
-        </div>
-      </template>
-    </TreeCommon>
-  </div>
+  <span>
+    [<span class="promql-duration">{{matrixSelector.duration}}</span>]
+<!--    <Expr :expr="matrixSelector.expr" />-->
+<!--    <TreeCommon >-->
+<!--      <template v-slot:connector>-->
+<!--        <div class="ast-connector ast-connector-up" style="top: -4px"></div>-->
+<!--      </template>-->
+<!--      <template v-slot:innerText>-->
+<!--        [<span class="ast-duration">{{ matrixSelector.duration }}</span>:<span class="ast-duration"></span>]-->
+<!--      </template>-->
+<!--      <template v-slot:infoLabel>-->
+<!--        16 results - 91ms - -->
+<!--        <div class="ast-node-label-stats">-->
+<!--          <span class="ast-label-name" style="color: green;">host</span>-->
+<!--          :16,-->
+<!--        </div>-->
+<!--        <div class="ast-node-label-stats">-->
+<!--          <span class="ast-label-name" style="color: green;">instance</span>-->
+<!--          :16,-->
+<!--        </div>-->
+<!--      </template>-->
+<!--    </TreeCommon>-->
+  </span>
 </template>
 
 <script lang="ts">
@@ -32,8 +32,8 @@ export default {
   name: "MatrixSelector",
   props: ['matrixSelector'],
   components: {
-    TreeCommon,
-    Expr: defineAsyncComponent(() => import('./Expr.vue'))
+    // TreeCommon,
+    // Expr: defineAsyncComponent(() => import('./Expr.vue'))
   },
   setup(props: any) {
     console.log(props, 'matrix')

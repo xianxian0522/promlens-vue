@@ -10,6 +10,9 @@
                   <p class="ast-formatted" v-if="formState.queryType === 'BinaryOperation'">
                     <PreviewBinary :preview="formState.preview" />
                   </p>
+                  <p class="ast-formatted" v-if="formState.queryType === 'CallFunction'">
+                    <PreviewFunction :preview="formState.preview" />
+                  </p>
                   <p class="ast-formatted">
                     <PreviewSelectData :preview="formState.preview" />
                   </p>
@@ -41,7 +44,7 @@
                 <FormBinaryOperation @previewChange="previewChange" :binaryExpr="formChildValue.binaryExpr" />
               </div>
               <div v-if="formState.queryType === 'CallFunction'">
-                <FormFunction :functionCall="formChildValue.functionCall" />
+                <FormFunction @previewChange="previewChange" :functionCall="formChildValue.functionCall" />
               </div>
               <div v-if="formState.queryType === 'LiteralValue'">
                 <FormLiteralValue />
@@ -83,6 +86,7 @@ import FormSubquery from "@/components/FormSubquery.vue";
 import FormUnaryExpression from "@/components/FormUnaryExpression.vue";
 import PreviewBinary from "@/components/PreviewBinary.vue";
 import PreviewSelectData from "@/components/PreviewSelectData.vue";
+import PreviewFunction from "@/components/PreviewFunction.vue";
 
 export default {
   name: "FormCommon",
@@ -100,13 +104,14 @@ export default {
     FormUnaryExpression,
     PreviewBinary,
     PreviewSelectData,
+    PreviewFunction,
   },
   props: {
     // metricNameData: Array,
     // labelNameData: Array,
   },
   setup(props: any) {
-    console.log(props, 'props', inject('addExpr'))
+    // console.log(props, 'props', inject('addExpr'))
     const formChildValue: any = inject('addExpr')
     const activeKey = ref('1')
     const formRef = ref();

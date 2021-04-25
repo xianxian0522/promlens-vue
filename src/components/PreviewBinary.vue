@@ -1,5 +1,5 @@
 <template>
-<div>
+<span>
   <span class="ast-ellipsis">...</span>
   <span class="ast-operator"> {{ preview.operator }} </span>
   <span v-if="preview.switchOpen">
@@ -28,7 +28,7 @@
     </span>
   </span>
   <span class="ast-ellipsis">...</span>
-</div>
+</span>
 </template>
 
 <script lang="ts">

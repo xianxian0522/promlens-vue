@@ -3,9 +3,9 @@
   <div v-if="expr.functionCall">
     <FunctionCall :functionCall="expr.functionCall" :isLeft="isLeft" />
   </div>
-  <div v-else-if="expr.matrixSelector">
-    <MatrixSelector :matrixSelector="expr.matrixSelector" />
-  </div>
+<!--  <div v-else-if="expr.matrixSelector">-->
+<!--    <MatrixSelector :matrixSelector="expr.matrixSelector" />-->
+<!--  </div>-->
   <div v-else-if="expr.vectorSelector">
     <VectorSelector :vectorSelector="expr.vectorSelector" />
   </div>
@@ -21,9 +21,9 @@
   <div v-else-if="expr.aggregateExpr">
     {{ expr.aggregateExpr }}
   </div>
-  <div v-else-if="expr.offsetExpr">
-    {{ expr.offsetExpr }}
-  </div>
+<!--  <div v-else-if="expr.offsetExpr">-->
+<!--    {{ expr.offsetExpr }}-->
+<!--  </div>-->
   <div v-else-if="expr.parenExpr">
     {{ expr.parenExpr }}
   </div>
@@ -61,7 +61,7 @@ export default {
   ],
   components: {
     FunctionCall,
-    MatrixSelector,
+    // MatrixSelector,
     VectorSelector,
     BinaryExpr,
     NumberLiteral,

@@ -15,8 +15,13 @@
             <span v-if="vectorSelector.labelMatchers.length > 1 && (vectorSelector.labelMatchers.length - 1 !== index)">,</span>
           </span>}
         </span>
-        <span v-if="vectorSelector.duration">
-          [<span class="promql-duration">{{vectorSelector.duration}}</span>]
+        <span v-if="vectorSelector.matrixSelector">
+          [<span class="promql-duration">{{vectorSelector.matrixSelector.duration}}</span>]
+<!--          <MatrixSelector :matrixSelector="vectorSelector.matrixSelector"/>-->
+        </span>
+        <span v-if="vectorSelector.offsetExpr">
+          <span class="promql-keyword" v-if="vectorSelector.offsetExpr.offset">offset </span>
+          <span class="promql-duration">{{vectorSelector.offsetExpr.duration}}</span>
         </span>
       </span>
     </template>
@@ -37,12 +42,14 @@
 
 <script lang="ts">
 import TreeCommon from "@/components/TreeCommon.vue";
+import MatrixSelector from "@/views/MatrixSelector.vue";
 
 export default {
   name: "VectorSelector",
   props: ['vectorSelector'],
   components: {
     TreeCommon,
+    // MatrixSelector,
   },
   setup(props: any) {
     console.log(props, 've')

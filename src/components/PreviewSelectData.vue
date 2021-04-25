@@ -1,5 +1,5 @@
 <template>
-<div>
+<span>
   <span class="promql-metric-name">{{ preview.metricName }}</span>
   <span v-if="preview.labelMatchers && preview.labelMatchers.length > 0">{<span class="promql-metric-name" v-for="(label, index) in preview.labelMatchers" :key="index">
       <span class="promql-label-name">{{ label.labelName }}</span>{{ label.matchOp }}<span class="promql-string">"{{ label.labelValue }}"</span>
@@ -11,7 +11,7 @@
     <span class="promql-keyword"> offset </span>
     <span class="promql-duration">{{ preview.offset }}</span>
   </span>
-</div>
+</span>
 </template>
 
 <script lang="ts">

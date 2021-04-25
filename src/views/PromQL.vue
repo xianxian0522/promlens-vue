@@ -45,21 +45,25 @@ export default {
               functionIdentifier: 'sum',
               functionArgs: [
                 {
-                  matrixSelector: {
-                    expr: {
-                      vectorSelector: {
-                        metricIdentifier: 'node_memory_MemAvailable_bytes',
-                        labelMatchers: [
-                          {
-                            labelName: 'instance',
-                            matchOp: '=',
-                            labelValue: 'node-exporter-172-18-11-45',
-                          }
-                        ],
+                  vectorSelector: {
+                    metricIdentifier: 'node_memory_MemAvailable_bytes',
+                    labelMatchers: [
+                      {
+                        labelName: 'instance',
+                        matchOp: '=',
+                        labelValue: 'node-exporter-172-18-11-45',
+                      }
+                    ],
+                    matrixSelector: {
+                      expr: {
                       },
+                      duration: '5m'
                     },
-                    duration: '5m'
-                  }
+                    offsetExpr: {
+                      offset: true,
+                      duration: '15m'
+                    }
+                  },
                 },
               ],
             },
