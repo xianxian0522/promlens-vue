@@ -133,6 +133,7 @@ export default {
     }
 
     onMounted(() => {
+
       watch(() => formState.queryType, () => {
         // if (formState.queryType === 'Subquery') {
         //   formState.range = '1h'

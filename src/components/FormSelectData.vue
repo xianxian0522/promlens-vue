@@ -101,7 +101,7 @@
 
 <script lang="ts">
 import {QuestionCircleOutlined, DeleteOutlined, PlusOutlined, } from '@ant-design/icons-vue'
-import {onMounted, reactive, ref, toRefs, watch} from "vue";
+import {onMounted, reactive, ref, toRefs, watch, readonly} from "vue";
 import {labelNameData, metricNameData, promRepository} from "@/api/promRepository";
 
 export interface Label {
@@ -211,6 +211,7 @@ export default {
 
       watch(formState, (value) => {
         formRef.value.validate().then(res => {
+          console.log(res, 'res')
           content.emit('previewChange', value)
         }).catch(err => console.log(err, 'err'))
       })

@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div>
+  <div >
 <!--    <span>{{functionCall.functionIdentifier}}</span>-->
     <TreeCommon >
       <template v-slot:connector>
@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import {Component, defineAsyncComponent} from "vue";
+import {Component, defineAsyncComponent, onMounted, ref} from "vue";
 import TreeCommon from "@/components/TreeCommon.vue";
 
 export default {
@@ -49,6 +49,7 @@ export default {
     console.log(props);
 
     return {
+
     }
   },
 }

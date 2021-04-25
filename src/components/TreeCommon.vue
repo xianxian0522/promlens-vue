@@ -1,5 +1,5 @@
 <template>
-<div>
+<div ref="childRef">
   <slot name="nodeLeftChild"></slot>
   <div class="ast-node-inner-wrapper">
     <slot name="connector"></slot>
@@ -11,14 +11,14 @@
 <!--          [<span class="ast-duration">1h</span>: <span class="ast-duration">1m</span>]-->
           <slot name="innerText"></slot>
         </div>
-        <a-button @click="isShowForm = !isShowForm" class="ast-node-inner-action-btn btn btn-outline-secondary btn-sm">
+        <a-button @click="isShowFormClick" class="ast-node-inner-action-btn btn btn-outline-secondary btn-sm">
           <SwapOutlined />Form
         </a-button>
         <a-button class="ast-node-inner-action-btn btn btn-outline-secondary btn-sm">
           <EditOutlined />PromQL
         </a-button>
       </div>
-      <FormCommon v-if="isShowForm" />
+      <FormCommon v-if="isShowForm"/>
     </div>
     <div class="ast-node-infos">
       <div class="ast-node-query-info">
@@ -46,7 +46,7 @@
 <script lang="ts">
 import {PlusOutlined, SwapOutlined, EditOutlined} from '@ant-design/icons-vue'
 import FormCommon from "@/components/FormCommon.vue";
-import {defineAsyncComponent, inject, ref} from "vue";
+import {defineAsyncComponent, inject, onMounted, ref, watch} from "vue";
 
 export default {
   name: "TreeCommon",
@@ -58,15 +58,25 @@ export default {
   },
   setup() {
     const isShowForm = ref(false)
+    const childRef = ref()
 
     const formValue = inject('addExpr')
     const addExpr = () => {
       console.log('aa add child', formValue)
     }
+    const isShowFormClick = (r) => {
+      isShowForm.value = !isShowForm.value
+      console.log(childRef.value.offsetHeight, 'refchild', childRef.value.clientHeight, r)
+    }
+    onMounted(() => {
+
+    })
 
     return {
+      childRef,
       isShowForm,
       addExpr,
+      isShowFormClick,
     }
   }
 }
