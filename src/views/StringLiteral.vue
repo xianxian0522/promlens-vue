@@ -1,7 +1,14 @@
 <template>
 <div>
   <TreeCommon>
-    <template v-slot:innerText>{{stringLiteral}}</template>
+    <template v-slot:innerText>
+       <span class="promql-code">
+          <span class="promql-keyword">{{stringLiteral}}</span>
+       </span>
+    </template>
+    <template v-slot:connector>
+      <div class="ast-connector ast-connector-up" style="top: -4px"></div>
+    </template>
   </TreeCommon>
 </div>
 </template>

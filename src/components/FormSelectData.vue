@@ -1,6 +1,6 @@
 <template>
 <div>
-  <a-form layout="vertical" :model="formState" class="small">
+  <a-form layout="vertical" :model="formState" :rules="rules" ref="formRef" class="small">
     <a-form-item label="Metric name:">
       <a-select
           show-search
@@ -91,7 +91,7 @@
       <label class="label-svg">Range: <QuestionCircleOutlined /></label>
       <a-input v-model:value="formState.range"></a-input>
     </a-form-item>
-    <a-form-item>
+    <a-form-item name="offset">
       <label class="label-svg">Offset: <QuestionCircleOutlined /></label>
       <a-input v-model:value="formState.offset"></a-input>
     </a-form-item>
@@ -101,7 +101,7 @@
 
 <script lang="ts">
 import {QuestionCircleOutlined, DeleteOutlined, PlusOutlined, } from '@ant-design/icons-vue'
-import {onMounted, reactive, toRefs, watch} from "vue";
+import {onMounted, reactive, ref, toRefs, watch} from "vue";
 import {labelNameData, metricNameData, promRepository} from "@/api/promRepository";
 
 export interface Label {
@@ -122,12 +122,13 @@ export default {
   },
   setup(props: any, content) {
     console.log(props, 'props select data')
+    const formRef = ref()
     const formState = reactive({
       metricName: props.vectorSelector.metricIdentifier || undefined,
       labelMatchers: [] as Label[],
-      select: 'instance',
-      offset: '0s',
-      range: '5m',
+      select: props.vectorSelector.offsetExpr.offset ? 'range' : 'instance',
+      offset: props.vectorSelector.matrixSelector.duration || '0s',
+      range: props.vectorSelector.offsetExpr.duration || '5m',
     })
     const state = reactive({
       metricNameList: [] as string[],
@@ -138,6 +139,24 @@ export default {
         { labelName: undefined, labelValue: undefined, matchOp: '=', showAdd: true },
       ],
     })
+    const validatorRule = async (rule, value) => {
+      const num = value.slice(0, -1)
+      const str = value.slice(-1)
+      if (str === 's' || str === 'm' || str === 'h' || str === 'd' || str === 'w' || str === 'y') {
+        if (Number(num) || parseInt(num, 10) === 0) {
+          return Promise.resolve();
+        }
+        return Promise.reject('Unable to parse duration string: invalid duration string');
+      } else {
+        return Promise.reject('Unable to parse duration string: invalid duration string');
+      }
+    }
+    const rules = {
+      offset: [{
+        validator: validatorRule,
+        trigger: 'blur',
+      }],
+    }
 
     const handleSearch = (value: string) => {
       if (value) {
@@ -186,13 +205,20 @@ export default {
           labelName: undefined, labelValue: undefined, matchOp: '=', showAdd: true
         }
       }
+      if (props.vectorSelector.matrixSelector.duration) {
+        formState.offset = props.vectorSelector.matrixSelector.duration
+      }
 
       watch(formState, (value) => {
-        content.emit('previewChange', value)
+        formRef.value.validate().then(res => {
+          content.emit('previewChange', value)
+        }).catch(err => console.log(err, 'err'))
       })
     })
 
     return {
+      formRef,
+      rules,
       formState,
       handleSearch,
       handleSearchLabel,

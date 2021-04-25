@@ -46,7 +46,7 @@
 <script lang="ts">
 import {PlusOutlined, SwapOutlined, EditOutlined} from '@ant-design/icons-vue'
 import FormCommon from "@/components/FormCommon.vue";
-import {inject, ref} from "vue";
+import {defineAsyncComponent, inject, ref} from "vue";
 
 export default {
   name: "TreeCommon",
@@ -54,7 +54,7 @@ export default {
     PlusOutlined,
     SwapOutlined,
     EditOutlined,
-    FormCommon,
+    FormCommon: defineAsyncComponent(() => import('./FormCommon.vue')),
   },
   setup() {
     const isShowForm = ref(false)

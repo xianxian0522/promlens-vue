@@ -75,36 +75,22 @@
 
 <script lang="ts">
 import { PlusOutlined, QuestionCircleOutlined, CheckOutlined, DeleteOutlined } from '@ant-design/icons-vue'
-import {ref, toRaw, toRefs, onMounted, reactive, watch, inject} from 'vue'
-import {labelNameData, metricNameData, promRepository} from "@/api/promRepository";
-import FormSelectData from "@/components/FormSelectData.vue";
-import FormAggregate from "@/components/FormAggregate.vue";
-import FormBinaryOperation from "@/components/FormBinaryOperation.vue";
-import FormFunction from "@/components/FormFunction.vue";
-import FormLiteralValue from "@/components/FormLiteralValue.vue";
-import FormSubquery from "@/components/FormSubquery.vue";
-import FormUnaryExpression from "@/components/FormUnaryExpression.vue";
-import PreviewBinary from "@/components/PreviewBinary.vue";
-import PreviewSelectData from "@/components/PreviewSelectData.vue";
-import PreviewFunction from "@/components/PreviewFunction.vue";
+import {ref, toRaw, toRefs, onMounted, reactive, watch, inject, defineAsyncComponent} from 'vue'
 
 export default {
   name: "FormCommon",
   components: {
-    // PlusOutlined,
-    // QuestionCircleOutlined,
     CheckOutlined,
-    // DeleteOutlined,
-    FormSelectData,
-    FormAggregate,
-    FormBinaryOperation,
-    FormFunction,
-    FormLiteralValue,
-    FormSubquery,
-    FormUnaryExpression,
-    PreviewBinary,
-    PreviewSelectData,
-    PreviewFunction,
+    FormSelectData: defineAsyncComponent(() => import('./FormSelectData.vue')),
+    FormAggregate: defineAsyncComponent(() => import('./FormAggregate.vue')),
+    FormBinaryOperation: defineAsyncComponent(() => import('./FormBinaryOperation.vue')),
+    FormFunction: defineAsyncComponent(() => import('./FormFunction.vue')),
+    FormLiteralValue: defineAsyncComponent(() => import('./FormLiteralValue.vue')),
+    FormSubquery: defineAsyncComponent(() => import('./FormSubquery.vue')),
+    FormUnaryExpression: defineAsyncComponent(() => import('./FormUnaryExpression.vue')),
+    PreviewBinary: defineAsyncComponent(() => import('./PreviewBinary.vue')),
+    PreviewSelectData: defineAsyncComponent(() => import('./PreviewSelectData.vue')),
+    PreviewFunction: defineAsyncComponent(() => import('./PreviewFunction.vue')),
   },
   props: {
     // metricNameData: Array,
