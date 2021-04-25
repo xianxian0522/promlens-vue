@@ -7,8 +7,11 @@
             <div>
               <a-form layout="vertical" ref="formRef" :model="formState" class="small">
                 <a-form-item label="Preview:">
-                  <p class="ast-formatted">
+                  <p class="ast-formatted" v-if="formState.queryType === 'BinaryOperation'">
                     <PreviewBinary :preview="formState.preview" />
+                  </p>
+                  <p class="ast-formatted">
+                    <PreviewSelectData :preview="formState.preview" />
                   </p>
                 </a-form-item>
                 <a-form-item label="Query type:">
@@ -29,7 +32,7 @@
                 </a-form-item>
               </a-form>
               <div v-if="formState.queryType === 'SelectData'">
-                <FormSelectData />
+                <FormSelectData @previewChange="previewChange" :vectorSelector="formChildValue.vectorSelector" />
               </div>
               <div v-if="formState.queryType === 'AggregateOverLabels'">
                 <FormAggregate />
@@ -79,6 +82,7 @@ import FormLiteralValue from "@/components/FormLiteralValue.vue";
 import FormSubquery from "@/components/FormSubquery.vue";
 import FormUnaryExpression from "@/components/FormUnaryExpression.vue";
 import PreviewBinary from "@/components/PreviewBinary.vue";
+import PreviewSelectData from "@/components/PreviewSelectData.vue";
 
 export default {
   name: "FormCommon",
@@ -95,6 +99,7 @@ export default {
     FormSubquery,
     FormUnaryExpression,
     PreviewBinary,
+    PreviewSelectData,
   },
   props: {
     // metricNameData: Array,

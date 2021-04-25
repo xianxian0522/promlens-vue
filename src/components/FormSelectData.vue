@@ -17,8 +17,8 @@
     </a-form-item>
     <a-form-item>
       <label class="label-svg">Label matchers: <QuestionCircleOutlined /></label>
-      <div class="mb-1 row no-gutters" v-for="(label, index) in formState.labelMatchers" :key="index">
-        <div>
+      <div class="mb-1 row no-gutters" v-for="(label, index) in labelMatchers" :key="index">
+        <div class="col">
           <div class="row no-gutters">
             <div class="col col-select">
               <a-select
@@ -37,7 +37,7 @@
             </div>
             <div class="col-auto" style="margin-right: 3px; margin-left: 3px">
               <a-select
-                  v-model:value="label.sign"
+                  v-model:value="label.matchOp"
                   style="width: 80px"
                   ref="select"
               >
@@ -49,7 +49,7 @@
             </div>
           </div>
         </div>
-        <div>
+        <div class="col">
           <div class="row no-gutters">
             <div class="col col-select">
               <a-select
@@ -67,7 +67,7 @@
               </a-select>
             </div>
             <div class="col-auto" style="margin-right: 3px; margin-left: 3px">
-              <a-button v-if="label.showAdd" @click="addLabelMatcher(index)" class="btn btn-secondary btn-sm">
+              <a-button v-if="label.showAdd" @click="addLabelMatcher(label, index)" class="btn btn-secondary btn-sm">
                 <PlusOutlined />
               </a-button>
               <a-button v-if="!label.showAdd" @click="deleteLabelMatcher(index)" class="btn btn-secondary btn-sm">
@@ -101,33 +101,44 @@
 
 <script lang="ts">
 import {QuestionCircleOutlined, DeleteOutlined, PlusOutlined, } from '@ant-design/icons-vue'
-import {reactive, toRefs} from "vue";
+import {onMounted, reactive, toRefs, watch} from "vue";
 import {labelNameData, metricNameData, promRepository} from "@/api/promRepository";
+
+export interface Label {
+  labelName: string;
+  labelValue: string;
+  matchOp: string;
+  showAdd: boolean
+}
 
 export default {
   name: "FormSelectData",
+  props: ['vectorSelector'],
+  emits: ['previewChange'],
   components: {
     QuestionCircleOutlined,
     DeleteOutlined,
     PlusOutlined
   },
-  setup() {
+  setup(props: any, content) {
+    console.log(props, 'props select data')
     const formState = reactive({
-      metricName: undefined,
-      labelMatchers: [
-        { labelName: undefined, labelValue: undefined, sign: '=', showAdd: true },
-      ],
+      metricName: props.vectorSelector.metricIdentifier || undefined,
+      labelMatchers: [] as Label[],
       select: 'instance',
       offset: '0s',
       range: '5m',
     })
-
     const state = reactive({
-      metricNameList: [],
-      labelNameList: [],
+      metricNameList: [] as string[],
+      labelNameList: [] as string[],
       valueList: [],
       valueListFilter: [],
+      labelMatchers: [
+        { labelName: undefined, labelValue: undefined, matchOp: '=', showAdd: true },
+      ],
     })
+
     const handleSearch = (value: string) => {
       if (value) {
         state.metricNameList = metricNameData.value.filter((item: string) => item.toLocaleLowerCase().startsWith(value))
@@ -147,18 +158,39 @@ export default {
         state.valueListFilter = state.valueList.filter((item: string) => item.toLocaleLowerCase().startsWith(value))
       }
     }
-    const addLabelMatcher = (index: number) => {
-      if (formState.labelMatchers[index].labelName && formState.labelMatchers[index].labelValue) {
-        console.log(index, 'add', formState.labelMatchers[index]);
-        formState.labelMatchers[index].showAdd = false;
-        formState.labelMatchers.push({
-          labelName: undefined, labelValue: undefined, sign: '=', showAdd: true
+    const addLabelMatcher = (label: Label, index: number) => {
+      if (state.labelMatchers[index].labelName && state.labelMatchers[index].labelValue) {
+        state.labelMatchers[index].showAdd = false;
+        state.labelMatchers.push({
+          labelName: undefined, labelValue: undefined, matchOp: '=', showAdd: true
         })
+        formState.labelMatchers.splice(index, 0, label)
       }
     }
     const deleteLabelMatcher = (index: number) => {
-
+      formState.labelMatchers.splice(index, 1)
+      state.labelMatchers.splice(index, 1)
     }
+    onMounted(() => {
+      content.emit('previewChange', formState)
+      if (formState.metricName) {
+        state.metricNameList.push(formState.metricName)
+      }
+      if (props.vectorSelector.labelMatchers) {
+        const p = props.vectorSelector.labelMatchers;
+        p.forEach((item, index) => {
+          state.labelMatchers[index] = item
+          formState.labelMatchers[index] = item
+        })
+        state.labelMatchers[p.length] = {
+          labelName: undefined, labelValue: undefined, matchOp: '=', showAdd: true
+        }
+      }
+
+      watch(formState, (value) => {
+        content.emit('previewChange', value)
+      })
+    })
 
     return {
       formState,
