@@ -79,7 +79,11 @@ export default {
 
     const updateValue = (value) => {
       const [v, str] = value;
-      ql.expr[str] = v;
+      if (ql.expr[str]) {
+        ql.expr[str] = v;
+      } else {
+        ql.expr = v
+      }
       console.log(v, str, 'update promql', ql.expr)
     }
     return {

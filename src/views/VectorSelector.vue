@@ -2,7 +2,11 @@
 <div>
   <TreeCommon>
     <template v-slot:connector>
-      <div class="ast-connector ast-connector-up" style="top: -4px"></div>
+      <div v-if="isLeft" class="ast-connector ast-connector-down" style="bottom: -80px"></div>
+      <div v-else class="ast-connector ast-connector-up" style="top: -4px"></div>
+    </template>
+    <template v-slot:addExpr>
+      <PlusOutlined @click="addExpr" class="ast-connector-plus ast-connector-plus-up" />
     </template>
     <template v-slot:innerText>
       <span class="promql-code">
@@ -46,16 +50,19 @@ import TreeCommon from "@/components/TreeCommon.vue";
 import MatrixSelector from "@/views/MatrixSelector.vue";
 import PreviewSelectData from "@/components/PreviewSelectData.vue";
 import {reactive} from "vue";
+import {PlusOutlined} from "@ant-design/icons-vue";
 
 export default {
   name: "VectorSelector",
-  props: ['vectorSelector'],
+  props: ['vectorSelector', 'showLeft', 'isLeft'],
+  emits: ['updateValue'],
   components: {
+    PlusOutlined,
     TreeCommon,
     // MatrixSelector,
     PreviewSelectData,
   },
-  setup(props: any) {
+  setup(props: any, content) {
 
     const preview = {
       metricName: props.vectorSelector.metricIdentifier,
@@ -70,8 +77,20 @@ export default {
     //   }
     // }
 
+    const addExpr = () => {
+      const value = {
+        unknownExpr: {
+          vectorSelector: props.vectorSelector,
+          showLeft: props.showLeft,
+        }
+      }
+      console.log(props)
+      content.emit('updateValue', [value, 'unknownExpr'])
+    }
+
     return {
-      preview
+      preview,
+      addExpr
     }
   }
 }

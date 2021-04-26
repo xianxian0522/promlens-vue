@@ -1,16 +1,16 @@
 <template>
 <div>
   <div v-if="expr.functionCall">
-    <FunctionCall :functionCall="expr.functionCall" :isLeft="isLeft" @updateValue="updateValue"/>
+    <FunctionCall :functionCall="expr.functionCall" :isLeft="isLeft" :index="index" :showLeft="showLeft" @updateValue="updateValue"/>
   </div>
 <!--  <div v-else-if="expr.matrixSelector">-->
 <!--    <MatrixSelector :matrixSelector="expr.matrixSelector" />-->
 <!--  </div>-->
   <div v-else-if="expr.vectorSelector">
-    <VectorSelector :vectorSelector="expr.vectorSelector" @updateValue="updateValue" />
+    <VectorSelector :vectorSelector="expr.vectorSelector" :index="index" :isLeft="isLeft" :showLeft="showLeft" @updateValue="updateValue" />
   </div>
   <div v-else-if="expr.binaryExpr">
-    <BinaryExpr :binaryExpr="expr.binaryExpr" @updateValue="updateValue" />
+    <BinaryExpr :binaryExpr="expr.binaryExpr" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
   <div v-else-if="expr.numberLiteral">
     <NumberLiteral :numberLiteral="expr.numberLiteral" />
@@ -37,7 +37,7 @@
     {{ expr.stepInvariantExpr }}
   </div>
   <div v-else>
-    <UnknownExpr :unknownExpr="expr.unknownExpr" :isLeft="isLeft" />
+    <UnknownExpr :unknownExpr="expr.unknownExpr" :index="index" :isLeft="isLeft" :showLeft="showLeft" @updateValue="updateValue" />
   </div>
 </div>
 </template>
@@ -62,6 +62,8 @@ export default {
     // 'binaryExpr',
     'expr',
     'isLeft',
+    'showLeft',
+    'index',
   ],
   components: {
     FunctionCall,
@@ -77,15 +79,14 @@ export default {
   setup(props: any, content) {
     // console.log(props, 'expr')
     const addExpr = () => {
-      console.log('add')
       return props.expr
     }
     provide('addExpr', addExpr())
 
     const updateValue = (value) => {
-      console.log(value, 'expr')
+      console.log(value, 'expr xxx')
       const [v, str,] = value
-      content.emit('updateValue', [v, str])
+      content.emit('updateValue', [v, str, props.index])
     }
 
     return {

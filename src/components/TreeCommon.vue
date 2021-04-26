@@ -57,15 +57,21 @@ export default {
     EditOutlined,
     FormCommon: defineAsyncComponent(() => import('./FormCommon.vue')),
   },
-  props: ['isLeft'],
+  props: ['showLeft', 'updateValue'],
   setup(props, content) {
     const isShowForm = ref(false)
     const childRef = ref()
 
     const formValue = inject('addExpr')
-    const addExpr = () => {
-      console.log('aa add child', formValue, props.isLeft)
-    }
+    // const addExpr = () => {
+    //   console.log('aa add child', formValue, props.showLeft)
+    //   const value = {
+    //     unknownExpr: formValue,
+    //     showLeft: props.showLeft
+    //   }
+    //   console.log(value, 'value unknown')
+    //   content.emit('updateValue', [value, 'unknownExpr'])
+    // }
     const isShowFormClick = (r) => {
       isShowForm.value = !isShowForm.value
       console.log(childRef.value.offsetHeight, 'refchild', childRef.value.clientHeight)
@@ -77,7 +83,7 @@ export default {
     return {
       childRef,
       isShowForm,
-      addExpr,
+      // addExpr,
       isShowFormClick,
     }
   }

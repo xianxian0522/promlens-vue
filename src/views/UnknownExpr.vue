@@ -1,6 +1,6 @@
 <template>
 <span>
-  <TreeCommon>
+  <TreeCommon >
     <template v-slot:innerText>
       <span>start query:</span>
     </template>
@@ -10,7 +10,7 @@
     </template>
   </TreeCommon>
   <div class="ast-node">
-    <Expr :expr="unknownExpr" @updateValue="updateValue" />
+    <Expr :expr="unknownExpr" @updateValue="updateValue" :showLeft="showLeft" :index="index" />
   </div>
 </span>
 </template>
@@ -20,7 +20,7 @@ import TreeCommon from "@/components/TreeCommon.vue";
 import {defineAsyncComponent} from "vue";
 export default {
   name: "UnknownExpr",
-  props: ['unknownExpr', 'isLeft'],
+  props: ['unknownExpr', 'showLeft', 'isLeft', 'index'],
   emits: ['updateValue'],
   components: {
     TreeCommon,
@@ -30,10 +30,11 @@ export default {
     const updateValue = (value) => {
       const [v, str] = value
       const data = {
-        [str]: v
+        [str]: v,
+        showLeft: props.showLeft
       }
       console.log(data, 'unk')
-      content.emit('updateValue', [data, 'unknownExpr'])
+      content.emit('updateValue', [data, 'unknownExpr', props.index])
     }
 
     return {
