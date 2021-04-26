@@ -102,7 +102,7 @@ export default {
     const activeKey = ref('1')
     const formRef = ref();
     const formState = reactive({
-      preview: 'nnnn',
+      preview: 'n',
       queryType: 'SelectData',
     });
     const rules = {

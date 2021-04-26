@@ -2,7 +2,7 @@
   <TreeCommon>
     <template v-slot:nodeLeftChild>
       <div class="ast-node">
-        <Expr :expr="binaryExpr.left" :isLeft="true" />
+        <Expr :expr="binaryExpr.left" :isLeft="true" @updateValue="updateValue" />
       </div>
     </template>
     <template v-slot:innerText>
@@ -10,7 +10,7 @@
     </template>
     <template v-slot:nodeRightChild>
       <div class="ast-node">
-        <Expr :expr="binaryExpr.right" />
+        <Expr :expr="binaryExpr.right" @updateValue="updateValue" />
       </div>
     </template>
   </TreeCommon>
@@ -27,11 +27,29 @@ export default {
     TreeCommon,
     Expr: defineAsyncComponent(() => import('./Expr.vue'))
   },
-  setup(props: any) {
+  emits: ['updateValue'],
+  setup(props: any, content) {
     console.log(props, 'binary')
 
-    return {
+    const updateValue = (value) => {
+      console.log(value, 'binary', props)
+      const [v,] = value
+      let data = {
+        left: props.binaryExpr.left,
+        operator: props.binaryExpr.operator,
+        right: props.binaryExpr.right,
+      }
+      if (v.unknownExpr && v.unknownExpr.isLeft) {
+        console.log('value xxx', v.unknownExpr)
+        data.left = v;
+      } else if (v.unknownExpr && !v.unknownExpr.isLeft) {
+        data.right = v;
+      }
+      content.emit('updateValue', [data, 'binaryExpr'])
+    }
 
+    return {
+      updateValue,
     }
   },
 }

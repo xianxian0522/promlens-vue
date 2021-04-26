@@ -1,16 +1,16 @@
 <template>
 <div>
   <div v-if="expr.functionCall">
-    <FunctionCall :functionCall="expr.functionCall" :isLeft="isLeft" />
+    <FunctionCall :functionCall="expr.functionCall" :isLeft="isLeft" @updateValue="updateValue"/>
   </div>
 <!--  <div v-else-if="expr.matrixSelector">-->
 <!--    <MatrixSelector :matrixSelector="expr.matrixSelector" />-->
 <!--  </div>-->
   <div v-else-if="expr.vectorSelector">
-    <VectorSelector :vectorSelector="expr.vectorSelector" />
+    <VectorSelector :vectorSelector="expr.vectorSelector" @updateValue="updateValue" />
   </div>
   <div v-else-if="expr.binaryExpr">
-    <BinaryExpr :binaryExpr="expr.binaryExpr" />
+    <BinaryExpr :binaryExpr="expr.binaryExpr" @updateValue="updateValue" />
   </div>
   <div v-else-if="expr.numberLiteral">
     <NumberLiteral :numberLiteral="expr.numberLiteral" />
@@ -36,6 +36,9 @@
   <div v-else-if="expr.stepInvariantExpr">
     {{ expr.stepInvariantExpr }}
   </div>
+  <div v-else>
+    <UnknownExpr :unknownExpr="expr.unknownExpr" :isLeft="isLeft" />
+  </div>
 </div>
 </template>
 
@@ -47,6 +50,7 @@ import BinaryExpr from "@/views/BinaryExpr.vue";
 import NumberLiteral from "@/views/NumberLiteral.vue";
 import StringLiteral from "@/views/StringLiteral.vue";
 import SubqueryExpr from "@/views/SubqueryExpr.vue";
+import UnknownExpr from "@/views/UnknownExpr.vue";
 import {provide, reactive, ref, toRefs} from "vue";
 
 export default {
@@ -67,8 +71,10 @@ export default {
     NumberLiteral,
     StringLiteral,
     SubqueryExpr,
+    UnknownExpr,
   },
-  setup(props: any) {
+  emits: ['updateValue'],
+  setup(props: any, content) {
     // console.log(props, 'expr')
     const addExpr = () => {
       console.log('add')
@@ -76,7 +82,14 @@ export default {
     }
     provide('addExpr', addExpr())
 
+    const updateValue = (value) => {
+      console.log(value, 'expr')
+      const [v, str,] = value
+      content.emit('updateValue', [v, str])
+    }
+
     return {
+      updateValue,
     }
   }
 }

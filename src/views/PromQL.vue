@@ -1,6 +1,6 @@
 <template>
 <div>
-  <Expr :expr="ql.expr" />
+  <Expr :expr="ql.expr" @updateValue="updateValue" />
 </div>
 </template>
 
@@ -76,8 +76,15 @@ export default {
       }
     })
     console.log(ql);
+
+    const updateValue = (value) => {
+      const [v, str] = value;
+      ql.expr[str] = v;
+      console.log(v, str, 'update promql', ql.expr)
+    }
     return {
       ql,
+      updateValue,
     }
   }
 }

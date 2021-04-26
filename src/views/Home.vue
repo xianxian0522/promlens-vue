@@ -103,7 +103,9 @@ export default {
       isShowForm.value.push(false)
     }
     const deleteAnotherQuery = (index: number) => {
-      isShowForm.value.splice(index, 1)
+      if (isShowForm.value.length > 1) {
+        isShowForm.value.splice(index, 1)
+      }
     }
 
     const queryLabelValue = async () => {

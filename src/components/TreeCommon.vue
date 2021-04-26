@@ -4,7 +4,8 @@
   <div class="ast-node-inner-wrapper">
     <slot name="connector"></slot>
 <!--    <div class="ast-connector ast-connector-up" style="top: -4px"></div>-->
-    <PlusOutlined @click="addExpr" class="ast-connector-plus ast-connector-plus-up" />
+<!--    <PlusOutlined @click="addExpr" class="ast-connector-plus ast-connector-plus-up" />-->
+    <slot name="addExpr"></slot>
     <div class="ast-node-inner ast-node-inner-tree-view" style="opacity: 1;">
       <div class="ast-node-inner-top">
         <div class="ast-node-inner-text">
@@ -18,7 +19,7 @@
           <EditOutlined />PromQL
         </a-button>
       </div>
-      <FormCommon v-if="isShowForm"/>
+      <FormCommon v-if="isShowForm" />
     </div>
     <div class="ast-node-infos">
       <div class="ast-node-query-info">
@@ -51,22 +52,23 @@ import {defineAsyncComponent, inject, onMounted, ref, watch} from "vue";
 export default {
   name: "TreeCommon",
   components: {
-    PlusOutlined,
+    // PlusOutlined,
     SwapOutlined,
     EditOutlined,
     FormCommon: defineAsyncComponent(() => import('./FormCommon.vue')),
   },
-  setup() {
+  props: ['isLeft'],
+  setup(props, content) {
     const isShowForm = ref(false)
     const childRef = ref()
 
     const formValue = inject('addExpr')
     const addExpr = () => {
-      console.log('aa add child', formValue)
+      console.log('aa add child', formValue, props.isLeft)
     }
     const isShowFormClick = (r) => {
       isShowForm.value = !isShowForm.value
-      console.log(childRef.value.offsetHeight, 'refchild', childRef.value.clientHeight, r)
+      console.log(childRef.value.offsetHeight, 'refchild', childRef.value.clientHeight)
     }
     onMounted(() => {
 

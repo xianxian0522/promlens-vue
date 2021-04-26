@@ -14,6 +14,7 @@ export interface Expr {
     subqueryExpr?: SubqueryExpr;
     unaryExpr?: UnaryExpr;
     stepInvariantExpr?: StepInvariantExpr;
+    unknownExpr?: Expr;
 }
 export interface FunctionCall {
     functionIdentifier: string;
