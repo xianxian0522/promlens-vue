@@ -1,13 +1,17 @@
 <template>
 <div>
   <TreeCommon>
+    <template v-slot:addExpr>
+      <PlusOutlined @click="addExpr" class="ast-connector-plus ast-connector-plus-up" />
+    </template>
     <template v-slot:innerText>
        <span class="promql-code">
           <span class="promql-keyword">{{stringLiteral}}</span>
        </span>
     </template>
     <template v-slot:connector>
-      <div class="ast-connector ast-connector-up" style="top: -4px"></div>
+      <div v-if="isLeft" class="ast-connector ast-connector-down" style="bottom: -80px"></div>
+      <div v-else class="ast-connector ast-connector-up" style="top: -4px"></div>
     </template>
   </TreeCommon>
 </div>
@@ -15,13 +19,23 @@
 
 <script lang="ts">
 import TreeCommon from "@/components/TreeCommon.vue";
+import {PlusOutlined} from "@ant-design/icons-vue";
 
 export default {
   name: "StringLiteral",
-  props: ['stringLiteral'],
-  components: {TreeCommon},
+  props: ['stringLiteral', 'showLeft', 'isLeft'],
+  components: {
+    PlusOutlined,
+    TreeCommon
+  },
   setup() {
+    const addExpr = () => {
 
+    }
+
+    return {
+      addExpr,
+    }
   }
 }
 </script>
