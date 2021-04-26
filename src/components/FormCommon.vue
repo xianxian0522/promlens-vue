@@ -13,8 +13,11 @@
                   <p class="ast-formatted" v-if="formState.queryType === 'CallFunction'">
                     <PreviewFunction :preview="formState.preview" />
                   </p>
-                  <p class="ast-formatted">
+                  <p class="ast-formatted" v-if="formState.queryType === 'SelectData'">
                     <PreviewSelectData :preview="formState.preview" />
+                  </p>
+                  <p class="ast-formatted" >
+                    <PreviewLiteralValue :preview="formState.preview" />
                   </p>
                 </a-form-item>
                 <a-form-item label="Query type:">
@@ -46,8 +49,8 @@
               <div v-if="formState.queryType === 'CallFunction'">
                 <FormFunction @previewChange="previewChange" :functionCall="formChildValue.functionCall" />
               </div>
-              <div v-if="formState.queryType === 'LiteralValue'">
-                <FormLiteralValue />
+              <div v-if="formState.queryType === 'LiteralValue'" >
+                <FormLiteralValue @previewChange="previewChange" :stringLiteral="formChildValue.stringLiteral" :numberLiteral="formChildValue.numberLiteral" />
               </div>
               <div v-if="formState.queryType === 'Subquery'">
                 <FormSubquery />
@@ -91,6 +94,7 @@ export default {
     PreviewBinary: defineAsyncComponent(() => import('./PreviewBinary.vue')),
     PreviewSelectData: defineAsyncComponent(() => import('./PreviewSelectData.vue')),
     PreviewFunction: defineAsyncComponent(() => import('./PreviewFunction.vue')),
+    PreviewLiteralValue: defineAsyncComponent(() => import('./PreviewLiteralValue.vue')),
   },
   props: {
     // metricNameData: Array,
@@ -105,13 +109,7 @@ export default {
       preview: 'n',
       queryType: 'SelectData',
     });
-    const rules = {
-      numValue: [{
-        type: 'number',
-        trigger: 'blur',
-        message: 'Invalid number format',
-      }]
-    };
+
     formState.queryType = formChildValue.functionCall ? 'CallFunction' : formChildValue.binaryExpr ? 'BinaryOperation'
         : formChildValue.aggregateExpr ? 'AggregateOverLabels' : formChildValue.subqueryExpr ? 'Subquery'
             : formChildValue.unaryExpr ? 'UnaryExpression' : formChildValue.parenExpr ? 'Parentheses'
@@ -149,7 +147,6 @@ export default {
       activeKey,
       formRef,
       formState,
-      rules,
       formChildValue,
     }
   }

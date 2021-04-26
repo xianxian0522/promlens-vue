@@ -18,15 +18,24 @@
 </template>
 
 <script lang="ts">
-import {reactive} from "vue";
+import {onMounted, reactive} from "vue";
 
 export default {
   name: "FormLiteralValue",
-  setup() {
+  props: ['stringLiteral', 'numberLiteral'],
+  emits: ['previewChange'],
+  setup(props, content) {
     const formState = reactive({
       valueType: 'numberLiteral',
-      numValue: 0,
-      stringValue: '',
+      numValue: props.numberLiteral || 0,
+      stringValue: props.stringLiteral || '',
+    })
+    if (props.stringLiteral || props.stringLiteral === '') {
+      formState.valueType = 'numberLiteral'
+    }
+
+    onMounted(() => {
+      content.emit('previewChange', formState)
     })
 
     return {

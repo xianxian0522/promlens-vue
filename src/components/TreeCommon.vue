@@ -74,7 +74,7 @@ export default {
     // }
     const isShowFormClick = (r) => {
       isShowForm.value = !isShowForm.value
-      console.log(childRef.value.offsetHeight, 'refchild', childRef.value.clientHeight)
+      // console.log(childRef.value.offsetHeight, 'refchild', childRef.value.clientHeight)
     }
     onMounted(() => {
 
