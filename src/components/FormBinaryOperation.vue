@@ -114,10 +114,10 @@ export default {
   setup(props: any, content) {
     // console.log(props.binaryExpr.operator, 'binaryExpr')
     const formState = reactive({
-      operator: (props.binaryExpr && props.binaryExpr.operator) || '/',
-      switchOpen: false,
-      matchOn: 'on',
-      ComparisonBehavior: 'filter',
+      operator: props.binaryExpr?.operator || '/',
+      switchOpen: !!props.binaryExpr?.binModifiers,
+      matchOn: props.binaryExpr?.binModifiers?.OnOrIgnoring.Ignoring ? 'ignoring' : 'on',
+      ComparisonBehavior: props.binaryExpr?.binModifiers?.Bool ? 'bool' : 'filter',
       ignoreLabels: [] as string[],
       matchType: 'one-to-one',
       includeLabels: [] as string[],
@@ -140,8 +140,8 @@ export default {
         {name: 'or', value: 'or'},
         {name: 'unless', value: 'unless'},
       ],
-      ignoreLabels: [{name: '', isShow: true}],
-      includeLabels: [{name: '', isShow: true}],
+      ignoreLabels: [{name: '', isShow: true}] as Item[],
+      includeLabels: [{name: '', isShow: true}] as Item[],
     })
 
     content.emit('previewChange', {operator: formState.operator})
@@ -173,6 +173,31 @@ export default {
     }
 
     onMounted(() => {
+      let ignoreList = [];
+      let includeList = [];
+      if (props.binaryExpr?.binModifiers?.OnOrIgnoring.Ignoring) {
+        ignoreList = props.binaryExpr.binModifiers.OnOrIgnoring.Ignoring
+      } else if (props.binaryExpr?.binModifiers?.OnOrIgnoring.On) {
+        ignoreList = props.binaryExpr.binModifiers.OnOrIgnoring.On
+      }
+      if (props.binaryExpr?.binModifiers?.group.GroupLeft) {
+        formState.matchType = 'many-to-one'
+        includeList = props.binaryExpr.binModifiers.group.GroupLeft
+      } else if (props.binaryExpr?.binModifiers?.group.GroupRight) {
+        formState.matchType = 'one-to-many'
+        includeList = props.binaryExpr.binModifiers.group.GroupRight
+      }
+      ignoreList.forEach((item, index) => {
+        formState.ignoreLabels.splice(index, 1, item)
+        state.ignoreLabels.splice(index, 1, {name: item, isShow: false})
+      })
+      includeList.forEach((item, index) => {
+        formState.includeLabels.splice(index, 1, item)
+        state.includeLabels.splice(index, 1, {name: item, isShow: false})
+      })
+      state.ignoreLabels.splice(state.ignoreLabels.length, 0, {name: '', isShow: true})
+      state.includeLabels.splice(state.includeLabels.length, 0, {name: '', isShow: true})
+
       watch(formState, (value => {
         content.emit('previewChange', value)
       }))

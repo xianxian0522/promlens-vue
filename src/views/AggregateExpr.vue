@@ -57,11 +57,30 @@ export default {
     }
 
     const addExpr = () => {
-      console.log('add agg')
+      const value = {
+        unknownExpr: {
+          aggregateExpr: props.aggregateExpr,
+          showLeft: props.showLeft,
+        }
+      }
+      content.emit('updateValue', [value, 'unknownExpr'])
     }
 
-    const updateValue = () => {
-      console.log('agg')
+    const updateValue = (value) => {
+      const [v, str, index] = value
+      const k = props.aggregateExpr.aggregateModifier.Without ? 'without' : 'by'
+      const data = {
+        aggregateExpr: {
+          aggregateOp: props.aggregateExpr.aggregateOp,
+          aggregateModifier: {
+            [k]: props.aggregateExpr.aggregateModifier.Without || props.aggregateExpr.aggregateModifier.By
+          },
+          functionArgs: props.aggregateExpr.aggregateModifier.Without || props.aggregateExpr.aggregateModifier.By,
+        },
+        showLeft: props.showLeft,
+      }
+      data.aggregateExpr.functionArgs[index] = v;
+      content.emit('updateValue', [data, str, index])
     }
 
     return {

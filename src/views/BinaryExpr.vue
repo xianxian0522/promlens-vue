@@ -36,6 +36,16 @@ export default {
   setup(props: any, content) {
     // console.log(props, 'binary')
 
+    const preview = {
+      operator: (props.binaryExpr && props.binaryExpr.operator) || '/',
+      switchOpen: false,
+      matchOn: 'on',
+      ComparisonBehavior: 'filter',
+      ignoreLabels: [] as string[],
+      matchType: 'one-to-one',
+      includeLabels: [] as string[],
+    }
+
     const updateValue = (value) => {
       console.log(value, 'binary', props)
       const [v, str] = value

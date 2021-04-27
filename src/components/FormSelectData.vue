@@ -124,11 +124,11 @@ export default {
     console.log(props, 'props select data')
     const formRef = ref()
     const formState = reactive({
-      metricName: props.vectorSelector.metricIdentifier || undefined,
+      metricName: (props.vectorSelector?.metricIdentifier) || undefined,
       labelMatchers: [] as Label[],
-      select: props.vectorSelector.offsetExpr.offset ? 'range' : 'instance',
-      offset: props.vectorSelector.matrixSelector.duration || '0s',
-      range: props.vectorSelector.offsetExpr.duration || '5m',
+      select: props.vectorSelector?.offsetExpr?.offset ? 'range' : 'instance',
+      offset: props.vectorSelector?.matrixSelector.duration || '0s',
+      range: props.vectorSelector?.offsetExpr?.duration || '5m',
     })
     const state = reactive({
       metricNameList: [] as string[],
@@ -195,7 +195,7 @@ export default {
       if (formState.metricName) {
         state.metricNameList.push(formState.metricName)
       }
-      if (props.vectorSelector.labelMatchers) {
+      if (props.vectorSelector?.labelMatchers) {
         const p = props.vectorSelector.labelMatchers;
         p.forEach((item, index) => {
           state.labelMatchers[index] = item
@@ -205,7 +205,7 @@ export default {
           labelName: undefined, labelValue: undefined, matchOp: '=', showAdd: true
         }
       }
-      if (props.vectorSelector.matrixSelector.duration) {
+      if (props.vectorSelector?.matrixSelector.duration) {
         formState.offset = props.vectorSelector.matrixSelector.duration
       }
 

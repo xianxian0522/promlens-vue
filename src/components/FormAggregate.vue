@@ -63,10 +63,10 @@ export default {
   setup(props, content) {
     console.log(props, 'agg')
     const formState = reactive({
-      aggregationType: (props.aggregateExpr && props.aggregateExpr.aggregateOp) || 'sum',
+      aggregationType: props.aggregateExpr?.aggregateOp || 'sum',
       preserve: 'by',
       groupingLabels: [] as string[],
-      functionArgs: (props.aggregateExpr && props.aggregateExpr.functionArgs)
+      functionArgs: props.aggregateExpr?.functionArgs
     })
 
     const state = reactive({
@@ -100,11 +100,11 @@ export default {
     }
 
     onMounted(() => {
-      let grouping
-      if (props.aggregateExpr.aggregateModifier && props.aggregateExpr.aggregateModifier.Without) {
+      let grouping = []
+      if (props.aggregateExpr?.aggregateModifier?.Without) {
         formState.preserve = 'without'
         grouping = props.aggregateExpr.aggregateModifier.Without
-      } else {
+      } else if (props.aggregateExpr?.aggregateModifier?.By) {
         grouping = props.aggregateExpr.aggregateModifier.By
       }
       grouping.forEach((item, index) => {
