@@ -44,7 +44,7 @@
 
 <script lang="ts">
 import {QuestionCircleOutlined, PlusOutlined, CloseOutlined} from '@ant-design/icons-vue'
-import {onMounted, reactive, toRefs} from "vue";
+import {onMounted, reactive, toRefs, watch} from "vue";
 
 export interface ItemGroup {
   value: undefined | string;
@@ -115,6 +115,7 @@ export default {
       state.groupingLabels.splice(state.groupingLabels.length, 0, {value: undefined, isShow: true})
 
       content.emit('previewChange', formState)
+
     })
 
     return {

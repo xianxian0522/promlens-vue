@@ -11,12 +11,6 @@
     </span>
     <span class="promql-paren" v-if="(preview.preserve !== 'by' || preview.groupingLabels.length > 0)">)</span>
 
-    <span v-if="preview.functionArgs">
-      <span v-for="(item, index) in preview.functionArgs" :key="index">
-        (<PreviewSelectData v-if="item.vectorSelector" :preview="previewData(item)" />)
-      </span>
-    </span>
-
 <!--    <span class="promql-keyword">{{ preview.aggregateOp }}</span>-->
 <!--    <span v-if="preview.aggregateModifier">-->
 <!--      <span v-if="preview.aggregateModifier.Without">-->
@@ -38,6 +32,14 @@
 <!--        <span class="promql-paren">)</span>-->
 <!--      </span>-->
 <!--    </span>-->
+
+
+    <span v-if="preview.functionArgs">
+      <span v-for="(item, index) in preview.functionArgs" :key="index">
+        (<PreviewSelectData v-if="item.vectorSelector" :preview="previewData(item)" />)
+      </span>
+    </span>
+
   </span>
 </span>
 </template>
