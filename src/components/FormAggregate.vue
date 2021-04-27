@@ -63,9 +63,10 @@ export default {
   setup(props, content) {
     console.log(props, 'agg')
     const formState = reactive({
-      aggregationType: props.aggregateExpr.aggregateOp || 'sum',
+      aggregationType: (props.aggregateExpr && props.aggregateExpr.aggregateOp) || 'sum',
       preserve: 'by',
       groupingLabels: [] as string[],
+      functionArgs: (props.aggregateExpr && props.aggregateExpr.functionArgs)
     })
 
     const state = reactive({

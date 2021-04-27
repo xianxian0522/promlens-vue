@@ -11,6 +11,12 @@
     </span>
     <span class="promql-paren" v-if="(preview.preserve !== 'by' || preview.groupingLabels.length > 0)">)</span>
 
+    <span v-if="preview.functionArgs">
+      <span v-for="(item, index) in preview.functionArgs" :key="index">
+        (<PreviewSelectData v-if="item.vectorSelector" :preview="previewData(item)" />)
+      </span>
+    </span>
+
 <!--    <span class="promql-keyword">{{ preview.aggregateOp }}</span>-->
 <!--    <span v-if="preview.aggregateModifier">-->
 <!--      <span v-if="preview.aggregateModifier.Without">-->
@@ -37,11 +43,28 @@
 </template>
 
 <script lang="ts">
+import PreviewSelectData from "@/components/PreviewSelectData.vue";
+
 export default {
   name: "PreviewAggregate",
   props: ['preview'],
+  components: {
+    PreviewSelectData,
+  },
   setup() {
+    const previewData = (item) => {
+      return {
+        metricName: item.vectorSelector.metricIdentifier,
+        labelMatchers: item.vectorSelector.labelMatchers,
+        select: item.vectorSelector.offsetExpr.offset ? 'range' : 'instance',
+        offset: item.vectorSelector.matrixSelector.duration || '0s',
+        range: item.vectorSelector.offsetExpr.duration,
+      }
+    }
 
+    return {
+      previewData,
+    }
   }
 }
 </script>
