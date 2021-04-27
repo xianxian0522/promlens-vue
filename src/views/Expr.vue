@@ -19,7 +19,7 @@
     <StringLiteral :stringLiteral="expr.stringLiteral" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
   <div v-else-if="expr.aggregateExpr">
-    {{ expr.aggregateExpr }}
+    <AggregateExpr :aggregateExpr="expr.aggregateExpr" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
 <!--  <div v-else-if="expr.offsetExpr">-->
 <!--    {{ expr.offsetExpr }}-->
@@ -51,6 +51,7 @@ import NumberLiteral from "@/views/NumberLiteral.vue";
 import StringLiteral from "@/views/StringLiteral.vue";
 import SubqueryExpr from "@/views/SubqueryExpr.vue";
 import UnknownExpr from "@/views/UnknownExpr.vue";
+import AggregateExpr from "@/views/AggregateExpr.vue";
 import {provide, reactive, ref, toRefs} from "vue";
 
 export default {
@@ -74,6 +75,7 @@ export default {
     StringLiteral,
     SubqueryExpr,
     UnknownExpr,
+    AggregateExpr,
   },
   emits: ['updateValue'],
   setup(props: any, content) {

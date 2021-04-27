@@ -17,32 +17,10 @@ export default {
   setup() {
     const ql: PromQL = reactive({
       expr: {
-        // functionCall: {
-        //   functionIdentifier: 'sum',
-        //   functionArgs: [
-        //     {
-        //       matrixSelector: {
-        //         expr: {
-        //           vectorSelector: {
-        //             metricIdentifier: 'node_memory_MemAvailable_bytes',
-        //             labelMatchers: [
-        //               {
-        //                 labelName: 'instance',
-        //                 matchOp: '=',
-        //                 labelValue: 'node-exporter-172-18-11-45',
-        //               }
-        //             ],
-        //           }
-        //         },
-        //         duration: '5m'
-        //       }
-        //     }
-        //   ],
-        // },
         binaryExpr: {
           left: {
             functionCall: {
-              functionIdentifier: 'sum',
+              functionIdentifier: 'rate',
               functionArgs: [
                 {
                   vectorSelector: {
@@ -64,6 +42,15 @@ export default {
                       duration: '15m'
                     }
                   },
+                },
+                {
+                  aggregateExpr: {
+                    aggregateOp: 'sum',
+                    aggregateModifier: {
+                      By: ['a'],
+                    },
+                    functionArgs: [],
+                  }
                 },
               ],
             },
