@@ -16,7 +16,7 @@
                   <p class="ast-formatted" v-if="formState.queryType === 'SelectData'">
                     <PreviewSelectData :preview="formState.preview" />
                   </p>
-                  <p class="ast-formatted" >
+                  <p class="ast-formatted" v-if="formState.queryType === 'LiteralValue'" >
                     <PreviewLiteralValue :preview="formState.preview" />
                   </p>
                 </a-form-item>
