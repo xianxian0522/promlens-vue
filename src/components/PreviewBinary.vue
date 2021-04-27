@@ -34,9 +34,44 @@
 <script lang="ts">
 export default {
   name: "PreviewBinary",
-  props: ['preview'],
-  setup() {
-
+  props: ['preview', 'leftPreview', 'rightPreview'],
+  setup(props) {
+    console.log(props.leftPreview, props.rightPreview)
+    let previewData
+    if (props.leftPreview?.functionCall) {
+      previewData = {
+        functionIdentifier: props.leftPreview.functionCall.functionIdentifier,
+        functionArgs: props.leftPreview.functionCall.functionArgs,
+      }
+    }
+    if (props.rightPreview?.functionCall) {
+      previewData = {
+        functionIdentifier: props.rightPreview.functionCall.functionIdentifier,
+        functionArgs: props.rightPreview.functionCall.functionArgs,
+      }
+    }
+    if (props.rightPreview?.binaryExpr) {
+      previewData = {
+        operator: props.rightPreview.binaryExpr?.operator || '/',
+        switchOpen: !!props.rightPreview.binaryExpr?.binModifiers,
+        matchOn: props.rightPreview.binaryExpr?.binModifiers?.OnOrIgnoring.Ignoring ? 'ignoring' : 'on',
+        ComparisonBehavior: props.rightPreview.binaryExpr?.binModifiers?.Bool ? 'bool' : 'filter',
+        ignoreLabels: props.rightPreview.binaryExpr?.binModifiers?.OnOrIgnoring.On || props.rightPreview.binaryExpr?.binModifiers?.OnOrIgnoring.Ignoring,
+        matchType: props.rightPreview.binaryExpr?.binModifiers?.group.GroupLeft ? 'many-to-one' : props.rightPreview.binaryExpr?.binModifiers?.group.GroupRight ? 'one-to-many' : 'one-to-one',
+        includeLabels: props.rightPreview.binaryExpr?.binModifiers?.group.GroupRight || props.rightPreview.binaryExpr?.binModifiers?.group.GroupLeft,
+      }
+    }
+    if (props.leftPreview?.binaryExpr) {
+      previewData = {
+        operator: props.leftPreview.binaryExpr?.operator || '/',
+        switchOpen: !!props.leftPreview.binaryExpr?.binModifiers,
+        matchOn: props.leftPreview.binaryExpr?.binModifiers?.OnOrIgnoring.Ignoring ? 'ignoring' : 'on',
+        ComparisonBehavior: props.leftPreview.binaryExpr?.binModifiers?.Bool ? 'bool' : 'filter',
+        ignoreLabels: props.leftPreview.binaryExpr?.binModifiers?.OnOrIgnoring.On || props.leftPreview.binaryExpr?.binModifiers?.OnOrIgnoring.Ignoring,
+        matchType: props.leftPreview.binaryExpr?.binModifiers?.group.GroupLeft ? 'many-to-one' : props.leftPreview.binaryExpr?.binModifiers?.group.GroupRight ? 'one-to-many' : 'one-to-one',
+        includeLabels: props.leftPreview.binaryExpr?.binModifiers?.group.GroupRight || props.leftPreview.binaryExpr?.binModifiers?.group.GroupLeft,
+      }
+    }
   }
 }
 </script>

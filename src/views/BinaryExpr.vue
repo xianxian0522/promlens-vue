@@ -9,7 +9,8 @@
       </div>
     </template>
     <template v-slot:innerText>
-      <div>{{ binaryExpr.operator }}</div>
+      <PreviewBinary :preview="preview" :leftPreview="binaryExpr.left" :rightPreview="binaryExpr.right" />
+<!--      <div>{{ binaryExpr.operator }}</div>-->
     </template>
     <template v-slot:nodeRightChild>
       <div class="ast-node">
@@ -22,6 +23,7 @@
 <script lang="ts">
 import {defineAsyncComponent, inject, provide} from "vue";
 import TreeCommon from "@/components/TreeCommon.vue";
+import PreviewBinary from "@/components/PreviewBinary.vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
 
 export default {
@@ -30,6 +32,7 @@ export default {
   components: {
     PlusOutlined,
     TreeCommon,
+    PreviewBinary,
     Expr: defineAsyncComponent(() => import('./Expr.vue'))
   },
   emits: ['updateValue'],
@@ -37,13 +40,13 @@ export default {
     // console.log(props, 'binary')
 
     const preview = {
-      operator: (props.binaryExpr && props.binaryExpr.operator) || '/',
-      switchOpen: false,
-      matchOn: 'on',
-      ComparisonBehavior: 'filter',
-      ignoreLabels: [] as string[],
-      matchType: 'one-to-one',
-      includeLabels: [] as string[],
+      operator: props.binaryExpr?.operator || '/',
+      switchOpen: !!props.binaryExpr?.binModifiers,
+      matchOn: props.binaryExpr?.binModifiers?.OnOrIgnoring.Ignoring ? 'ignoring' : 'on',
+      ComparisonBehavior: props.binaryExpr?.binModifiers?.Bool ? 'bool' : 'filter',
+      ignoreLabels: props.binaryExpr?.binModifiers?.OnOrIgnoring.On || props.binaryExpr?.binModifiers?.OnOrIgnoring.Ignoring,
+      matchType: props.binaryExpr?.binModifiers?.group.GroupLeft ? 'many-to-one' : props.binaryExpr?.binModifiers?.group.GroupRight ? 'one-to-many' : 'one-to-one',
+      includeLabels: props.binaryExpr?.binModifiers?.group.GroupRight || props.binaryExpr?.binModifiers?.group.GroupLeft,
     }
 
     const updateValue = (value) => {
@@ -76,6 +79,7 @@ export default {
     }
 
     return {
+      preview,
       updateValue,
       addExpr,
     }
