@@ -9,7 +9,7 @@
       <PlusOutlined @click="addExpr" class="ast-connector-plus ast-connector-plus-up" />
     </template>
     <template v-slot:innerText>
-      <PreviewAggregate :preview="aggregateExpr" />
+      <PreviewAggregate :preview="preview" />
     </template>
     <!--    需要判断是否有  -->
     <!--      <template v-slot:infoLabel>-->
@@ -50,6 +50,12 @@ export default {
   emits: ['updateValue'],
   setup(props, content) {
 
+    const preview = {
+      aggregationType: props.aggregateExpr.aggregateOp || 'sum',
+      preserve: props.aggregateExpr.aggregateModifier.Without ? 'without' : 'by',
+      groupingLabels: props.aggregateExpr.aggregateModifier.Without || props.aggregateExpr.aggregateModifier.By,
+    }
+
     const addExpr = () => {
       console.log('add agg')
     }
@@ -59,6 +65,7 @@ export default {
     }
 
     return {
+      preview,
       updateValue,
       addExpr,
     }

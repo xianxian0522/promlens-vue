@@ -26,11 +26,14 @@
     </a-form-item>
     <a-form-item>
       <label class="label-svg">Grouping labels: <QuestionCircleOutlined /></label>
-      <div class="input-group" v-for="(group, index) in formState.groupingLabels" :key="index">
-        <a-input v-model:value="formState.groupingLabels[index]" class="pending-input-item" placeholder="add label name"></a-input>
+      <div class="input-group my-bottom" v-for="(group, index) in groupingLabels" :key="index">
+        <a-input v-model:value="group.value" class="pending-input-item" placeholder="add label name"></a-input>
         <div class="input-group-append">
-          <a-button class="btn btn-outline-secondary btn-sm" style="padding: 4px 8px">
+          <a-button v-if="group.isShow" @click="addGroupingLabels(group, index)" class="btn btn-outline-secondary btn-sm" style="padding: 4px 8px">
             <PlusOutlined style="font-size: 18px;" />
+          </a-button>
+          <a-button v-if="!group.isShow" @click="deleteGroupingLabels(index)" class="btn btn-outline-secondary btn-sm" style="padding: 4px 8px">
+            <CloseOutlined style="font-size: 18px;" />
           </a-button>
         </div>
       </div>
@@ -40,20 +43,29 @@
 </template>
 
 <script lang="ts">
-import {QuestionCircleOutlined, PlusOutlined} from '@ant-design/icons-vue'
-import {reactive, toRefs} from "vue";
+import {QuestionCircleOutlined, PlusOutlined, CloseOutlined} from '@ant-design/icons-vue'
+import {onMounted, reactive, toRefs} from "vue";
+
+export interface ItemGroup {
+  value: undefined | string;
+  isShow: boolean;
+}
 
 export default {
   name: "FormAggregate",
   components: {
     QuestionCircleOutlined,
     PlusOutlined,
+    CloseOutlined,
   },
-  setup() {
+  props: ['aggregateExpr'],
+  emits: ['previewChange'],
+  setup(props, content) {
+    console.log(props, 'agg')
     const formState = reactive({
-      aggregationType: 'sum',
+      aggregationType: props.aggregateExpr.aggregateOp || 'sum',
       preserve: 'by',
-      groupingLabels: [''],
+      groupingLabels: [] as string[],
     })
 
     const state = reactive({
@@ -71,11 +83,44 @@ export default {
         {name: 'topk', value: 'topk'},
         {name: 'quantile', value: 'quantile'},
       ],
+      groupingLabels: [{value: undefined, isShow: true}] as ItemGroup[],
+    })
+
+    const deleteGroupingLabels = (index: number) => {
+      state.groupingLabels.splice(index, 1)
+      formState.groupingLabels.splice(index, 1)
+    }
+    const addGroupingLabels = (item, index: number) => {
+      if (item.value) {
+        state.groupingLabels[index].isShow = false
+        state.groupingLabels.push({value: undefined, isShow: true})
+        formState.groupingLabels.splice(index, 0, item.value)
+      }
+    }
+
+    onMounted(() => {
+      let grouping
+      if (props.aggregateExpr.aggregateModifier && props.aggregateExpr.aggregateModifier.Without) {
+        formState.preserve = 'without'
+        grouping = props.aggregateExpr.aggregateModifier.Without
+      } else {
+        grouping = props.aggregateExpr.aggregateModifier.By
+      }
+      grouping.forEach((item, index) => {
+        formState.groupingLabels.splice(index, 1, item)
+        state.groupingLabels.splice(index, 1, {value: item, isShow: false})
+      })
+
+      state.groupingLabels.splice(state.groupingLabels.length, 0, {value: undefined, isShow: true})
+
+      content.emit('previewChange', formState)
     })
 
     return {
       formState,
       ...toRefs(state),
+      deleteGroupingLabels,
+      addGroupingLabels,
     }
   }
 }

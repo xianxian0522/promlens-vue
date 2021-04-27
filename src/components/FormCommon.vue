@@ -19,6 +19,9 @@
                   <p class="ast-formatted" v-if="formState.queryType === 'LiteralValue'" >
                     <PreviewLiteralValue :preview="formState.preview" />
                   </p>
+                  <p class="ast-formatted" v-if="formState.queryType === 'AggregateOverLabels'" >
+                    <PreviewAggregate :preview="formState.preview" />
+                  </p>
                 </a-form-item>
                 <a-form-item label="Query type:">
                   <a-select
@@ -41,7 +44,7 @@
                 <FormSelectData @previewChange="previewChange" :vectorSelector="formChildValue.vectorSelector" />
               </div>
               <div v-if="formState.queryType === 'AggregateOverLabels'">
-                <FormAggregate />
+                <FormAggregate  @previewChange="previewChange" :aggregateExpr="formChildValue.aggregateExpr" />
               </div>
               <div v-if="formState.queryType === 'BinaryOperation'">
                 <FormBinaryOperation @previewChange="previewChange" :binaryExpr="formChildValue.binaryExpr" />
@@ -95,6 +98,7 @@ export default {
     PreviewSelectData: defineAsyncComponent(() => import('./PreviewSelectData.vue')),
     PreviewFunction: defineAsyncComponent(() => import('./PreviewFunction.vue')),
     PreviewLiteralValue: defineAsyncComponent(() => import('./PreviewLiteralValue.vue')),
+    PreviewAggregate: defineAsyncComponent(() => import('./PreviewAggregate.vue')),
   },
   props: {
     // metricNameData: Array,
