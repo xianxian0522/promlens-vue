@@ -25,8 +25,8 @@ export default {
   setup(props: any, content) {
     console.log(props, 'function')
     const formState = reactive({
-      functionIdentifier: props.functionCall.functionIdentifier || 'rate',
-      functionArgs: props.functionCall.functionArgs
+      functionIdentifier: (props.functionCall && props.functionCall.functionIdentifier) || 'rate',
+      functionArgs: (props.functionCall && props.functionCall.functionArgs) || []
     })
     const state = reactive({
       functionList: [

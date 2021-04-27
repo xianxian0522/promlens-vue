@@ -23,14 +23,21 @@ import {PlusOutlined} from "@ant-design/icons-vue";
 
 export default {
   name: "StringLiteral",
-  props: ['stringLiteral', 'showLeft', 'isLeft'],
+  props: ['stringLiteral', 'showLeft', 'isLeft', 'index'],
+  emits: ['updateValue'],
   components: {
     PlusOutlined,
     TreeCommon
   },
-  setup() {
+  setup(props, content) {
     const addExpr = () => {
-
+      const data = {
+        unknownExpr: {
+          numberLiteral: props.stringLiteral,
+          showLeft: props.showLeft,
+        }
+      }
+      content.emit('updateValue', [data, 'unknownExpr', props.index])
     }
 
     return {

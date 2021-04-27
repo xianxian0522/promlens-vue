@@ -16,7 +16,7 @@
     <NumberLiteral :numberLiteral="expr.numberLiteral" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
   <div v-else-if="expr.stringLiteral">
-    <StringLiteral :stringLiteral="expr.stringLiteral" />
+    <StringLiteral :stringLiteral="expr.stringLiteral" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
   <div v-else-if="expr.aggregateExpr">
     {{ expr.aggregateExpr }}

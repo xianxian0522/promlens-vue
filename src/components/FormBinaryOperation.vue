@@ -114,7 +114,7 @@ export default {
   setup(props: any, content) {
     // console.log(props.binaryExpr.operator, 'binaryExpr')
     const formState = reactive({
-      operator: props.binaryExpr.operator || '/',
+      operator: (props.binaryExpr && props.binaryExpr.operator) || '/',
       switchOpen: false,
       matchOn: 'on',
       ComparisonBehavior: 'filter',

@@ -1,5 +1,5 @@
 <template>
-<div>
+<div >
   <a-form layout="vertical" :model="formState" class="small">
     <a-form-item label="Value type:">
       <a-select v-model:value="formState.valueType">
@@ -47,4 +47,7 @@ export default {
 
 <style scoped lang="less">
 @import "index.less";
+.tab-content .ant-input-number {
+  width: 100%;
+}
 </style>
