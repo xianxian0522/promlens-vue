@@ -46,14 +46,14 @@ export default {
     TreeCommon,
     Expr: defineAsyncComponent(() => import('./Expr.vue'))
   },
-  props: ['isLeft', 'aggregateExpr', 'showLeft', 'index'],
+  props: ['isLeft', 'aggregateExpr', 'showLeft', ],
   emits: ['updateValue'],
   setup(props, content) {
 
     const preview = {
-      aggregationType: props.aggregateExpr.aggregateOp || 'sum',
-      preserve: props.aggregateExpr.aggregateModifier.Without ? 'without' : 'by',
-      groupingLabels: props.aggregateExpr.aggregateModifier.Without || props.aggregateExpr.aggregateModifier.By,
+      aggregationType: props.aggregateExpr?.aggregateOp || 'sum',
+      preserve: props.aggregateExpr?.aggregateModifier?.Without ? 'without' : 'by',
+      groupingLabels: props.aggregateExpr?.aggregateModifier?.Without || props.aggregateExpr?.aggregateModifier?.By,
     }
 
     const addExpr = () => {

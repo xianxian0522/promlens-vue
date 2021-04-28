@@ -44,7 +44,7 @@ import {PlusOutlined,} from '@ant-design/icons-vue'
 
 export default {
   name: "FunctionCall",
-  props: ['isLeft', 'functionCall', 'showLeft', 'index'],
+  props: ['isLeft', 'functionCall', 'showLeft'],
   components: {
     PlusOutlined,
     TreeCommon,

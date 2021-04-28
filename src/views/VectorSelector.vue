@@ -65,11 +65,11 @@ export default {
   setup(props: any, content) {
 
     const preview = {
-      metricName: props.vectorSelector.metricIdentifier,
-      labelMatchers: props.vectorSelector.labelMatchers,
-      select: props.vectorSelector.offsetExpr.offset ? 'range' : 'instance',
-      offset: props.vectorSelector.matrixSelector.duration || '0s',
-      range: props.vectorSelector.offsetExpr.duration,
+      metricName: props.vectorSelector?.metricIdentifier,
+      labelMatchers: props.vectorSelector?.labelMatchers,
+      select: props.vectorSelector?.offsetExpr?.offset ? 'range' : 'instance',
+      offset: props.vectorSelector?.matrixSelector?.duration || '0s',
+      range: props.vectorSelector?.offsetExpr?.duration,
     }
     // if (props.vectorSelector.offsetExpr) {
     //   if (props.vectorSelector.offsetExpr.offset) {

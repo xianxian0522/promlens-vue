@@ -2,14 +2,14 @@
 <span>
   <span class="promql-code">
     <span class="promql-keyword">{{ preview.aggregationType }}</span>
-    <span class="promql-keyword" v-if="preview.preserve === 'by' && preview.groupingLabels.length > 0"> by</span>
+    <span class="promql-keyword" v-if="preview.preserve === 'by' && preview.groupingLabels?.length > 0"> by</span>
     <span class="promql-keyword" v-if="preview.preserve === 'without'"> without</span>
-    <span class="promql-paren" v-if="(preview.preserve !== 'by' || preview.groupingLabels.length > 0)">(</span>
+    <span class="promql-paren" v-if="(preview.preserve !== 'by' || preview.groupingLabels?.length > 0)">(</span>
     <span v-for="(item, index) in preview.groupingLabels" :key="index">
       <span class="promql-code promql-label-name">{{item}}</span>
-      <span v-if="preview.groupingLabels.length > 1 && (preview.groupingLabels.length - 1) !== index">,</span>
+      <span v-if="preview.groupingLabels?.length > 1 && (preview.groupingLabels?.length - 1) !== index">,</span>
     </span>
-    <span class="promql-paren" v-if="(preview.preserve !== 'by' || preview.groupingLabels.length > 0)">)</span>
+    <span class="promql-paren" v-if="(preview.preserve !== 'by' || preview.groupingLabels?.length > 0)">)</span>
 
 <!--    <span class="promql-keyword">{{ preview.aggregateOp }}</span>-->
 <!--    <span v-if="preview.aggregateModifier">-->
