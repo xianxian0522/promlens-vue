@@ -22,6 +22,9 @@
                   <p class="ast-formatted" v-if="formState.queryType === 'AggregateOverLabels'" >
                     <PreviewAggregate :preview="formState.preview" />
                   </p>
+                  <p class="ast-formatted" v-if="formState.queryType === 'Subquery'" >
+                    <PreviewSubQuery :preview="formState.preview" :ellipsis="true" />
+                  </p>
                 </a-form-item>
                 <a-form-item label="Query type:">
                   <a-select
@@ -56,7 +59,7 @@
                 <FormLiteralValue @previewChange="previewChange" :stringLiteral="formChildValue.stringLiteral" :numberLiteral="formChildValue.numberLiteral" />
               </div>
               <div v-if="formState.queryType === 'Subquery'">
-                <FormSubquery />
+                <FormSubquery @previewChange="previewChange" :subqueryExpr="formChildValue.subqueryExpr" />
               </div>
               <div v-if="formState.queryType === 'UnaryExpression'">
                 <FormUnaryExpression />
@@ -99,6 +102,7 @@ export default {
     PreviewFunction: defineAsyncComponent(() => import('./PreviewFunction.vue')),
     PreviewLiteralValue: defineAsyncComponent(() => import('./PreviewLiteralValue.vue')),
     PreviewAggregate: defineAsyncComponent(() => import('./PreviewAggregate.vue')),
+    PreviewSubQuery: defineAsyncComponent(() => import('./PreviewSubQuery.vue')),
   },
   props: {
     // metricNameData: Array,

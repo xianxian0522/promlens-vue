@@ -103,6 +103,7 @@
 import {QuestionCircleOutlined, DeleteOutlined, PlusOutlined, } from '@ant-design/icons-vue'
 import {onMounted, reactive, ref, toRefs, watch, readonly} from "vue";
 import {labelNameData, metricNameData, promRepository} from "@/api/promRepository";
+import {validatorRule} from "@/utils/common";
 
 export interface Label {
   labelName: string;
@@ -139,18 +140,18 @@ export default {
         { labelName: undefined, labelValue: undefined, matchOp: '=', showAdd: true },
       ],
     })
-    const validatorRule = async (rule, value) => {
-      const num = value.slice(0, -1)
-      const str = value.slice(-1)
-      if (str === 's' || str === 'm' || str === 'h' || str === 'd' || str === 'w' || str === 'y') {
-        if (Number(num) || parseInt(num, 10) === 0) {
-          return Promise.resolve();
-        }
-        return Promise.reject('Unable to parse duration string: invalid duration string');
-      } else {
-        return Promise.reject('Unable to parse duration string: invalid duration string');
-      }
-    }
+    // const validatorRule = async (rule, value) => {
+    //   const num = value.slice(0, -1)
+    //   const str = value.slice(-1)
+    //   if (str === 's' || str === 'm' || str === 'h' || str === 'd' || str === 'w' || str === 'y') {
+    //     if (Number(num) || parseInt(num, 10) === 0) {
+    //       return Promise.resolve();
+    //     }
+    //     return Promise.reject('Unable to parse duration string: invalid duration string');
+    //   } else {
+    //     return Promise.reject('Unable to parse duration string: invalid duration string');
+    //   }
+    // }
     const rules = {
       offset: [{
         validator: validatorRule,
