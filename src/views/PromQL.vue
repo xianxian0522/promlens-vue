@@ -43,6 +43,23 @@ export default {
                     }
                   },
                 },
+                {
+                  unaryExpr: {
+                    unaryOp: '-',
+                    expr: {
+                      vectorSelector: {
+                        metricIdentifier: 'net_conntrack_dialer_conn_attempted_total',
+                        labelMatchers: [
+                          {
+                            labelName: 'instance',
+                            matchOp: '=',
+                            labelValue: 'node-exporter:9100',
+                          }
+                        ],
+                      },
+                    }
+                  }
+                }
               ],
             },
           },

@@ -3,7 +3,7 @@
   <a-form layout="vertical" :model="formState" class="small">
     <a-form-item label="Unary operator type:">
       <a-select
-          v-model:value="formState.unaryOperator"
+          v-model:value="formState.unaryOp"
           style="width: 100%"
           ref="select"
       >
@@ -20,10 +20,14 @@ import {reactive} from "vue";
 
 export default {
   name: "FormUnaryExpression",
-  setup() {
+  props: ['unaryExpr'],
+  emits: ['previewChange'],
+  setup(props, content) {
     const formState = reactive({
-      unaryOperator: '-',
+      unaryOp: props.unaryExpr?.unaryOp || '-',
+      expr: props.unaryExpr?.expr
     })
+    content.emit('previewChange', formState)
 
     return {
       formState,

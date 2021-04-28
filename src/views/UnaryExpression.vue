@@ -9,25 +9,37 @@
       <PlusOutlined @click="addExpr" class="ast-connector-plus ast-connector-plus-up" />
     </template>
     <template v-slot:innerText>
-<!--      <PreviewParentheses :preview="parenExpr" />-->
+      <span >{{ unaryExpr.unaryOp }}</span>
     </template>
   </TreeCommon>
+  <div class="ast-node">
+    <Expr :expr="unaryExpr.expr" @updateValue="updateValue" :showLeft="showLeft" :index="index" />
+  </div>
 </div>
 </template>
 
 <script lang="ts">
 import TreeCommon from "@/components/TreeCommon.vue";
+import PreviewUnary from "@/components/PreviewUnary.vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
+import {defineAsyncComponent} from "vue";
 
 export default {
   name: "UnaryExpression",
   components: {
     TreeCommon,
     PlusOutlined,
+    Expr: defineAsyncComponent(() => import('./Expr.vue')),
   },
   props: ['unaryExpr', 'index', 'isLeft', 'showLeft'],
   emits: ['updateValue'],
   setup(props, content) {
+
+    // const parenExpr = {
+    //   unaryOp: props.unaryExpr?.unaryOp || '-',
+    //   expr: props.unaryExpr?.expr,
+    // }
+
     const addExpr = () => {
       const value = {
         unknownExpr: {
@@ -38,8 +50,22 @@ export default {
       content.emit('updateValue', [value, 'unknownExpr', props.index])
     }
 
+    const updateValue = (value) => {
+      const [v, str, index] = value
+      const data = {
+        unaryExpr: {
+          unaryOp: props.unaryExpr.unaryOp,
+          expr: v
+        },
+        showLeft: props.showLeft
+      }
+      content.emit('updateValue', [data, str, index])
+    }
+
     return {
+      // parenExpr,
       addExpr,
+      updateValue,
     }
   },
 }

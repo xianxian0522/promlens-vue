@@ -84,7 +84,6 @@ export default {
           showLeft: props.showLeft,
         }
       }
-      console.log(props)
       content.emit('updateValue', [value, 'unknownExpr', props.index])
     }
 

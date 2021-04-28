@@ -28,6 +28,9 @@
                   <p class="ast-formatted" v-if="formState.queryType === 'Parentheses'" >
                     <PreviewParentheses :preview="formState.preview"/>
                   </p>
+                  <p class="ast-formatted" v-if="formState.queryType === 'UnaryExpression'" >
+                    <PreviewUnary :preview="formState.preview"/>
+                  </p>
                 </a-form-item>
                 <a-form-item label="Query type:">
                   <a-select
@@ -65,7 +68,7 @@
                 <FormSubquery @previewChange="previewChange" :subqueryExpr="formChildValue.subqueryExpr" />
               </div>
               <div v-if="formState.queryType === 'UnaryExpression'">
-                <FormUnaryExpression />
+                <FormUnaryExpression @previewChange="previewChange" :unaryExpr="formChildValue.unaryExpr" />
               </div>
               <div v-if="formState.queryType === 'Parentheses'">
                 <FormParentheses @previewChange="previewChange" :parenExpr="formChildValue.parenExpr"  />
@@ -111,6 +114,7 @@ export default {
     PreviewAggregate: defineAsyncComponent(() => import('./PreviewAggregate.vue')),
     PreviewSubQuery: defineAsyncComponent(() => import('./PreviewSubQuery.vue')),
     PreviewParentheses: defineAsyncComponent(() => import('./PreviewParentheses.vue')),
+    PreviewUnary: defineAsyncComponent(() => import('./PreviewUnary.vue')),
   },
   props: {
     // metricNameData: Array,
