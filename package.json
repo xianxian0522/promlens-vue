@@ -13,6 +13,8 @@
     "axios": "^0.21.1",
     "babel-plugin-import": "^1.13.3",
     "core-js": "^3.6.5",
+    "lezer": "^0.13.4",
+    "lezer-promql": "^0.18.0",
     "monaco-promql": "^1.7.1",
     "vue": "^3.0.0",
     "vue-class-component": "^8.0.0-0",
@@ -51,9 +53,9 @@
     "rules": {
       "no-unused-vars": "off",
       "generator-star-spacing": "off",
-      "no-tabs":"off",
-      "no-console":"off",
-      "no-irregular-whitespace":"off",
+      "no-tabs": "off",
+      "no-console": "off",
+      "no-irregular-whitespace": "off",
       "no-debugger": "off"
     }
   },

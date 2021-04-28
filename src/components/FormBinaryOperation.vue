@@ -144,7 +144,7 @@ export default {
       includeLabels: [{name: '', isShow: true}] as Item[],
     })
 
-    content.emit('previewChange', {operator: formState.operator})
+    content.emit('previewChange', formState)
 
     const matchState = (state = '', reg: any) => {
       return !!String(state).match(reg) //返回true/false

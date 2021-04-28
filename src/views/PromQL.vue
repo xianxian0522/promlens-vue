@@ -59,6 +59,15 @@ export default {
             numberLiteral: 1024
           },
           operator: '/',
+          binModifiers: {
+            Bool: true,
+            OnOrIgnoring: {
+              On: ['on']
+            },
+            group: {
+              GroupLeft: ['left'],
+            }
+          }
         }
       }
     })
