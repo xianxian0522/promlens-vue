@@ -43,33 +43,31 @@ export default {
                     }
                   },
                 },
-                {
-                  parenExpr: {
-                    aggregateExpr: {
-                      aggregateOp: 'sum',
-                      aggregateModifier: {
-                        By: ['a'],
-                      },
-                      functionArgs: [
-                        {
-                          subqueryExpr: {
-                            range: '5m',
-                            offsetExpr: {
-                              offset: true,
-                              duration: '5h',
-                            },
-                            step: '5s',
-                          }
-                        }
-                      ],
-                    }
-                  }
-                },
               ],
             },
           },
           right: {
-            numberLiteral: 1024
+            parenExpr: {
+              aggregateExpr: {
+                aggregateOp: 'sum',
+                aggregateModifier: {
+                  By: ['a'],
+                },
+                functionArgs: [
+                  {
+                    subqueryExpr: {
+                      range: '5m',
+                      offsetExpr: {
+                        offset: true,
+                        duration: '5h',
+                      },
+                      step: '5s',
+                    }
+                  },
+                  {numberLiteral: 1024}
+                ],
+              }
+            },
           },
           operator: '/',
           binModifiers: {

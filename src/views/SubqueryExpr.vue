@@ -59,7 +59,7 @@ export default {
           showLeft: props.showLeft,
         }
       }
-      // content.emit('updateValue', [value, 'unknownExpr', props.index])
+      content.emit('updateValue', [value, 'unknownExpr', props.index])
     }
 
     return {

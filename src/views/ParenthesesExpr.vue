@@ -46,6 +46,7 @@ export default {
     }
     const updateValue = (value) => {
       const [v, str, index] = value
+      console.log(v, str, index, 'parentheses')
       const data = {
         parenExpr: v,
         showLeft: props.showLeft
