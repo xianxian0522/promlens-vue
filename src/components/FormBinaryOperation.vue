@@ -195,8 +195,8 @@ export default {
         formState.includeLabels.splice(index, 1, item)
         state.includeLabels.splice(index, 1, {name: item, isShow: false})
       })
-      state.ignoreLabels.splice(state.ignoreLabels.length, 0, {name: '', isShow: true})
-      state.includeLabels.splice(state.includeLabels.length, 0, {name: '', isShow: true})
+      state.ignoreLabels.splice(ignoreList.length, 1, {name: '', isShow: true})
+      state.includeLabels.splice(includeList.length, 1, {name: '', isShow: true})
 
       watch(formState, (value => {
         content.emit('previewChange', value)

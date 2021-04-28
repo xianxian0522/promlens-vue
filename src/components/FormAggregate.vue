@@ -112,7 +112,7 @@ export default {
         state.groupingLabels.splice(index, 1, {value: item, isShow: false})
       })
 
-      state.groupingLabels.splice(state.groupingLabels.length, 0, {value: undefined, isShow: true})
+      state.groupingLabels.splice(grouping.length, 1, {value: undefined, isShow: true})
 
       content.emit('previewChange', formState)
 

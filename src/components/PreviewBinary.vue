@@ -28,10 +28,10 @@
         <span class="ast-label-name">{{ item }}</span>
         <span v-if="preview.ignoreLabels.length > 1 && (preview.ignoreLabels.length - 1) !== index">,</span>
       </span>
-      <span class="ast-parens">) </span>
+      <span class="ast-parens">)</span>
     </span>
-    <span class="ast-keyword" v-if="preview.matchType === 'many-to-one'">group_left</span>
-    <span class="ast-keyword" v-if="preview.matchType === 'one-to-many'">group_right</span>
+    <span class="ast-keyword" v-if="preview.matchType === 'many-to-one'"> group_left</span>
+    <span class="ast-keyword" v-if="preview.matchType === 'one-to-many'"> group_right</span>
     <span v-if="preview.matchType === 'many-to-one' || preview.matchType === 'one-to-many'">
       <span class="ast-parens">(</span>
       <span v-for="(item, index) in preview.includeLabels" :key="index">
