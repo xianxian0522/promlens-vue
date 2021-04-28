@@ -56,6 +56,7 @@ export default {
         left: props.binaryExpr.left,
         operator: props.binaryExpr.operator,
         right: props.binaryExpr.right,
+        binModifiers: props.binaryExpr.binModifiers,
       }
       if (v && v.showLeft || v[str] && v[str].showLeft) {
         data.left = v;
@@ -72,6 +73,7 @@ export default {
             left: props.binaryExpr.left,
             operator: props.binaryExpr.operator,
             right: props.binaryExpr.right,
+            binModifiers: props.binaryExpr.binModifiers,
           }
         }
       }
