@@ -54,7 +54,7 @@ import {PlusOutlined} from "@ant-design/icons-vue";
 
 export default {
   name: "VectorSelector",
-  props: ['vectorSelector', 'showLeft', 'isLeft'],
+  props: ['vectorSelector', 'showLeft', 'isLeft', 'index'],
   emits: ['updateValue'],
   components: {
     PlusOutlined,
@@ -85,7 +85,7 @@ export default {
         }
       }
       console.log(props)
-      content.emit('updateValue', [value, 'unknownExpr'])
+      content.emit('updateValue', [value, 'unknownExpr', props.index])
     }
 
     return {

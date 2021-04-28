@@ -51,7 +51,7 @@ export default {
 
     const updateValue = (value) => {
       console.log(value, 'binary', props)
-      const [v, str] = value
+      const [v, str, index] = value
       let data = {
         left: props.binaryExpr.left,
         operator: props.binaryExpr.operator,
@@ -62,7 +62,7 @@ export default {
       } else {
         data.right = v;
       }
-      content.emit('updateValue', [data, 'binaryExpr', props.index])
+      content.emit('updateValue', [data, 'binaryExpr', index])
     }
 
     const addExpr = () => {
@@ -75,7 +75,7 @@ export default {
           }
         }
       }
-      content.emit('updateValue', [value, 'unknownExpr'])
+      content.emit('updateValue', [value, 'unknownExpr', props.index])
     }
 
     return {

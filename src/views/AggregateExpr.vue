@@ -46,7 +46,7 @@ export default {
     TreeCommon,
     Expr: defineAsyncComponent(() => import('./Expr.vue'))
   },
-  props: ['isLeft', 'aggregateExpr', 'showLeft'],
+  props: ['isLeft', 'aggregateExpr', 'showLeft', 'index'],
   emits: ['updateValue'],
   setup(props, content) {
 
@@ -63,7 +63,7 @@ export default {
           showLeft: props.showLeft,
         }
       }
-      content.emit('updateValue', [value, 'unknownExpr'])
+      content.emit('updateValue', [value, 'unknownExpr', props.index])
     }
 
     const updateValue = (value) => {

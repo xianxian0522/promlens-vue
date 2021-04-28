@@ -4,7 +4,7 @@
     <span class="promql-paren">(</span>
     <span>
       <span v-if="preview">
-
+        <!--    判断是Expr里面的哪一个就展示哪一个的preview    -->
       </span>
       <span v-else class="ast-ellipsis">...</span>
     </span>

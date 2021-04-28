@@ -44,7 +44,7 @@ import {PlusOutlined,} from '@ant-design/icons-vue'
 
 export default {
   name: "FunctionCall",
-  props: ['isLeft', 'functionCall', 'showLeft'],
+  props: ['isLeft', 'functionCall', 'showLeft', 'index'],
   components: {
     PlusOutlined,
     TreeCommon,
@@ -62,7 +62,7 @@ export default {
         }
       }
       // console.log(value, 'functionCall unknown');
-      content.emit('updateValue', [value, 'unknownExpr'])
+      content.emit('updateValue', [value, 'unknownExpr', props.index])
     }
 
     const updateValue = (value) => {

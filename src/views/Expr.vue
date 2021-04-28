@@ -31,7 +31,7 @@
     <SubqueryExpr :subqueryExpr="expr.subqueryExpr" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
   <div v-else-if="expr.unaryExpr">
-    {{ expr.unaryExpr }}
+    <UnaryExpression :unaryExpr="expr.unaryExpr" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
   <div v-else-if="expr.stepInvariantExpr">
     {{ expr.stepInvariantExpr }}
@@ -53,6 +53,7 @@ import SubqueryExpr from "@/views/SubqueryExpr.vue";
 import UnknownExpr from "@/views/UnknownExpr.vue";
 import AggregateExpr from "@/views/AggregateExpr.vue";
 import ParenthesesExpr from "@/views/ParenthesesExpr.vue";
+import UnaryExpression from "@/views/UnaryExpression.vue";
 import {provide, reactive, ref, toRefs} from "vue";
 
 export default {
@@ -78,6 +79,7 @@ export default {
     UnknownExpr,
     AggregateExpr,
     ParenthesesExpr,
+    UnaryExpression,
   },
   emits: ['updateValue'],
   setup(props: any, content) {
@@ -89,8 +91,8 @@ export default {
 
     const updateValue = (value) => {
       console.log(value, 'expr xxx')
-      const [v, str,] = value
-      content.emit('updateValue', [v, str, props.index])
+      const [v, str, index] = value
+      content.emit('updateValue', [v, str,index])
     }
 
     return {

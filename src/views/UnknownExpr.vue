@@ -28,13 +28,13 @@ export default {
   },
   setup(props, content) {
     const updateValue = (value) => {
-      const [v, str] = value
+      const [v, str, index] = value
       const data = {
         [str]: v,
         showLeft: props.showLeft
       }
       console.log(data, 'unk')
-      content.emit('updateValue', [data, 'unknownExpr', props.index])
+      content.emit('updateValue', [data, str, index])
     }
 
     return {

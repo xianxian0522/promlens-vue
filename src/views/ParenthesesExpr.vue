@@ -42,10 +42,15 @@ export default {
           showLeft: props.showLeft,
         }
       }
-      content.emit('updateValue', [value, 'unknownExpr'])
+      content.emit('updateValue', [value, 'unknownExpr', props.index])
     }
     const updateValue = (value) => {
-      console.log(value, 'parentheses')
+      const [v, str, index] = value
+      const data = {
+        parenExpr: v,
+        showLeft: props.showLeft
+      }
+      content.emit('updateValue', [data, str, index])
     }
 
     return {
