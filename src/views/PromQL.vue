@@ -44,23 +44,25 @@ export default {
                   },
                 },
                 {
-                  aggregateExpr: {
-                    aggregateOp: 'sum',
-                    aggregateModifier: {
-                      By: ['a'],
-                    },
-                    functionArgs: [
-                      {
-                        subqueryExpr: {
-                          range: '5m',
-                          offsetExpr: {
-                            offset: true,
-                            duration: '5h',
-                          },
-                          step: '5s',
+                  parenExpr: {
+                    aggregateExpr: {
+                      aggregateOp: 'sum',
+                      aggregateModifier: {
+                        By: ['a'],
+                      },
+                      functionArgs: [
+                        {
+                          subqueryExpr: {
+                            range: '5m',
+                            offsetExpr: {
+                              offset: true,
+                              duration: '5h',
+                            },
+                            step: '5s',
+                          }
                         }
-                      }
-                    ],
+                      ],
+                    }
                   }
                 },
               ],

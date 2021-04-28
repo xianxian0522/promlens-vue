@@ -25,7 +25,7 @@
 <!--    {{ expr.offsetExpr }}-->
 <!--  </div>-->
   <div v-else-if="expr.parenExpr">
-    {{ expr.parenExpr }}
+    <ParenthesesExpr :parenExpr=expr.parenExpr @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
   <div v-else-if="expr.subqueryExpr">
     <SubqueryExpr :subqueryExpr="expr.subqueryExpr" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
@@ -52,6 +52,7 @@ import StringLiteral from "@/views/StringLiteral.vue";
 import SubqueryExpr from "@/views/SubqueryExpr.vue";
 import UnknownExpr from "@/views/UnknownExpr.vue";
 import AggregateExpr from "@/views/AggregateExpr.vue";
+import ParenthesesExpr from "@/views/ParenthesesExpr.vue";
 import {provide, reactive, ref, toRefs} from "vue";
 
 export default {
@@ -76,6 +77,7 @@ export default {
     SubqueryExpr,
     UnknownExpr,
     AggregateExpr,
+    ParenthesesExpr,
   },
   emits: ['updateValue'],
   setup(props: any, content) {

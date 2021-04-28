@@ -33,9 +33,16 @@ export default {
     Expr: defineAsyncComponent(() => import('./Expr.vue')),
   },
   props: ['isLeft', 'parenExpr', 'index', 'showLeft'],
+  emits: ['updateValue'],
   setup(props, content) {
     const addExpr = () => {
-
+      const value = {
+        unknownExpr: {
+          parenExpr: props.parenExpr,
+          showLeft: props.showLeft,
+        }
+      }
+      content.emit('updateValue', [value, 'unknownExpr'])
     }
     const updateValue = (value) => {
       console.log(value, 'parentheses')
