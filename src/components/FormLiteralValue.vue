@@ -30,7 +30,7 @@ export default {
       numValue: props.numberLiteral || 0,
       stringValue: props.stringLiteral || '',
     })
-    if (props.stringLiteral || props.stringLiteral === '') {
+    if (props.numberLiteral || props.stringLiteral === '') {
       formState.valueType = 'numberLiteral'
     }
 

@@ -25,6 +25,9 @@
                   <p class="ast-formatted" v-if="formState.queryType === 'Subquery'" >
                     <PreviewSubQuery :preview="formState.preview" :ellipsis="true" />
                   </p>
+                  <p class="ast-formatted" v-if="formState.queryType === 'Parentheses'" >
+                    <PreviewParentheses :preview="formState.preview"/>
+                  </p>
                 </a-form-item>
                 <a-form-item label="Query type:">
                   <a-select
@@ -64,6 +67,9 @@
               <div v-if="formState.queryType === 'UnaryExpression'">
                 <FormUnaryExpression />
               </div>
+              <div v-if="formState.queryType === 'Parentheses'">
+                <FormParentheses @previewChange="previewChange" :parenExpr="formChildValue.parenExpr"  />
+              </div>
 
               <a-button class="btn btn-secondary btn-sm" @click="onSubmit">
                 <CheckOutlined />Apply changes
@@ -97,12 +103,14 @@ export default {
     FormLiteralValue: defineAsyncComponent(() => import('./FormLiteralValue.vue')),
     FormSubquery: defineAsyncComponent(() => import('./FormSubquery.vue')),
     FormUnaryExpression: defineAsyncComponent(() => import('./FormUnaryExpression.vue')),
+    FormParentheses: defineAsyncComponent(() => import('./FormParentheses.vue')),
     PreviewBinary: defineAsyncComponent(() => import('./PreviewBinary.vue')),
     PreviewSelectData: defineAsyncComponent(() => import('./PreviewSelectData.vue')),
     PreviewFunction: defineAsyncComponent(() => import('./PreviewFunction.vue')),
     PreviewLiteralValue: defineAsyncComponent(() => import('./PreviewLiteralValue.vue')),
     PreviewAggregate: defineAsyncComponent(() => import('./PreviewAggregate.vue')),
     PreviewSubQuery: defineAsyncComponent(() => import('./PreviewSubQuery.vue')),
+    PreviewParentheses: defineAsyncComponent(() => import('./PreviewParentheses.vue')),
   },
   props: {
     // metricNameData: Array,
