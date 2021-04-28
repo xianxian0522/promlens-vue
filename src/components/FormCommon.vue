@@ -153,11 +153,7 @@ export default {
     onMounted(() => {
 
       watch(() => formState.queryType, () => {
-        // if (formState.queryType === 'Subquery') {
-        //   formState.range = '1h'
-        // } else if (formState.queryType === 'SelectData') {
-        //   formState.range = '5m'
-        // }
+
       })
     })
 

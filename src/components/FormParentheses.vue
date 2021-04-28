@@ -4,13 +4,16 @@
 </template>
 
 <script lang="ts">
+import {reactive} from "vue";
+
 export default {
   name: "FormParentheses",
   components: {},
   props: ['parenExpr'],
   emits: ['previewChange'],
   setup(props, content) {
-    content.emit('previewChange')
+    const formState = reactive({})
+    content.emit('previewChange', formState)
   }
 }
 </script>

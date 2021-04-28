@@ -13,8 +13,8 @@
 <script lang="ts">
 export default {
   name: "PreviewUnary",
-  props: ['preview', 'ellipsis'],
-  setup() {
+  props: ['preview'],
+  setup(props) {
 
   }
 }
