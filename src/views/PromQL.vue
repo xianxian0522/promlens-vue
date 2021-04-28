@@ -1,18 +1,32 @@
 <template>
 <div>
-  <Expr :expr="ql.expr" @updateValue="updateValue" />
+  <Expr v-if="ql.expr" :expr="ql.expr" @updateValue="updateValue" />
+  <div v-else>
+    <TreeCommon >
+      <template v-slot:innerText>
+        <span>start query:ccc</span>
+      </template>
+      <template v-slot:addExpr>
+        <PlusOutlined @click="addExpr" class="ast-connector-plus ast-connector-plus-up" />
+      </template>
+    </TreeCommon>
+  </div>
 </div>
 </template>
 
 <script lang="ts">
+import TreeCommon from "@/components/TreeCommon.vue";
 import {PromQL} from "@/utils/tree";
 import Expr from "@/views/Expr.vue";
 import {reactive, ref} from "vue";
+import {PlusOutlined} from "@ant-design/icons-vue";
 
 export default {
   name: "PromQL",
   components: {
     Expr,
+    TreeCommon,
+    PlusOutlined,
   },
   setup() {
     const ql: PromQL = reactive({
@@ -99,6 +113,7 @@ export default {
         }
       }
     })
+    // ql.expr = {}
     console.log(ql);
 
     const updateValue = (value) => {

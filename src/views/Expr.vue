@@ -83,7 +83,7 @@ export default {
   },
   emits: ['updateValue'],
   setup(props: any, content) {
-    // console.log(props, 'expr')
+    console.log(props, 'expr')
     const addExpr = () => {
       return props.expr
     }

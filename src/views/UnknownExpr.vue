@@ -12,7 +12,7 @@
       <div v-else class="ast-connector ast-connector-up" style="top: -4px"></div>
     </template>
   </TreeCommon>
-  <div class="ast-node">
+  <div class="ast-node" v-if="unknownExpr">
     <Expr :expr="unknownExpr" @updateValue="updateValue" :showLeft="showLeft" :index="index" />
   </div>
 </span>
