@@ -49,7 +49,18 @@ export default {
                     aggregateModifier: {
                       By: ['a'],
                     },
-                    functionArgs: [],
+                    functionArgs: [
+                      {
+                        subqueryExpr: {
+                          range: '5m',
+                          offsetExpr: {
+                            offset: true,
+                            duration: '5h',
+                          },
+                          step: '5s',
+                        }
+                      }
+                    ],
                   }
                 },
               ],

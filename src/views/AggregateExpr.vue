@@ -75,7 +75,7 @@ export default {
           aggregateModifier: {
             [k]: props.aggregateExpr.aggregateModifier.Without || props.aggregateExpr.aggregateModifier.By
           },
-          functionArgs: props.aggregateExpr.aggregateModifier.Without || props.aggregateExpr.aggregateModifier.By,
+          functionArgs: props.aggregateExpr.functionArgs,
         },
         showLeft: props.showLeft,
       }

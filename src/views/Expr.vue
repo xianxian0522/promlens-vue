@@ -28,7 +28,7 @@
     {{ expr.parenExpr }}
   </div>
   <div v-else-if="expr.subqueryExpr">
-    <SubqueryExpr :subqueryExpr="expr.subqueryExpr" />
+    <SubqueryExpr :subqueryExpr="expr.subqueryExpr" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
   <div v-else-if="expr.unaryExpr">
     {{ expr.unaryExpr }}

@@ -71,9 +71,12 @@ export interface OffsetExpr {
     duration: string;
 }
 export interface SubqueryExpr {
-    expr: Expr;
-    duration1: string;
-    duration2?: string;
+    // expr: Expr;
+    // duration1: string;
+    // duration2?: string;
+    range: string;
+    offsetExpr?: OffsetExpr;
+    step?: string;
 }
 export interface UnaryExpr {
     unaryOp: string;
