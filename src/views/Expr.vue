@@ -96,8 +96,12 @@ export default {
         newValue = {
           unknownExpr: v
         }
-      } else {
+      } else if (Object.prototype.hasOwnProperty.call(v, str)) {
         newValue = v
+      } else {
+        newValue = {
+          [str]: v
+        }
       }
 
       console.log(v, str, index, newValue, 'chu wen ti ')
