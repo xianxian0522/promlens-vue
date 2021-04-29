@@ -41,13 +41,17 @@ export default {
     // }
 
     const addExpr = () => {
+      // const value = {
+      //   unknownExpr: {
+      //     unaryExpr: props.unaryExpr,
+      //     showLeft: props.showLeft,
+      //   }
+      // }
       const value = {
-        unknownExpr: {
-          unaryExpr: props.unaryExpr,
-          showLeft: props.showLeft,
-        }
+        unaryExpr: props.unaryExpr,
+        showLeft: props.showLeft,
       }
-      content.emit('updateValue', [value, 'unknownExpr', props.index])
+      content.emit('updateValue', [value, 'unknown', props.index])
     }
 
     const updateValue = (value) => {
@@ -59,7 +63,8 @@ export default {
         },
         showLeft: props.showLeft
       }
-      content.emit('updateValue', [data, str, index])
+      console.log('update unary', v, str, data)
+      content.emit('updateValue', [data, 'unaryExpr', index])
     }
 
     return {

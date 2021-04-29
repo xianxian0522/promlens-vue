@@ -53,13 +53,17 @@ export default {
 
     const addExpr = () => {
       console.log(props, 'props')
+      // const value = {
+      //   unknownExpr: {
+      //     subqueryExpr: props.subqueryExpr,
+      //     showLeft: props.showLeft,
+      //   }
+      // }
       const value = {
-        unknownExpr: {
-          subqueryExpr: props.subqueryExpr,
-          showLeft: props.showLeft,
-        }
+        subqueryExpr: props.subqueryExpr,
+        showLeft: props.showLeft,
       }
-      content.emit('updateValue', [value, 'unknownExpr', props.index])
+      content.emit('updateValue', [value, 'unknown', props.index])
     }
 
     return {

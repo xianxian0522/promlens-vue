@@ -55,18 +55,21 @@ export default {
     // console.log(props);
 
     const addExpr = () => {
+      // const value = {
+      //   unknownExpr: {
+      //     functionCall: props.functionCall,
+      //     showLeft: props.showLeft,
+      //   }
+      // }
       const value = {
-        unknownExpr: {
-          functionCall: props.functionCall,
-          showLeft: props.showLeft,
-        }
+        functionCall: props.functionCall,
+        showLeft: props.showLeft,
       }
       // console.log(value, 'functionCall unknown');
-      content.emit('updateValue', [value, 'unknownExpr', props.index])
+      content.emit('updateValue', [value, 'unknown', props.index])
     }
 
     const updateValue = (value) => {
-      console.log('function updata', value)
       const [v, str, index] = value
       const data = {
         functionCall: {
@@ -76,8 +79,8 @@ export default {
         showLeft: props.showLeft,
       }
       data.functionCall.functionArgs[index] = v;
-      console.log(data, 'cccc')
-      content.emit('updateValue', [data, str, index])
+      console.log(v, str, data, 'function updata')
+      content.emit('updateValue', [data, 'functionCall', index])
     }
 
     onMounted(() => {

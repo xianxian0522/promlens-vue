@@ -74,9 +74,9 @@
                 <FormParentheses @previewChange="previewChange" :parenExpr="formChildValue.parenExpr"  />
               </div>
 
-              <a-button class="btn btn-secondary btn-sm" @click="onSubmit">
-                <CheckOutlined />Apply changes
-              </a-button>
+<!--              <a-button class="btn btn-secondary btn-sm" @click="onSubmit">-->
+<!--                <CheckOutlined />Apply changes-->
+<!--              </a-button>-->
             </div>
           </div>
         </a-tab-pane>
@@ -98,7 +98,7 @@ import {ref, toRaw, toRefs, onMounted, reactive, watch, inject, defineAsyncCompo
 export default {
   name: "FormCommon",
   components: {
-    CheckOutlined,
+    // CheckOutlined,
     FormSelectData: defineAsyncComponent(() => import('./FormSelectData.vue')),
     FormAggregate: defineAsyncComponent(() => import('./FormAggregate.vue')),
     FormBinaryOperation: defineAsyncComponent(() => import('./FormBinaryOperation.vue')),
@@ -123,10 +123,11 @@ export default {
   setup(props: any) {
     // console.log(props, 'props', inject('addExpr'))
     const formChildValue: any = inject('addExpr')
+    const updateExprValue: any = inject('updateExprValue')
     const activeKey = ref('1')
     const formRef = ref();
     const formState = reactive({
-      preview: 'n',
+      preview: {} as any,
       queryType: 'SelectData',
     });
 
@@ -139,7 +140,23 @@ export default {
       formRef.value
           .validate()
           .then(() => {
-            console.log('values', formState, toRaw(formState));
+            console.log('values', formState, toRaw(formState), formChildValue);
+            let value
+            if (formState.queryType === 'SelectData') {
+              value = {
+                metricIdentifier: formState.preview?.metricName,
+                labelMatchers: formState.preview?.labelMatchers,
+                matrixSelector: {
+                  expr: {},
+                  duration: formState.preview?.offset,
+                },
+                offsetExpr: {
+                  offset: formState.preview?.select,
+                  duration: formState.preview?.range,
+                }
+              }
+            }
+            updateExprValue([value, 'vectorSelector'])
           })
           .catch((error: any) => {
             console.log('error', error);

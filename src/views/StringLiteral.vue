@@ -31,13 +31,17 @@ export default {
   },
   setup(props, content) {
     const addExpr = () => {
+      // const data = {
+      //   unknownExpr: {
+      //     numberLiteral: props.stringLiteral,
+      //     showLeft: props.showLeft,
+      //   }
+      // }
       const data = {
-        unknownExpr: {
-          numberLiteral: props.stringLiteral,
-          showLeft: props.showLeft,
-        }
+        numberLiteral: props.stringLiteral,
+        showLeft: props.showLeft,
       }
-      content.emit('updateValue', [data, 'unknownExpr', props.index])
+      content.emit('updateValue', [data, 'unknown', props.index])
     }
 
     return {

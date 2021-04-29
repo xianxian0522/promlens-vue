@@ -57,13 +57,17 @@ export default {
     }
 
     const addExpr = () => {
+      // const value = {
+      //   unknownExpr: {
+      //     aggregateExpr: props.aggregateExpr,
+      //     showLeft: props.showLeft,
+      //   }
+      // }
       const value = {
-        unknownExpr: {
-          aggregateExpr: props.aggregateExpr,
-          showLeft: props.showLeft,
-        }
+        aggregateExpr: props.aggregateExpr,
+        showLeft: props.showLeft,
       }
-      content.emit('updateValue', [value, 'unknownExpr', props.index])
+      content.emit('updateValue', [value, 'unknown', props.index])
     }
 
     const updateValue = (value) => {
@@ -80,7 +84,8 @@ export default {
         showLeft: props.showLeft,
       }
       data.aggregateExpr.functionArgs[index] = v;
-      content.emit('updateValue', [data, str, index])
+      console.log('updata agg', v, str, data)
+      content.emit('updateValue', [data, 'aggregateExpr', index])
     }
 
     return {

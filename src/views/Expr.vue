@@ -83,17 +83,27 @@ export default {
   },
   emits: ['updateValue'],
   setup(props: any, content) {
-    console.log(props, 'expr')
     const addExpr = () => {
       return props.expr
     }
     provide('addExpr', addExpr())
+    provide('updateExprIndex', props.index)
 
     const updateValue = (value) => {
-      console.log(value, 'expr xxx')
       const [v, str, index] = value
-      content.emit('updateValue', [v, str,index])
+      let newValue
+      if (str === 'unknown') {
+        newValue = {
+          unknownExpr: v
+        }
+      } else {
+        newValue = v
+      }
+
+      console.log(v, str, index, newValue, 'chu wen ti ')
+      content.emit('updateValue', [newValue, str,index])
     }
+    provide('updateExprValue', updateValue)
 
     return {
       updateValue,

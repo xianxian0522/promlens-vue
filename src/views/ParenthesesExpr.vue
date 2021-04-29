@@ -36,22 +36,26 @@ export default {
   emits: ['updateValue'],
   setup(props, content) {
     const addExpr = () => {
+      // const value = {
+      //   unknownExpr: {
+      //     parenExpr: props.parenExpr,
+      //     showLeft: props.showLeft,
+      //   }
+      // }
       const value = {
-        unknownExpr: {
-          parenExpr: props.parenExpr,
-          showLeft: props.showLeft,
-        }
+        parenExpr: props.parenExpr,
+        showLeft: props.showLeft,
       }
-      content.emit('updateValue', [value, 'unknownExpr', props.index])
+      content.emit('updateValue', [value, 'unknown', props.index])
     }
     const updateValue = (value) => {
       const [v, str, index] = value
-      console.log(v, str, index, 'parentheses')
       const data = {
         parenExpr: v,
         showLeft: props.showLeft
       }
-      content.emit('updateValue', [data, str, index])
+      console.log(v, str, data, 'parentheses')
+      content.emit('updateValue', [data, 'parenExpr', index])
     }
 
     return {

@@ -96,12 +96,15 @@
       <a-input v-model:value="formState.offset"></a-input>
     </a-form-item>
   </a-form>
+  <a-button class="btn btn-secondary btn-sm" @click="onSubmit">
+    <CheckOutlined />Apply changes
+  </a-button>
 </div>
 </template>
 
 <script lang="ts">
-import {QuestionCircleOutlined, DeleteOutlined, PlusOutlined, } from '@ant-design/icons-vue'
-import {onMounted, reactive, ref, toRefs, watch, readonly} from "vue";
+import {QuestionCircleOutlined, DeleteOutlined, PlusOutlined, CheckOutlined, } from '@ant-design/icons-vue'
+import {onMounted, reactive, ref, toRefs, watch, readonly, toRaw, inject} from "vue";
 import {labelNameData, metricNameData, promRepository} from "@/api/promRepository";
 import {validatorRule} from "@/utils/common";
 
@@ -119,10 +122,13 @@ export default {
   components: {
     QuestionCircleOutlined,
     DeleteOutlined,
-    PlusOutlined
+    PlusOutlined,
+    CheckOutlined,
   },
   setup(props: any, content) {
     console.log(props, 'props select data')
+    const updateExprValue: any = inject('updateExprValue')
+    const updateExprIndex: number | undefined = inject('updateExprIndex')
     const formRef = ref()
     const formState = reactive({
       metricName: (props.vectorSelector?.metricIdentifier) || undefined,
@@ -191,6 +197,38 @@ export default {
       formState.labelMatchers.splice(index, 1)
       state.labelMatchers.splice(index, 1)
     }
+
+    const onSubmit = () => {
+      formRef.value
+          .validate()
+          .then(() => {
+            console.log('values', formState, toRaw(formState));
+            // 去掉vectorSelector
+            const value: any = {
+              metricIdentifier: formState.metricName,
+              labelMatchers: formState.labelMatchers,
+              matrixSelector: {
+                expr: {},
+                duration: formState.offset,
+              },
+              // offsetExpr: {
+              //   offset: formState.select,
+              //   duration: formState.range,
+              // }
+            }
+            if (formState.offset === 'range') {
+              value.offsetExpr = {
+                offset: formState.select,
+                duration: formState.range,
+              }
+            }
+            updateExprValue([value, 'vectorSelector', updateExprIndex])
+          })
+          .catch((error: any) => {
+            console.log('error', error);
+          });
+    };
+
     onMounted(() => {
       content.emit('previewChange', formState)
       if (formState.metricName) {
@@ -228,6 +266,7 @@ export default {
       handleSearchValue,
       addLabelMatcher,
       deleteLabelMatcher,
+      onSubmit,
       ...toRefs(state),
     }
   }

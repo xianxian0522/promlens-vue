@@ -78,13 +78,17 @@ export default {
     // }
 
     const addExpr = () => {
+      // const value = {
+      //   unknownExpr: {
+      //     vectorSelector: props.vectorSelector,
+      //     showLeft: props.showLeft,
+      //   }
+      // }
       const value = {
-        unknownExpr: {
-          vectorSelector: props.vectorSelector,
-          showLeft: props.showLeft,
-        }
+        vectorSelector: props.vectorSelector,
+        showLeft: props.showLeft,
       }
-      content.emit('updateValue', [value, 'unknownExpr', props.index])
+      content.emit('updateValue', [value, 'unknown', props.index])
     }
 
     return {

@@ -33,23 +33,27 @@ export default {
   },
   setup(props, content) {
     const addExpr = () => {
+      // const value = {
+      //   unknownExpr: {
+      //     unknownExpr: props.unknownExpr,
+      //     showLeft: props.showLeft,
+      //   }
+      // }
       const value = {
-        unknownExpr: {
-          unknownExpr: props.unknownExpr,
-          showLeft: props.showLeft,
-        }
+        unknownExpr: props.unknownExpr,
+        showLeft: props.showLeft,
       }
-      content.emit('updateValue', [value, 'unknownExpr', props.index])
+      content.emit('updateValue', [value, 'unknown', props.index])
     }
 
     const updateValue = (value) => {
       const [v, str, index] = value
       const data = {
-        [str]: v,
+        unknownExpr: v,
         showLeft: props.showLeft
       }
-      console.log(data, 'unk')
-      content.emit('updateValue', [data, str, index])
+      console.log(v, str, data, 'unk update')
+      content.emit('updateValue', [data, 'unknownExpr', index])
     }
 
     return {

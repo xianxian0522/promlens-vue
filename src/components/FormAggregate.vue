@@ -39,11 +39,14 @@
       </div>
     </a-form-item>
   </a-form>
+  <a-button class="btn btn-secondary btn-sm" @click="onSubmit">
+    <CheckOutlined />Apply changes
+  </a-button>
 </div>
 </template>
 
 <script lang="ts">
-import {QuestionCircleOutlined, PlusOutlined, CloseOutlined} from '@ant-design/icons-vue'
+import {QuestionCircleOutlined, PlusOutlined, CloseOutlined, CheckOutlined} from '@ant-design/icons-vue'
 import {onMounted, reactive, toRefs, watch} from "vue";
 
 export interface ItemGroup {
@@ -57,11 +60,11 @@ export default {
     QuestionCircleOutlined,
     PlusOutlined,
     CloseOutlined,
+    CheckOutlined,
   },
   props: ['aggregateExpr'],
   emits: ['previewChange'],
   setup(props, content) {
-    console.log(props, 'agg')
     const formState = reactive({
       aggregationType: props.aggregateExpr?.aggregateOp || 'sum',
       preserve: 'by',
@@ -99,6 +102,10 @@ export default {
       }
     }
 
+    const onSubmit = () => {
+      console.log(formState, 'form aggre')
+    }
+
     onMounted(() => {
       let grouping = []
       if (props.aggregateExpr?.aggregateModifier?.Without) {
@@ -123,6 +130,7 @@ export default {
       ...toRefs(state),
       deleteGroupingLabels,
       addGroupingLabels,
+      onSubmit,
     }
   }
 }
