@@ -123,6 +123,7 @@ export default {
   setup(props: any) {
     // console.log(props, 'props', inject('addExpr'))
     const formChildValue: any = inject('addExpr')
+    const updateExprIndex: number | undefined = inject('updateExprIndex')
     const updateExprValue: any = inject('updateExprValue')
     const activeKey = ref('1')
     const formRef = ref();
@@ -144,19 +145,23 @@ export default {
             let value
             if (formState.queryType === 'SelectData') {
               value = {
-                metricIdentifier: formState.preview?.metricName,
-                labelMatchers: formState.preview?.labelMatchers,
-                matrixSelector: {
-                  expr: {},
-                  duration: formState.preview?.offset,
-                },
-                offsetExpr: {
+                vectorSelector: {
+                  metricIdentifier: formState.preview?.metricName,
+                  labelMatchers: formState.preview?.labelMatchers,
+                  matrixSelector: {
+                    expr: {},
+                    duration: formState.preview?.offset,
+                  },
+                }
+              }
+              if (formState.preview?.select === 'range') {
+                value.vectorSelector.offsetExpr = {
                   offset: formState.preview?.select,
                   duration: formState.preview?.range,
                 }
               }
             }
-            updateExprValue([value, 'vectorSelector'])
+            updateExprValue([value, 'vectorSelector', updateExprIndex])
           })
           .catch((error: any) => {
             console.log('error', error);

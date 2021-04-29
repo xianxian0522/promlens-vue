@@ -64,6 +64,8 @@ export default {
   },
   setup(props: any, content) {
 
+    console.log(props, '===========')
+
     const preview = {
       metricName: props.vectorSelector?.metricIdentifier,
       labelMatchers: props.vectorSelector?.labelMatchers,
