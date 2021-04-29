@@ -203,21 +203,18 @@ export default {
           .validate()
           .then(() => {
             console.log('values', formState, toRaw(formState));
-            // 去掉vectorSelector
             const value: any = {
-              metricIdentifier: formState.metricName,
-              labelMatchers: formState.labelMatchers,
-              matrixSelector: {
-                expr: {},
-                duration: formState.offset,
-              },
-              // offsetExpr: {
-              //   offset: formState.select,
-              //   duration: formState.range,
-              // }
+              vectorSelector: {
+                metricIdentifier: formState.metricName,
+                labelMatchers: formState.labelMatchers,
+                matrixSelector: {
+                  expr: {},
+                  duration: formState.offset,
+                },
+              }
             }
-            if (formState.offset === 'range') {
-              value.offsetExpr = {
+            if (formState.select === 'range') {
+              value.vectorSelector.offsetExpr = {
                 offset: formState.select,
                 duration: formState.range,
               }

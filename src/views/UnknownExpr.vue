@@ -48,9 +48,17 @@ export default {
 
     const updateValue = (value) => {
       const [v, str, index] = value
-      const data = {
-        unknownExpr: v,
-        showLeft: props.showLeft
+      let data
+      if (str === 'unknown') {
+        data = {
+          unknownExpr: v.unknownExpr,
+          showLeft: props.showLeft
+        }
+      } else {
+        data = {
+          unknownExpr: v,
+          showLeft: props.showLeft
+        }
       }
       console.log(v, str, data, 'unk update')
       content.emit('updateValue', [data, 'unknownExpr', index])
