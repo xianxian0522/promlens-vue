@@ -14,22 +14,29 @@
       <a-input v-model:value="formState.step"></a-input>
     </a-form-item>
   </a-form>
+  <a-button class="btn btn-secondary btn-sm" @click="onSubmit">
+    <CheckOutlined />Apply changes
+  </a-button>
 </div>
 </template>
 
 <script lang="ts">
-import {QuestionCircleOutlined} from '@ant-design/icons-vue'
-import {reactive, ref, watch} from "vue";
+import {CheckOutlined, QuestionCircleOutlined} from '@ant-design/icons-vue'
+import {inject, reactive, ref, watch} from "vue";
 import {validatorRule} from "@/utils/common";
 
 export default {
   name: "FormSubquery",
   components: {
-    QuestionCircleOutlined
+    QuestionCircleOutlined,
+    CheckOutlined,
   },
   props: ['subqueryExpr'],
   emits: ['previewChange'],
   setup(props, content) {
+    const updateExprValue: any = inject('updateExprValue')
+    const updateExprIndex: number | undefined = inject('updateExprIndex')
+    const updateLeft = inject('updateLeft')
     const formState = reactive({
       offset: props.subqueryExpr?.offsetExpr?.duration || '0s',
       range: props.subqueryExpr?.range || '1h',
@@ -49,12 +56,33 @@ export default {
       step: [{validator: validatorRule, trigger: 'blur'}],
     }
 
-    content.emit('previewChange', formState)
+    const getSubquery = () => {
+      const data: any = {
+        range: formState.range,
+        step: formState.step,
+      }
+      if (formState.offset.slice(0, -1) !== '0') {
+        data.offsetExpr = {
+          offset: true,
+          duration: formState.offset,
+        }
+      }
+      return data
+    }
+
+    const onSubmit = () => {
+      const value = {
+        subqueryExpr: getSubquery(),
+        showLeft: updateLeft,
+      }
+      updateExprValue([value, 'subqueryExpr', updateExprIndex])
+    }
+
+    content.emit('previewChange', props.subqueryExpr)
 
     watch(formState, (value) => {
       formRef.value.validate().then(res => {
-        console.log(res, 'sub query')
-        content.emit('previewChange', value)
+        content.emit('previewChange', getSubquery())
       }).catch(err => console.log(err, 'err'))
     })
 
@@ -62,6 +90,7 @@ export default {
       formRef,
       rules,
       formState,
+      onSubmit,
     }
   }
 }

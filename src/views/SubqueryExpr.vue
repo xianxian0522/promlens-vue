@@ -10,7 +10,7 @@
         <PlusOutlined @click="addExpr" class="ast-connector-plus ast-connector-plus-up" />
       </template>
       <template v-slot:innerText>
-        <PreviewSubQuery :preview="preview" :ellipsis="false"/>
+        <PreviewSubQuery :preview="subqueryExpr" :ellipsis="false"/>
 <!--        [<span class="ast-duration">{{ subqueryExpr.duration }}</span>:<span class="ast-duration">1m</span>]-->
       </template>
       <template v-slot:infoLabel>
