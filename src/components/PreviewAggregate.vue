@@ -22,7 +22,7 @@
         </span>
         <span class="promql-paren">)</span>
       </span>
-      <span v-if="preview.aggregateModifier?.By && preview.aggregateModifier?.By?.length > 0">
+      <span v-if="preview.aggregateModifier?.By?.length > 0">
         <span class="promql-keyword"> by</span>
         <span class="promql-paren">(</span>
         <span v-for="(item, index) in preview.aggregateModifier?.By" :key="index">

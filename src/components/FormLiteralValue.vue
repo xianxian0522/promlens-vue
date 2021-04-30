@@ -14,17 +14,25 @@
       <a-input v-model:value="formState.stringValue"></a-input>
     </a-form-item>
   </a-form>
+  <a-button class="btn btn-secondary btn-sm" @click="onSubmit">
+    <CheckOutlined />Apply changes
+  </a-button>
 </div>
 </template>
 
 <script lang="ts">
-import {onMounted, reactive} from "vue";
+import {inject, onMounted, reactive, watch} from "vue";
+import {CheckOutlined} from "@ant-design/icons-vue";
 
 export default {
   name: "FormLiteralValue",
+  components: {CheckOutlined,},
   props: ['stringLiteral', 'numberLiteral'],
   emits: ['previewChange'],
   setup(props, content) {
+    const updateExprValue: any = inject('updateExprValue')
+    const updateExprIndex: number | undefined = inject('updateExprIndex')
+    const updateLeft = inject('updateLeft')
     const formState = reactive({
       valueType: 'numberLiteral',
       numValue: props.numberLiteral || 0,
@@ -34,12 +42,45 @@ export default {
       formState.valueType = 'numberLiteral'
     }
 
+    const getLiteral = () => {
+      let value
+      if (formState.valueType === 'numberLiteral') {
+        value = formState.numValue
+      } else {
+        value = formState.stringValue
+      }
+      return value
+    }
+
+    const onSubmit = () => {
+      const value: any = {
+        showLeft: updateLeft,
+      }
+      if (formState.valueType === 'numberLiteral') {
+        value.numberLiteral = getLiteral()
+        updateExprValue([value, 'numberLiteral', updateExprIndex])
+      } else {
+        value.stringLiteral = getLiteral()
+        updateExprValue([value, 'stringLiteral', updateExprIndex])
+      }
+    }
+
+
     onMounted(() => {
-      content.emit('previewChange', formState)
+      if (formState.valueType === 'numberLiteral') {
+        content.emit('previewChange', props.numberLiteral)
+      } else {
+        content.emit('previewChange', props.stringLiteral)
+      }
+
+      watch(formState, () => {
+        content.emit('previewChange', getLiteral())
+      })
     })
 
     return {
       formState,
+      onSubmit,
     }
   }
 }

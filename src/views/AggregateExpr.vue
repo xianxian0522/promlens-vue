@@ -72,7 +72,7 @@ export default {
 
     const updateValue = (value) => {
       const [v, str, index] = value
-      const k = props.aggregateExpr.aggregateModifier.Without ? 'without' : 'by'
+      const k = props.aggregateExpr.aggregateModifier.Without ? 'Without' : 'By'
       const data = {
         aggregateExpr: {
           aggregateOp: props.aggregateExpr.aggregateOp,

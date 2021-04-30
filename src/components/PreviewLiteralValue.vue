@@ -1,7 +1,7 @@
 <template>
 <span>
-  <span class="ast-number" v-if="preview.valueType === 'numberLiteral'">{{ preview.numValue }}</span>
-  <span class="ast-string" v-if="preview.valueType === 'stringLiteral'">"{{ preview.stringValue }}"</span>
+  <span class="ast-number" v-if="Number(preview)">{{ preview }}</span>
+  <span class="ast-string" v-else >"{{ preview }}"</span>
 </span>
 </template>
 

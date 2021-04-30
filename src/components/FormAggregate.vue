@@ -153,7 +153,7 @@ export default {
 
       state.groupingLabels.splice(grouping.length, 1, {value: undefined, isShow: true})
 
-      content.emit('previewChange', getAggregate())
+      content.emit('previewChange', props.aggregateExpr)
 
       watch(formState, (value => {
         content.emit('previewChange', getAggregate())
