@@ -47,7 +47,7 @@
           <a-form-item>
             <label class="label-svg">Ignore labels: <QuestionCircleOutlined /></label>
             <div class="input-group my-bottom" v-for="(ignore, index) in ignoreLabels" :key="index">
-              <a-input v-model:value="ignoreLabels[index].name" class="pending-input-item" placeholder="add label name"></a-input>
+              <a-input v-model:value="ignore.name" class="pending-input-item" placeholder="add label name"></a-input>
               <div class="input-group-append">
                 <a-button v-if="ignore.isShow" @click="addIgnoreLabel(ignore, index)" class="btn btn-outline-secondary btn-sm" style="padding: 4px 8px">
                   <PlusOutlined style="font-size: 18px;" />
@@ -75,7 +75,7 @@
           <a-form-item v-if="formState.matchType !== 'one-to-one'">
             <label class="label-svg">Include labels: <QuestionCircleOutlined /></label>
             <div class="input-group my-bottom" v-for="(include, index) in includeLabels" :key="index">
-              <a-input v-model:value="includeLabels[index].name" class="pending-input-item" placeholder="add label name"></a-input>
+              <a-input v-model:value="include.name" class="pending-input-item" placeholder="add label name"></a-input>
               <div class="input-group-append ">
                 <a-button v-if="include.isShow" @click="addIncludeLabel(include, index)" class="btn btn-outline-secondary btn-sm" style="padding: 4px 8px">
                   <PlusOutlined style="font-size: 18px;" />
@@ -90,12 +90,15 @@
       </div>
     </a-form-item>
   </a-form>
+  <a-button class="btn btn-secondary btn-sm" @click="onSubmit">
+    <CheckOutlined />Apply changes
+  </a-button>
 </div>
 </template>
 
 <script lang="ts">
-import {QuestionCircleOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons-vue'
-import {onMounted, reactive, ref, toRefs, watch} from "vue";
+import {QuestionCircleOutlined, PlusOutlined, DeleteOutlined, CheckOutlined, } from '@ant-design/icons-vue'
+import {inject, onMounted, reactive, ref, toRefs, watch} from "vue";
 
 export interface Item {
   name: string;
@@ -110,9 +113,12 @@ export default {
     QuestionCircleOutlined,
     PlusOutlined,
     DeleteOutlined,
+    CheckOutlined,
   },
   setup(props: any, content) {
     // console.log(props.binaryExpr.operator, 'binaryExpr')
+    const updateExprValue: any = inject('updateExprValue')
+    const updateExprIndex: number | undefined = inject('updateExprIndex')
     const formState = reactive({
       operator: props.binaryExpr?.operator || '/',
       switchOpen: !!props.binaryExpr?.binModifiers,
@@ -144,7 +150,7 @@ export default {
       includeLabels: [{name: '', isShow: true}] as Item[],
     })
 
-    content.emit('previewChange', formState)
+    content.emit('previewChange', props.binaryExpr)
 
     const matchState = (state = '', reg: any) => {
       return !!String(state).match(reg) //返回true/false
@@ -170,6 +176,59 @@ export default {
     const deleteIncludeLabel = (index: number) => {
       formState.includeLabels.splice(index, 1)
       state.includeLabels.splice(index, 1)
+    }
+    const getBinary = () => {
+      const data: any = {
+        left: props.binaryExpr.left,
+        operator: formState.operator,
+        right: props.binaryExpr.right,
+      }
+      if (formState.switchOpen) {
+        data.binModifiers = {
+          Bool: formState.ComparisonBehavior === 'bool',
+          OnOrIgnoring: {},
+          group: {}
+        }
+
+        if (formState.matchOn === 'ignoring') {
+          data.binModifiers.OnOrIgnoring.Ignoring = []
+          state.ignoreLabels.forEach((item, index) => {
+            if (item.name) {
+              data.binModifiers.OnOrIgnoring.Ignoring.splice(index, 1, item.name)
+            }
+          })
+        } else {
+          data.binModifiers.OnOrIgnoring.On = []
+          state.ignoreLabels.forEach((item, index) => {
+            if (item.name) {
+              data.binModifiers.OnOrIgnoring.On.splice(index, 1, item.name)
+            }
+          })
+        }
+        if (formState.matchType === 'many-to-one') {
+          data.binModifiers.group.GroupLeft = []
+          state.includeLabels.forEach((item, index) => {
+            if (item.name) {
+              data.binModifiers.group.GroupLeft.splice(index, 1, item.name)
+            }
+          })
+        } else if (formState.matchType === 'one-to-many') {
+          data.binModifiers.group.GroupRight = []
+          state.includeLabels.forEach((item, index) => {
+            if (item.name) {
+              data.binModifiers.group.GroupRight.splice(index, 1, item.name)
+            }
+          })
+        }
+      }
+      return data
+    }
+
+    const onSubmit = () => {
+      const value = {
+        binaryExpr: getBinary(),
+      }
+      updateExprValue([value, 'binaryExpr', updateExprIndex])
     }
 
     onMounted(() => {
@@ -199,7 +258,7 @@ export default {
       state.includeLabels.splice(includeList.length, 1, {name: '', isShow: true})
 
       watch(formState, (value => {
-        content.emit('previewChange', value)
+        content.emit('previewChange', getBinary())
       }))
     })
 
@@ -211,6 +270,7 @@ export default {
       deleteIgnoreLabel,
       addIncludeLabel,
       deleteIncludeLabel,
+      onSubmit,
     }
   }
 }

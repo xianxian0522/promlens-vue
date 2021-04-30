@@ -89,7 +89,7 @@ export default {
     }
 
     return {
-      preview,
+      // preview,
       updateValue,
       addExpr,
     }

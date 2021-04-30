@@ -112,9 +112,19 @@ export default {
         functionArgs: formState.functionArgs
       }
       if (formState.preserve === 'by') {
-        data.aggregateModifier.By = formState.groupingLabels
+        data.aggregateModifier.By = []
+        state.groupingLabels.map((item, index) => {
+          if (item.value) {
+            data.aggregateModifier.By.splice(index, 1, item.value)
+          }
+        })
       } else {
-        data.aggregateModifier.Without = formState.groupingLabels
+        data.aggregateModifier.Without = []
+        state.groupingLabels.map((item, index) => {
+          if (item.value) {
+            data.aggregateModifier.Without.splice(index, 1, item.value)
+          }
+        })
       }
       return data
     }
@@ -122,15 +132,6 @@ export default {
     const onSubmit = () => {
       const value = {
         aggregateExpr: getAggregate(),
-      }
-      if (formState.preserve === 'by') {
-        formState.groupingLabels.map((item, index) => {
-          value.aggregateExpr?.aggregateModifier.By.splice(index, 1, item)
-        })
-      } else {
-        formState.groupingLabels.map((item, index) => {
-          value.aggregateExpr?.aggregateModifier.Without.splice(index, 1, item)
-        })
       }
       updateExprValue([value, 'aggregateExpr', updateExprIndex])
     }

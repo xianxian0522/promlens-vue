@@ -9,7 +9,7 @@
       </div>
     </template>
     <template v-slot:innerText>
-      <PreviewBinary :preview="preview" :leftPreview="binaryExpr.left" :rightPreview="binaryExpr.right" />
+      <PreviewBinary :preview="binaryExpr" :leftPreview="binaryExpr.left" :rightPreview="binaryExpr.right" />
 <!--      <div>{{ binaryExpr.operator }}</div>-->
     </template>
     <template v-slot:nodeRightChild>
