@@ -15,7 +15,6 @@ export default {
   name: "PreviewUnary",
   props: ['preview'],
   setup(props) {
-    console.log(props, ';;;;;;;;;')
   }
 }
 </script>
