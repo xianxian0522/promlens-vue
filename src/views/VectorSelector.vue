@@ -10,7 +10,7 @@
     </template>
     <template v-slot:innerText>
       <span class="promql-code">
-        <PreviewSelectData :preview="preview"/>
+        <PreviewSelectData :preview="vectorSelector"/>
 <!--        <span class="promql-metric-name">{{vectorSelector.metricIdentifier}}</span>-->
 <!--        <span class="promql-metric-name" v-if="vectorSelector.labelMatchers.length > 0">-->
 <!--          {<span v-for="(vector, index) in vectorSelector.labelMatchers" :key="index">-->
@@ -66,17 +66,12 @@ export default {
 
     console.log(props, '===========')
 
-    const preview = {
-      metricName: props.vectorSelector?.metricIdentifier,
-      labelMatchers: props.vectorSelector?.labelMatchers,
-      select: props.vectorSelector?.offsetExpr?.offset ? 'range' : 'instance',
-      offset: props.vectorSelector?.matrixSelector?.duration || '0s',
-      range: props.vectorSelector?.offsetExpr?.duration,
-    }
-    // if (props.vectorSelector.offsetExpr) {
-    //   if (props.vectorSelector.offsetExpr.offset) {
-    //     preview.select = 'range'
-    //   }
+    // const preview = {
+    //   metricName: props.vectorSelector?.metricIdentifier,
+    //   labelMatchers: props.vectorSelector?.labelMatchers,
+    //   select: props.vectorSelector?.offsetExpr?.offset ? 'range' : 'instance',
+    //   offset: props.vectorSelector?.matrixSelector?.duration || '0s',
+    //   range: props.vectorSelector?.offsetExpr?.duration,
     // }
 
     const addExpr = () => {
@@ -94,7 +89,7 @@ export default {
     }
 
     return {
-      preview,
+      // preview,
       addExpr
     }
   }

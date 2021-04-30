@@ -198,27 +198,51 @@ export default {
       state.labelMatchers.splice(index, 1)
     }
 
+    const getVectorSelector = (value) => {
+      const data: any = {
+        metricIdentifier: value.metricName,
+        labelMatchers: value.labelMatchers,
+        matrixSelector: {
+          expr: {},
+          duration: value.offset,
+        },
+      }
+      if (value.select === 'range') {
+        data.offsetExpr = {
+          offset: true,
+          duration: value.range,
+        }
+      }
+      return data
+    }
+
     const onSubmit = () => {
       formRef.value
           .validate()
           .then(() => {
             console.log('values', formState, toRaw(formState));
-            const value: any = {
-              vectorSelector: {
-                metricIdentifier: formState.metricName,
-                labelMatchers: formState.labelMatchers,
-                matrixSelector: {
-                  expr: {},
-                  duration: formState.offset,
-                },
-              }
+            // const value: any = {
+            //   vectorSelector: {
+            //     metricIdentifier: formState.metricName,
+            //     labelMatchers: [],
+            //     matrixSelector: {
+            //       expr: {},
+            //       duration: formState.offset,
+            //     },
+            //   }
+            // }
+            // if (formState.select === 'range') {
+            //   value.vectorSelector.offsetExpr = {
+            //     offset: true,
+            //     duration: formState.range,
+            //   }
+            // }
+            const value = {
+              vectorSelector: getVectorSelector(formState)
             }
-            if (formState.select === 'range') {
-              value.vectorSelector.offsetExpr = {
-                offset: formState.select,
-                duration: formState.range,
-              }
-            }
+            formState.labelMatchers.map((item, index) => {
+              value.vectorSelector.labelMatchers.splice(index, 1, item)
+            })
             updateExprValue([value, 'vectorSelector', updateExprIndex])
           })
           .catch((error: any) => {
@@ -227,7 +251,7 @@ export default {
     };
 
     onMounted(() => {
-      content.emit('previewChange', formState)
+      content.emit('previewChange', props.vectorSelector)
       if (formState.metricName) {
         state.metricNameList.push(formState.metricName)
       }
@@ -248,7 +272,19 @@ export default {
       watch(formState, (value) => {
         formRef.value.validate().then(res => {
           console.log(res, 'res')
-          content.emit('previewChange', value)
+          // const data = {
+          //   metricIdentifier: value.metricName,
+          //   labelMatchers: value.labelMatchers,
+          //   matrixSelector: {
+          //     duration: value.offset
+          //   },
+          //   offsetExpr: {
+          //     offset: value.select === 'range',
+          //     duration: value.range,
+          //   }
+          // }
+          const data = getVectorSelector(value)
+          content.emit('previewChange', data)
         }).catch(err => console.log(err, 'err'))
       })
     })

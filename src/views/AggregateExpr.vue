@@ -9,7 +9,7 @@
       <PlusOutlined @click="addExpr" class="ast-connector-plus ast-connector-plus-up" />
     </template>
     <template v-slot:innerText>
-      <PreviewAggregate :preview="preview" />
+      <PreviewAggregate :preview="aggregateExpr" :isShowExpr="true"/>
     </template>
     <!--    需要判断是否有  -->
     <!--      <template v-slot:infoLabel>-->

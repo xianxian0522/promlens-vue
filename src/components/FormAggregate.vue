@@ -47,7 +47,7 @@
 
 <script lang="ts">
 import {QuestionCircleOutlined, PlusOutlined, CloseOutlined, CheckOutlined} from '@ant-design/icons-vue'
-import {onMounted, reactive, toRefs, watch} from "vue";
+import {inject, onMounted, reactive, toRefs, watch} from "vue";
 
 export interface ItemGroup {
   value: undefined | string;
@@ -65,6 +65,8 @@ export default {
   props: ['aggregateExpr'],
   emits: ['previewChange'],
   setup(props, content) {
+    const updateExprValue: any = inject('updateExprValue')
+    const updateExprIndex: number | undefined = inject('updateExprIndex')
     const formState = reactive({
       aggregationType: props.aggregateExpr?.aggregateOp || 'sum',
       preserve: 'by',
@@ -102,8 +104,35 @@ export default {
       }
     }
 
+    const getAggregate = () => {
+      const data: any = {
+        aggregateOp: formState.aggregationType,
+        aggregateModifier: {
+        },
+        functionArgs: formState.functionArgs
+      }
+      if (formState.preserve === 'by') {
+        data.aggregateModifier.By = formState.groupingLabels
+      } else {
+        data.aggregateModifier.Without = formState.groupingLabels
+      }
+      return data
+    }
+
     const onSubmit = () => {
-      console.log(formState, 'form aggre')
+      const value = {
+        aggregateExpr: getAggregate(),
+      }
+      if (formState.preserve === 'by') {
+        formState.groupingLabels.map((item, index) => {
+          value.aggregateExpr?.aggregateModifier.By.splice(index, 1, item)
+        })
+      } else {
+        formState.groupingLabels.map((item, index) => {
+          value.aggregateExpr?.aggregateModifier.Without.splice(index, 1, item)
+        })
+      }
+      updateExprValue([value, 'aggregateExpr', updateExprIndex])
     }
 
     onMounted(() => {
@@ -121,7 +150,11 @@ export default {
 
       state.groupingLabels.splice(grouping.length, 1, {value: undefined, isShow: true})
 
-      content.emit('previewChange', formState)
+      content.emit('previewChange', getAggregate())
+
+      watch(formState, (value => {
+        content.emit('previewChange', getAggregate())
+      }))
 
     })
 
