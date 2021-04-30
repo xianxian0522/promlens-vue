@@ -11,18 +11,26 @@
       </a-select>
     </a-form-item>
   </a-form>
+  <a-button class="btn btn-secondary btn-sm" @click="onSubmit">
+    <CheckOutlined />Apply changes
+  </a-button>
 </div>
 </template>
 
 <script lang="ts">
-import {onMounted, reactive, toRefs, watch} from "vue";
+import {inject, onMounted, reactive, toRefs, watch} from "vue";
+import {CheckOutlined} from "@ant-design/icons-vue";
 
 export default {
   name: "FormFunction",
+  components: {CheckOutlined,},
   props: ['functionCall'],
   emits: ['previewChange'],
   setup(props: any, content) {
     console.log(props, 'function')
+    const updateExprValue: any = inject('updateExprValue')
+    const updateExprIndex: number | undefined = inject('updateExprIndex')
+    const updateLeft = inject('updateLeft')
     const formState = reactive({
       functionIdentifier: (props.functionCall && props.functionCall.functionIdentifier) || 'rate',
       functionArgs: (props.functionCall && props.functionCall.functionArgs)
@@ -126,17 +134,34 @@ export default {
       ],
     })
 
+    const getFunction = () => {
+      const data: any = {
+        functionIdentifier: formState.functionIdentifier,
+        functionArgs: formState.functionArgs
+      }
+      return data
+    }
+
+    const onSubmit = () => {
+      const value = {
+        functionCall: getFunction(),
+        showLeft: updateLeft,
+      }
+      updateExprValue([value, 'functionCall', updateExprIndex])
+    }
+
     onMounted(() => {
-      content.emit('previewChange', formState)
+      content.emit('previewChange', props.functionCall)
 
       watch(formState, (value) => {
-        content.emit('previewChange', value)
+        content.emit('previewChange', getFunction())
       })
     })
 
     return {
       formState,
       ...toRefs(state),
+      onSubmit,
     }
   }
 }

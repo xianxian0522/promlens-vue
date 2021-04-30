@@ -88,6 +88,7 @@ export default {
     }
     provide('addExpr', addExpr())
     provide('updateExprIndex', props.index)
+    provide('updateLeft', props.showLeft)
 
     const updateValue = (value) => {
       const [v, str, index] = value
