@@ -51,18 +51,19 @@ export default {
 
     const updateValue = (value) => {
       const [v, str, index] = value
-      let data = {
-        left: props.binaryExpr.left,
-        operator: props.binaryExpr.operator,
-        right: props.binaryExpr.right,
-        binModifiers: props.binaryExpr.binModifiers,
-      }
+      // let data = {
+      //   left: props.binaryExpr.left,
+      //   operator: props.binaryExpr.operator,
+      //   right: props.binaryExpr.right,
+      //   binModifiers: props.binaryExpr.binModifiers,
+      // }
+      const data = props.binaryExpr
       if (v && v.showLeft || v[str] && v[str].showLeft || v.unknownExpr && v.unknownExpr.showLeft) {
         data.left = v;
       } else {
         data.right = v;
       }
-      console.log(v, str, data, 'update binary', props)
+      console.log(v, str, data, '+++++++update binary')
       content.emit('updateValue', [data, 'binaryExpr', index])
     }
 
@@ -78,12 +79,13 @@ export default {
       //   }
       // }
       const value = {
-        binaryExpr: {
-          left: props.binaryExpr.left,
-          operator: props.binaryExpr.operator,
-          right: props.binaryExpr.right,
-          binModifiers: props.binaryExpr.binModifiers,
-        }
+        // binaryExpr: {
+        //   left: props.binaryExpr.left,
+        //   operator: props.binaryExpr.operator,
+        //   right: props.binaryExpr.right,
+        //   binModifiers: props.binaryExpr.binModifiers,
+        // }
+        binaryExpr: props.binaryExpr
       }
       content.emit('updateValue', [value, 'unknown', props.index])
     }

@@ -71,11 +71,15 @@ export default {
 
     const updateValue = (value) => {
       const [v, str, index] = value
+      // const data = {
+      //   functionCall: {
+      //     functionIdentifier: props.functionCall.functionIdentifier,
+      //     functionArgs: props.functionCall.functionArgs,
+      //   },
+      //   showLeft: props.showLeft,
+      // }
       const data = {
-        functionCall: {
-          functionIdentifier: props.functionCall.functionIdentifier,
-          functionArgs: props.functionCall.functionArgs,
-        },
+        functionCall: props.functionCall,
         showLeft: props.showLeft,
       }
       data.functionCall.functionArgs[index] = v;
