@@ -34,7 +34,7 @@ export default {
     const updateExprIndex: number | undefined = inject('updateExprIndex')
     const updateLeft = inject('updateLeft')
     const formState = reactive({
-      valueType: 'numberLiteral',
+      valueType: props.stringLiteral ? 'stringLiteral' : 'numberLiteral',
       numValue: props.numberLiteral || 0,
       stringValue: props.stringLiteral || '',
     })

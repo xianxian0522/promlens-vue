@@ -104,15 +104,16 @@ export default {
 
     const updateValue = (value) => {
       const [v, str] = value;
-      if (str === 'unknown') {
-        ql.expr = v
-      } else if (Object.prototype.hasOwnProperty.call(ql.expr, str)) {
-        ql.expr = v;
-      } else {
-        ql.expr = {
-          [str]: v
-        }
-      }
+      // if (str === 'unknown') {
+      //   ql.expr = v
+      // } else if (Object.prototype.hasOwnProperty.call(ql.expr, str)) {
+      //   ql.expr = v;
+      // } else {
+      //   ql.expr = {
+      //     [str]: v
+      //   }
+      // }
+      ql.expr = v
       console.log(v, str, 'update promql', ql.expr)
     }
     return {

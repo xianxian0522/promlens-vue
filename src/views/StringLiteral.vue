@@ -5,9 +5,10 @@
       <PlusOutlined @click="addExpr" class="ast-connector-plus ast-connector-plus-up" />
     </template>
     <template v-slot:innerText>
-       <span class="promql-code">
-          <span class="promql-keyword">{{stringLiteral}}</span>
-       </span>
+      <PreviewLiteralValue :preview="stringLiteral" numOrStr="stringLiteral" />
+<!--       <span class="promql-code">-->
+<!--          <span class="promql-keyword">{{stringLiteral}}</span>-->
+<!--       </span>-->
     </template>
     <template v-slot:connector>
       <div v-if="isLeft" class="ast-connector ast-connector-down" style="bottom: -80px"></div>
@@ -20,6 +21,7 @@
 <script lang="ts">
 import TreeCommon from "@/components/TreeCommon.vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
+import PreviewLiteralValue from "@/components/PreviewLiteralValue.vue";
 
 export default {
   name: "StringLiteral",
@@ -27,7 +29,8 @@ export default {
   emits: ['updateValue'],
   components: {
     PlusOutlined,
-    TreeCommon
+    TreeCommon,
+    PreviewLiteralValue,
   },
   setup(props, content) {
     const addExpr = () => {
