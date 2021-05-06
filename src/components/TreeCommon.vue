@@ -62,7 +62,7 @@ export default {
     const isShowForm = ref(false)
     const childRef = ref()
 
-    const formValue = inject('addExpr')
+    const formValue = inject('exprChange')
     // const addExpr = () => {
     //   console.log('aa add child', formValue, props.showLeft)
     //   const value = {

@@ -83,12 +83,13 @@ export default {
   },
   emits: ['updateValue'],
   setup(props: any, content) {
-    const addExpr = () => {
+    const exprChange = () => {
       return props.expr
     }
-    provide('addExpr', addExpr())
+
     provide('updateExprIndex', props.index)
     provide('updateLeft', props.showLeft)
+    provide('exprChange', exprChange)
 
     const updateValue = (value) => {
       const [v, str, index] = value

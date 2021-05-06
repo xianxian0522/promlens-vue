@@ -50,28 +50,28 @@
                 </a-form-item>
               </a-form>
               <div v-if="formState.queryType === 'SelectData'">
-                <FormSelectData @previewChange="previewChange" :vectorSelector="formChildValue.vectorSelector" />
+                <FormSelectData @previewChange="previewChange" :vectorSelector="exprChange().vectorSelector" />
               </div>
               <div v-if="formState.queryType === 'AggregateOverLabels'">
-                <FormAggregate  @previewChange="previewChange" :aggregateExpr="formChildValue.aggregateExpr" />
+                <FormAggregate  @previewChange="previewChange" :aggregateExpr="exprChange().aggregateExpr" />
               </div>
               <div v-if="formState.queryType === 'BinaryOperation'">
-                <FormBinaryOperation @previewChange="previewChange" :binaryExpr="formChildValue.binaryExpr" />
+                <FormBinaryOperation @previewChange="previewChange" :binaryExpr="exprChange().binaryExpr" />
               </div>
               <div v-if="formState.queryType === 'CallFunction'">
-                <FormFunction @previewChange="previewChange" :functionCall="formChildValue.functionCall" />
+                <FormFunction @previewChange="previewChange" :functionCall="exprChange().functionCall" />
               </div>
               <div v-if="formState.queryType === 'LiteralValue'" >
-                <FormLiteralValue @previewChange="previewChange" :stringLiteral="formChildValue.stringLiteral" :numberLiteral="formChildValue.numberLiteral" />
+                <FormLiteralValue @previewChange="previewChange" :stringLiteral="exprChange().stringLiteral" :numberLiteral="exprChange().numberLiteral" />
               </div>
               <div v-if="formState.queryType === 'Subquery'">
-                <FormSubquery @previewChange="previewChange" :subqueryExpr="formChildValue.subqueryExpr" />
+                <FormSubquery @previewChange="previewChange" :subqueryExpr="exprChange().subqueryExpr" />
               </div>
               <div v-if="formState.queryType === 'UnaryExpression'">
-                <FormUnaryExpression @previewChange="previewChange" :unaryExpr="formChildValue.unaryExpr" />
+                <FormUnaryExpression @previewChange="previewChange" :unaryExpr="exprChange().unaryExpr" />
               </div>
               <div v-if="formState.queryType === 'Parentheses'">
-                <FormParentheses @previewChange="previewChange" :parenExpr="formChildValue.parenExpr"  />
+                <FormParentheses @previewChange="previewChange" :parenExpr="exprChange().parenExpr"  />
               </div>
 
 <!--              <a-button class="btn btn-secondary btn-sm" @click="onSubmit">-->
@@ -122,9 +122,9 @@ export default {
   },
   setup(props: any) {
     // console.log(props, 'props', inject('addExpr'))
-    const formChildValue: any = inject('addExpr')
     const updateExprIndex: number | undefined = inject('updateExprIndex')
     const updateExprValue: any = inject('updateExprValue')
+    const exprChange: any = inject('exprChange')
     const activeKey = ref('1')
     const formRef = ref();
     const formState = reactive({
@@ -132,16 +132,16 @@ export default {
       queryType: 'SelectData',
     });
 
-    formState.queryType = formChildValue.functionCall ? 'CallFunction' : formChildValue.binaryExpr ? 'BinaryOperation'
-        : formChildValue.aggregateExpr ? 'AggregateOverLabels' : formChildValue.subqueryExpr ? 'Subquery'
-            : formChildValue.unaryExpr ? 'UnaryExpression' : formChildValue.parenExpr ? 'Parentheses'
-                : formChildValue.numberLiteral ? 'LiteralValue' : formChildValue.stringLiteral ? 'LiteralValue' : 'SelectData'
+    formState.queryType = exprChange().functionCall ? 'CallFunction' : exprChange().binaryExpr ? 'BinaryOperation'
+        : exprChange().aggregateExpr ? 'AggregateOverLabels' : exprChange().subqueryExpr ? 'Subquery'
+            : exprChange().unaryExpr ? 'UnaryExpression' : exprChange().parenExpr ? 'Parentheses'
+                : exprChange().numberLiteral ? 'LiteralValue' : exprChange().stringLiteral ? 'LiteralValue' : 'SelectData'
 
     const onSubmit = () => {
       formRef.value
           .validate()
           .then(() => {
-            console.log('values', formState, toRaw(formState), formChildValue);
+            console.log('values', formState, toRaw(formState));
             let value
             if (formState.queryType === 'SelectData') {
               value = {
@@ -168,12 +168,11 @@ export default {
           });
     };
     const previewChange = (value) => {
-      console.log(value, 'value');
       formState.preview = value
     }
 
     onMounted(() => {
-
+      // console.log('props form common', formState.preview, exprChange())
       watch(() => formState.queryType, () => {
 
       })
@@ -185,7 +184,7 @@ export default {
       activeKey,
       formRef,
       formState,
-      formChildValue,
+      exprChange,
     }
   }
 }
