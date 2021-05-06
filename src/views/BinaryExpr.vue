@@ -28,7 +28,7 @@ import {PlusOutlined} from "@ant-design/icons-vue";
 
 export default {
   name: "BinaryExpr",
-  props: ['binaryExpr', 'index'],
+  props: ['binaryExpr', 'index', 'outermost'],
   components: {
     PlusOutlined,
     TreeCommon,

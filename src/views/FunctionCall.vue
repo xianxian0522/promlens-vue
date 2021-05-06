@@ -4,8 +4,11 @@
 <!--    <span>{{functionCall.functionIdentifier}}</span>-->
     <TreeCommon >
       <template v-slot:connector>
-        <div v-if="isLeft" class="ast-connector ast-connector-down" style="bottom: -80px"></div>
-        <div v-else class="ast-connector ast-connector-up" style="top: -4px"></div>
+        <div v-if="!outermost">
+          <div v-if="isLeft" class="ast-connector ast-connector-down" style="bottom: -80px"></div>
+          <div v-else class="ast-connector ast-connector-up" style="top: -4px"></div>
+        </div>
+        <div v-else></div>
       </template>
       <template v-slot:addExpr>
         <PlusOutlined @click="addExpr" class="ast-connector-plus ast-connector-plus-up" />
@@ -44,7 +47,7 @@ import {PlusOutlined,} from '@ant-design/icons-vue'
 
 export default {
   name: "FunctionCall",
-  props: ['isLeft', 'functionCall', 'showLeft'],
+  props: ['isLeft', 'functionCall', 'showLeft', 'outermost'],
   components: {
     PlusOutlined,
     TreeCommon,

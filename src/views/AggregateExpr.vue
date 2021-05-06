@@ -2,8 +2,11 @@
 <div>
   <TreeCommon >
     <template v-slot:connector>
-      <div v-if="isLeft" class="ast-connector ast-connector-down" style="bottom: -80px"></div>
-      <div v-else class="ast-connector ast-connector-up" style="top: -4px"></div>
+      <div v-if="!outermost">
+        <div v-if="isLeft" class="ast-connector ast-connector-down" style="bottom: -80px"></div>
+        <div v-else class="ast-connector ast-connector-up" style="top: -4px"></div>
+      </div>
+      <div v-else></div>
     </template>
     <template v-slot:addExpr>
       <PlusOutlined @click="addExpr" class="ast-connector-plus ast-connector-plus-up" />
@@ -46,7 +49,7 @@ export default {
     TreeCommon,
     Expr: defineAsyncComponent(() => import('./Expr.vue'))
   },
-  props: ['isLeft', 'aggregateExpr', 'showLeft', ],
+  props: ['isLeft', 'aggregateExpr', 'showLeft', 'outermost'],
   emits: ['updateValue'],
   setup(props, content) {
 

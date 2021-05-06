@@ -1,6 +1,6 @@
 <template>
 <div>
-  <Expr v-if="ql.expr" :expr="ql.expr" @updateValue="updateValue" />
+  <Expr v-if="ql.expr" :expr="ql.expr" outermost="true" @updateValue="updateValue" />
 </div>
 </template>
 
@@ -99,7 +99,7 @@ export default {
         }
       }
     })
-    // ql.expr = {}
+    ql.expr = {}
     console.log(ql);
 
     const updateValue = (value) => {

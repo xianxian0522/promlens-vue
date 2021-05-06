@@ -11,8 +11,10 @@
 <!--       </span>-->
     </template>
     <template v-slot:connector>
-      <div v-if="isLeft" class="ast-connector ast-connector-down" style="bottom: -80px"></div>
-      <div v-else class="ast-connector ast-connector-up" style="top: -4px"></div>
+      <div v-if="!outermost">
+        <div v-if="isLeft" class="ast-connector ast-connector-down" style="bottom: -80px"></div>
+        <div v-else class="ast-connector ast-connector-up" style="top: -4px"></div>
+      </div>
     </template>
   </TreeCommon>
 </div>
@@ -25,7 +27,7 @@ import PreviewLiteralValue from "@/components/PreviewLiteralValue.vue";
 
 export default {
   name: "StringLiteral",
-  props: ['stringLiteral', 'showLeft', 'isLeft', 'index'],
+  props: ['stringLiteral', 'showLeft', 'isLeft', 'index', 'outermost'],
   emits: ['updateValue'],
   components: {
     PlusOutlined,

@@ -1,43 +1,43 @@
 <template>
 <div>
   <div v-if="expr.functionCall">
-    <FunctionCall :functionCall="expr.functionCall" :isLeft="isLeft" :index="index" :showLeft="showLeft" @updateValue="updateValue"/>
+    <FunctionCall :outermost="outermost" :functionCall="expr.functionCall" :isLeft="isLeft" :index="index" :showLeft="showLeft" @updateValue="updateValue"/>
   </div>
 <!--  <div v-else-if="expr.matrixSelector">-->
 <!--    <MatrixSelector :matrixSelector="expr.matrixSelector" />-->
 <!--  </div>-->
   <div v-else-if="expr.vectorSelector">
-    <VectorSelector :vectorSelector="expr.vectorSelector" :index="index" :isLeft="isLeft" :showLeft="showLeft" @updateValue="updateValue" />
+    <VectorSelector :outermost="outermost" :vectorSelector="expr.vectorSelector" :index="index" :isLeft="isLeft" :showLeft="showLeft" @updateValue="updateValue" />
   </div>
   <div v-else-if="expr.binaryExpr">
-    <BinaryExpr :binaryExpr="expr.binaryExpr" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
+    <BinaryExpr :outermost="outermost" :binaryExpr="expr.binaryExpr" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
   <div v-else-if="expr.numberLiteral">
-    <NumberLiteral :numberLiteral="expr.numberLiteral" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
+    <NumberLiteral :outermost="outermost" :numberLiteral="expr.numberLiteral" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
   <div v-else-if="expr.stringLiteral">
-    <StringLiteral :stringLiteral="expr.stringLiteral" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
+    <StringLiteral :outermost="outermost" :stringLiteral="expr.stringLiteral" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
   <div v-else-if="expr.aggregateExpr">
-    <AggregateExpr :aggregateExpr="expr.aggregateExpr" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
+    <AggregateExpr :outermost="outermost" :aggregateExpr="expr.aggregateExpr" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
 <!--  <div v-else-if="expr.offsetExpr">-->
 <!--    {{ expr.offsetExpr }}-->
 <!--  </div>-->
   <div v-else-if="expr.parenExpr">
-    <ParenthesesExpr :parenExpr=expr.parenExpr @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
+    <ParenthesesExpr :outermost="outermost" :parenExpr=expr.parenExpr @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
   <div v-else-if="expr.subqueryExpr">
-    <SubqueryExpr :subqueryExpr="expr.subqueryExpr" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
+    <SubqueryExpr :outermost="outermost" :subqueryExpr="expr.subqueryExpr" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
   <div v-else-if="expr.unaryExpr">
-    <UnaryExpression :unaryExpr="expr.unaryExpr" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
+    <UnaryExpression :outermost="outermost" :unaryExpr="expr.unaryExpr" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
   <div v-else-if="expr.stepInvariantExpr">
     {{ expr.stepInvariantExpr }}
   </div>
   <div v-else>
-    <UnknownExpr :unknownExpr="expr.unknownExpr" :index="index" :isLeft="isLeft" :showLeft="showLeft" @updateValue="updateValue" />
+    <UnknownExpr :outermost="outermost" :unknownExpr="expr.unknownExpr" :index="index" :isLeft="isLeft" :showLeft="showLeft" @updateValue="updateValue" />
   </div>
 </div>
 </template>
@@ -67,6 +67,7 @@ export default {
     'isLeft',
     'showLeft',
     'index',
+    'outermost',
   ],
   components: {
     FunctionCall,
