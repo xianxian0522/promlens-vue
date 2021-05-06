@@ -2,15 +2,15 @@
 <span>
   <TreeCommon>
     <template v-slot:connector>
-        <div v-if="isLeft" class="ast-connector ast-connector-down" style="bottom: -80px"></div>
-        <div v-else class="ast-connector ast-connector-up" style="top: -4px"></div>
-      </template>
-      <template v-slot:addExpr>
-        <PlusOutlined @click="addExpr" class="ast-connector-plus ast-connector-plus-up" />
-      </template>
-      <template v-slot:innerText>
-        <PreviewParentheses :preview="parenExpr" />
-      </template>
+      <div v-if="isLeft" class="ast-connector ast-connector-down" style="bottom: -80px"></div>
+      <div v-else class="ast-connector ast-connector-up" style="top: -4px"></div>
+    </template>
+    <template v-slot:addExpr>
+      <PlusOutlined @click="addExpr" class="ast-connector-plus ast-connector-plus-up" />
+    </template>
+    <template v-slot:innerText>
+      <PreviewParentheses :preview="parenExpr" />
+    </template>
   </TreeCommon>
   <div class="ast-node">
     <Expr :expr="parenExpr" @updateValue="updateValue" :showLeft="showLeft" :index="index" />
