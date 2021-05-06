@@ -92,8 +92,6 @@ export default {
     provide('updateLeft', props.showLeft)
     provide('exprChange', exprChange)
 
-    // console.log(props.showLeft, 'show left')
-
     const updateValue = (value) => {
       const [v, str, index] = value
       let newValue
