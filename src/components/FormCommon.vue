@@ -50,28 +50,28 @@
                 </a-form-item>
               </a-form>
               <div v-if="formState.queryType === 'SelectData'">
-                <FormSelectData @previewChange="previewChange" :vectorSelector="exprChange().vectorSelector" />
+                <FormSelectData @previewChange="previewChange" :vectorSelector="exprChange()?.vectorSelector" />
               </div>
               <div v-if="formState.queryType === 'AggregateOverLabels'">
-                <FormAggregate  @previewChange="previewChange" :aggregateExpr="exprChange().aggregateExpr" />
+                <FormAggregate  @previewChange="previewChange" :aggregateExpr="exprChange()?.aggregateExpr" />
               </div>
               <div v-if="formState.queryType === 'BinaryOperation'">
-                <FormBinaryOperation @previewChange="previewChange" :binaryExpr="exprChange().binaryExpr" />
+                <FormBinaryOperation @previewChange="previewChange" :binaryExpr="exprChange()?.binaryExpr" />
               </div>
               <div v-if="formState.queryType === 'CallFunction'">
-                <FormFunction @previewChange="previewChange" :functionCall="exprChange().functionCall" />
+                <FormFunction @previewChange="previewChange" :functionCall="exprChange()?.functionCall" />
               </div>
               <div v-if="formState.queryType === 'LiteralValue'" >
-                <FormLiteralValue @previewChange="previewChange" @numOrStr="numOrStr" :stringLiteral="exprChange().stringLiteral" :numberLiteral="exprChange().numberLiteral" />
+                <FormLiteralValue @previewChange="previewChange" @numOrStr="numOrStr" :stringLiteral="exprChange()?.stringLiteral" :numberLiteral="exprChange()?.numberLiteral" />
               </div>
               <div v-if="formState.queryType === 'Subquery'">
-                <FormSubquery @previewChange="previewChange" :subqueryExpr="exprChange().subqueryExpr" />
+                <FormSubquery @previewChange="previewChange" :subqueryExpr="exprChange()?.subqueryExpr" />
               </div>
               <div v-if="formState.queryType === 'UnaryExpression'">
-                <FormUnaryExpression @previewChange="previewChange" :unaryExpr="exprChange().unaryExpr" />
+                <FormUnaryExpression @previewChange="previewChange" :unaryExpr="exprChange()?.unaryExpr" />
               </div>
               <div v-if="formState.queryType === 'Parentheses'">
-                <FormParentheses @previewChange="previewChange" :parenExpr="exprChange().parenExpr"  />
+                <FormParentheses @previewChange="previewChange" :parenExpr="exprChange()?.parenExpr"  />
               </div>
 
 <!--              <a-button class="btn btn-secondary btn-sm" @click="onSubmit">-->
@@ -133,10 +133,10 @@ export default {
       numOrStr: 'numberLiteral',
     });
 
-    formState.queryType = exprChange().functionCall ? 'CallFunction' : exprChange().binaryExpr ? 'BinaryOperation'
-        : exprChange().aggregateExpr ? 'AggregateOverLabels' : exprChange().subqueryExpr ? 'Subquery'
-            : exprChange().unaryExpr ? 'UnaryExpression' : exprChange().parenExpr ? 'Parentheses'
-                : exprChange().numberLiteral ? 'LiteralValue' : exprChange().stringLiteral ? 'LiteralValue' : 'SelectData'
+    formState.queryType = exprChange()?.functionCall ? 'CallFunction' : exprChange()?.binaryExpr ? 'BinaryOperation'
+        : exprChange()?.aggregateExpr ? 'AggregateOverLabels' : exprChange()?.subqueryExpr ? 'Subquery'
+            : exprChange()?.unaryExpr ? 'UnaryExpression' : exprChange()?.parenExpr ? 'Parentheses'
+                : exprChange()?.numberLiteral ? 'LiteralValue' : exprChange()?.stringLiteral ? 'LiteralValue' : 'SelectData'
 
     const onSubmit = () => {
       formRef.value

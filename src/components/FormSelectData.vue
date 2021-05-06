@@ -129,6 +129,7 @@ export default {
     console.log(props, 'props select data')
     const updateExprValue: any = inject('updateExprValue')
     const updateExprIndex: number | undefined = inject('updateExprIndex')
+    const updateLeft: boolean | undefined = inject('updateLeft')
     const formRef = ref()
     const formState = reactive({
       metricName: (props.vectorSelector?.metricIdentifier) || undefined,
@@ -229,7 +230,8 @@ export default {
           .then(() => {
             console.log('values', formState, toRaw(formState));
             const value = {
-              vectorSelector: getVectorSelector()
+              vectorSelector: getVectorSelector(),
+              showLeft: updateLeft
             }
             updateExprValue([value, 'vectorSelector', updateExprIndex])
           })

@@ -1,43 +1,43 @@
 <template>
 <div>
-  <div v-if="expr.functionCall">
+  <div v-if="expr?.functionCall">
     <FunctionCall :outermost="outermost" :functionCall="expr.functionCall" :isLeft="isLeft" :index="index" :showLeft="showLeft" @updateValue="updateValue"/>
   </div>
 <!--  <div v-else-if="expr.matrixSelector">-->
 <!--    <MatrixSelector :matrixSelector="expr.matrixSelector" />-->
 <!--  </div>-->
-  <div v-else-if="expr.vectorSelector">
+  <div v-else-if="expr?.vectorSelector">
     <VectorSelector :outermost="outermost" :vectorSelector="expr.vectorSelector" :index="index" :isLeft="isLeft" :showLeft="showLeft" @updateValue="updateValue" />
   </div>
-  <div v-else-if="expr.binaryExpr">
+  <div v-else-if="expr?.binaryExpr">
     <BinaryExpr :outermost="outermost" :binaryExpr="expr.binaryExpr" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
-  <div v-else-if="expr.numberLiteral">
+  <div v-else-if="expr?.numberLiteral">
     <NumberLiteral :outermost="outermost" :numberLiteral="expr.numberLiteral" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
-  <div v-else-if="expr.stringLiteral">
+  <div v-else-if="expr?.stringLiteral">
     <StringLiteral :outermost="outermost" :stringLiteral="expr.stringLiteral" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
-  <div v-else-if="expr.aggregateExpr">
+  <div v-else-if="expr?.aggregateExpr">
     <AggregateExpr :outermost="outermost" :aggregateExpr="expr.aggregateExpr" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
 <!--  <div v-else-if="expr.offsetExpr">-->
 <!--    {{ expr.offsetExpr }}-->
 <!--  </div>-->
-  <div v-else-if="expr.parenExpr">
+  <div v-else-if="expr?.parenExpr">
     <ParenthesesExpr :outermost="outermost" :parenExpr=expr.parenExpr @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
-  <div v-else-if="expr.subqueryExpr">
+  <div v-else-if="expr?.subqueryExpr">
     <SubqueryExpr :outermost="outermost" :subqueryExpr="expr.subqueryExpr" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
-  <div v-else-if="expr.unaryExpr">
+  <div v-else-if="expr?.unaryExpr">
     <UnaryExpression :outermost="outermost" :unaryExpr="expr.unaryExpr" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
-  <div v-else-if="expr.stepInvariantExpr">
+  <div v-else-if="expr?.stepInvariantExpr">
     {{ expr.stepInvariantExpr }}
   </div>
   <div v-else>
-    <UnknownExpr :outermost="outermost" :unknownExpr="expr.unknownExpr" :index="index" :isLeft="isLeft" :showLeft="showLeft" @updateValue="updateValue" />
+    <UnknownExpr :outermost="outermost" :unknownExpr="expr?.unknownExpr" :index="index" :isLeft="isLeft" :showLeft="showLeft" @updateValue="updateValue" />
   </div>
 </div>
 </template>
@@ -91,6 +91,8 @@ export default {
     provide('updateExprIndex', props.index)
     provide('updateLeft', props.showLeft)
     provide('exprChange', exprChange)
+
+    // console.log(props.showLeft, 'show left')
 
     const updateValue = (value) => {
       const [v, str, index] = value

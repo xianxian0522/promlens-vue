@@ -119,6 +119,7 @@ export default {
     // console.log(props.binaryExpr.operator, 'binaryExpr')
     const updateExprValue: any = inject('updateExprValue')
     const updateExprIndex: number | undefined = inject('updateExprIndex')
+    const updateLeft: boolean | undefined = inject('updateLeft')
     const formState = reactive({
       operator: props.binaryExpr?.operator || '/',
       switchOpen: !!props.binaryExpr?.binModifiers,
@@ -227,6 +228,7 @@ export default {
     const onSubmit = () => {
       const value = {
         binaryExpr: getBinary(),
+        showLeft: updateLeft,
       }
       updateExprValue([value, 'binaryExpr', updateExprIndex])
     }

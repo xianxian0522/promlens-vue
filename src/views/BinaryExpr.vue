@@ -12,6 +12,12 @@
       <PreviewBinary :preview="binaryExpr" :leftPreview="binaryExpr.left" :rightPreview="binaryExpr.right" />
 <!--      <div>{{ binaryExpr.operator }}</div>-->
     </template>
+    <template v-slot:connector>
+      <div v-if="!outermost">
+        <div v-if="isLeft" class="ast-connector ast-connector-down" style="bottom: -80px"></div>
+        <div v-else class="ast-connector ast-connector-up" style="top: -4px"></div>
+      </div>
+    </template>
     <template v-slot:nodeRightChild>
       <div class="ast-node">
         <Expr :expr="binaryExpr.right" @updateValue="updateValue" :index="index" />
@@ -28,7 +34,7 @@ import {PlusOutlined} from "@ant-design/icons-vue";
 
 export default {
   name: "BinaryExpr",
-  props: ['binaryExpr', 'index', 'outermost'],
+  props: ['binaryExpr', 'index', 'outermost', 'isLeft'],
   components: {
     PlusOutlined,
     TreeCommon,
@@ -63,7 +69,7 @@ export default {
       } else {
         data.right = v;
       }
-      console.log(v, str, data, '+++++++update binary')
+      console.log(v, str, data, '+++++++update binary', props.isLeft)
       content.emit('updateValue', [data, 'binaryExpr', index])
     }
 
