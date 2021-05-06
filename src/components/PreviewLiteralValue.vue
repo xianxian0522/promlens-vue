@@ -1,16 +1,17 @@
 <template>
 <span>
-  <span class="ast-number" v-if="Number(preview)">{{ preview }}</span>
-  <span class="ast-string" v-else >"{{ preview }}"</span>
+  <span class="ast-string" v-if="numOrStr === 'stringLiteral'" >"{{ preview }}"</span>
+  <span v-else>
+    <span class="ast-number">{{ preview ? preview : 0 }}</span>
+  </span>
 </span>
 </template>
 
 <script lang="ts">
 export default {
   name: "PreviewLiteralValue",
-  props: ['preview'],
-  setup() {
-
+  props: ['preview', 'numOrStr'],
+  setup(props) {
   },
 }
 </script>

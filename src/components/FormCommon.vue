@@ -17,7 +17,7 @@
                     <PreviewSelectData :preview="formState.preview" />
                   </p>
                   <p class="ast-formatted" v-if="formState.queryType === 'LiteralValue'" >
-                    <PreviewLiteralValue :preview="formState.preview" />
+                    <PreviewLiteralValue :preview="formState.preview" :numOrStr="formState.numOrStr" />
                   </p>
                   <p class="ast-formatted" v-if="formState.queryType === 'AggregateOverLabels'" >
                     <PreviewAggregate :preview="formState.preview" />
@@ -62,7 +62,7 @@
                 <FormFunction @previewChange="previewChange" :functionCall="exprChange().functionCall" />
               </div>
               <div v-if="formState.queryType === 'LiteralValue'" >
-                <FormLiteralValue @previewChange="previewChange" :stringLiteral="exprChange().stringLiteral" :numberLiteral="exprChange().numberLiteral" />
+                <FormLiteralValue @previewChange="previewChange" @numOrStr="numOrStr" :stringLiteral="exprChange().stringLiteral" :numberLiteral="exprChange().numberLiteral" />
               </div>
               <div v-if="formState.queryType === 'Subquery'">
                 <FormSubquery @previewChange="previewChange" :subqueryExpr="exprChange().subqueryExpr" />
@@ -130,6 +130,7 @@ export default {
     const formState = reactive({
       preview: {} as any,
       queryType: 'SelectData',
+      numOrStr: 'numberLiteral',
     });
 
     formState.queryType = exprChange().functionCall ? 'CallFunction' : exprChange().binaryExpr ? 'BinaryOperation'
@@ -170,6 +171,9 @@ export default {
     const previewChange = (value) => {
       formState.preview = value
     }
+    const numOrStr = (value) => {
+      formState.numOrStr = value
+    }
 
     onMounted(() => {
       // console.log('props form common', formState.preview, exprChange())
@@ -179,6 +183,7 @@ export default {
     })
 
     return {
+      numOrStr,
       previewChange,
       onSubmit,
       activeKey,

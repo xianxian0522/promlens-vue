@@ -1,8 +1,8 @@
 <template>
 <span>
-  <span class="promql-keyword">{{ preview.functionIdentifier }}</span><span class="ast-parens">(</span>
-  <span v-if="preview.functionArgs">
-    <span v-for="(item, index) in preview.functionArgs" :key="index">
+  <span class="promql-keyword">{{ preview ? preview?.functionIdentifier : 'rate' }}</span><span class="ast-parens">(</span>
+  <span v-if="preview?.functionArgs">
+    <span v-for="(item, index) in preview?.functionArgs" :key="index">
       <PreviewSelectData v-if="item.vectorSelector" :preview="item.vectorSelector" />
     </span>
   </span>

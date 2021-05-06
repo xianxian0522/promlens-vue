@@ -1,9 +1,9 @@
 <template>
 <span>
   <span class="promql-code">
-    <span >{{ preview.unaryOp }}</span>
+    <span >{{ preview ? preview?.unaryOp : '-'}}</span>
     <span>
-      <span v-if="preview.expr"></span>
+      <span v-if="preview?.expr"></span>
       <span v-else class="ast-ellipsis">...</span>
     </span>
   </span>

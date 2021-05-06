@@ -28,7 +28,7 @@ export default {
   name: "FormLiteralValue",
   components: {CheckOutlined,},
   props: ['stringLiteral', 'numberLiteral'],
-  emits: ['previewChange'],
+  emits: ['previewChange', 'numOrStr'],
   setup(props, content) {
     const updateExprValue: any = inject('updateExprValue')
     const updateExprIndex: number | undefined = inject('updateExprIndex')
@@ -69,12 +69,15 @@ export default {
     onMounted(() => {
       if (formState.valueType === 'numberLiteral') {
         content.emit('previewChange', props.numberLiteral)
+        content.emit('numOrStr', 'numberLiteral')
       } else {
         content.emit('previewChange', props.stringLiteral)
+        content.emit('numOrStr', 'stringLiteral')
       }
 
       watch(formState, () => {
         content.emit('previewChange', getLiteral())
+        content.emit('numOrStr', formState.valueType)
       })
     })
 

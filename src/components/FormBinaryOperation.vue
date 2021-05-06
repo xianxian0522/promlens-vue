@@ -179,9 +179,9 @@ export default {
     }
     const getBinary = () => {
       const data: any = {
-        left: props.binaryExpr.left,
+        left: props.binaryExpr?.left,
         operator: formState.operator,
-        right: props.binaryExpr.right,
+        right: props.binaryExpr?.right,
       }
       if (formState.switchOpen) {
         data.binModifiers = {
