@@ -1,12 +1,12 @@
 <template>
-<div>
-  <TreeCommon>
-    <template v-slot:connector>
-      <div v-if="!outermost">
-        <div v-if="isLeft" class="ast-connector ast-connector-down" style="bottom: -80px"></div>
-        <div v-else class="ast-connector ast-connector-up" style="top: -4px"></div>
-      </div>
-    </template>
+<div ref="nodeRef">
+  <TreeCommon @nodeRefHeight="nodeRefHeight" :outermost="outermost" :isLeft="isLeft" >
+<!--    <template v-slot:connector>-->
+<!--      <div v-if="!outermost">-->
+<!--        <div v-if="isLeft" class="ast-connector ast-connector-down" style="bottom: -80px"></div>-->
+<!--        <div v-else class="ast-connector ast-connector-up" style="top: -4px"></div>-->
+<!--      </div>-->
+<!--    </template>-->
     <template v-slot:addExpr>
       <PlusOutlined @click="addExpr" class="ast-connector-plus ast-connector-plus-up" />
     </template>
@@ -51,7 +51,7 @@
 import TreeCommon from "@/components/TreeCommon.vue";
 import MatrixSelector from "@/views/MatrixSelector.vue";
 import PreviewSelectData from "@/components/PreviewSelectData.vue";
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
 
 export default {
@@ -66,7 +66,7 @@ export default {
   },
   setup(props: any, content) {
 
-    console.log(props, '===========')
+    const nodeRef = ref()
 
     // const preview = {
     //   metricName: props.vectorSelector?.metricIdentifier,
@@ -75,6 +75,10 @@ export default {
     //   offset: props.vectorSelector?.matrixSelector?.duration || '0s',
     //   range: props.vectorSelector?.offsetExpr?.duration,
     // }
+
+    const nodeRefHeight = () => {
+      console.log(nodeRef.value.offsetHeight, 'height')
+    }
 
     const addExpr = () => {
       // const value = {
@@ -92,7 +96,9 @@ export default {
 
     return {
       // preview,
-      addExpr
+      nodeRef,
+      addExpr,
+      nodeRefHeight,
     }
   }
 }

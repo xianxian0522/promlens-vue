@@ -1,13 +1,13 @@
 <template>
   <div>
 <!--    <Expr :expr="subqueryExpr.expr" />-->
-    <TreeCommon >
-      <template v-slot:connector>
-        <div v-if="!outermost">
-          <div v-if="isLeft" class="ast-connector ast-connector-down" style="bottom: -80px"></div>
-          <div v-else class="ast-connector ast-connector-up" style="top: -4px"></div>
-        </div>
-      </template>
+    <TreeCommon :outermost="outermost" :isLeft="isLeft">
+<!--      <template v-slot:connector>-->
+<!--        <div v-if="!outermost">-->
+<!--          <div v-if="isLeft" class="ast-connector ast-connector-down" style="bottom: -80px"></div>-->
+<!--          <div v-else class="ast-connector ast-connector-up" style="top: -4px"></div>-->
+<!--        </div>-->
+<!--      </template>-->
       <template v-slot:addExpr>
         <PlusOutlined @click="addExpr" class="ast-connector-plus ast-connector-plus-up" />
       </template>

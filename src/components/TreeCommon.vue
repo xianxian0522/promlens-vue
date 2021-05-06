@@ -2,14 +2,16 @@
 <div ref="childRef">
   <slot name="nodeLeftChild"></slot>
   <div class="ast-node-inner-wrapper">
-    <slot name="connector"></slot>
-<!--    <div class="ast-connector ast-connector-up" style="top: -4px"></div>-->
+<!--    <slot name="connector"></slot>-->
+    <div v-if="!outermost">
+      <div v-if="isLeft" class="ast-connector ast-connector-down" :style="{bottom: '-' + heightBottom + 'px'}"></div>
+      <div v-else class="ast-connector ast-connector-up" style="top: -4px"></div>
+    </div>
 <!--    <PlusOutlined @click="addExpr" class="ast-connector-plus ast-connector-plus-up" />-->
     <slot name="addExpr"></slot>
     <div class="ast-node-inner ast-node-inner-tree-view" style="opacity: 1;">
       <div class="ast-node-inner-top">
         <div class="ast-node-inner-text">
-<!--          [<span class="ast-duration">1h</span>: <span class="ast-duration">1m</span>]-->
           <slot name="innerText"></slot>
         </div>
         <a-button @click="isShowFormClick" class="ast-node-inner-action-btn btn btn-outline-secondary btn-sm">
@@ -57,10 +59,12 @@ export default {
     EditOutlined,
     FormCommon: defineAsyncComponent(() => import('./FormCommon.vue')),
   },
-  props: ['showLeft', 'updateValue'],
+  props: ['showLeft', 'updateValue', 'outermost', 'isLeft' ],
+  emits: ['nodeRefHeight'],
   setup(props, content) {
     const isShowForm = ref(false)
     const childRef = ref()
+    const heightBottom = ref(81)
 
     const formValue = inject('exprChange')
     // const addExpr = () => {
@@ -74,13 +78,20 @@ export default {
     // }
     const isShowFormClick = (r) => {
       isShowForm.value = !isShowForm.value
-      // console.log(childRef.value.offsetHeight, 'refchild', childRef.value.clientHeight)
+
+      // setTimeout(() => content.emit('nodeRefHeight'), 0)
     }
     onMounted(() => {
-
+      watch(isShowForm, () => {
+        setTimeout(() => {
+          heightBottom.value = childRef.value.offsetHeight + 80
+          console.log(childRef.value.offsetHeight, 'setTimeout',)
+        }, 100)
+      })
     })
 
     return {
+      heightBottom,
       childRef,
       isShowForm,
       // addExpr,
