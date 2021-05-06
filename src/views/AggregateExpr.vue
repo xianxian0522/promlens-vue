@@ -9,7 +9,7 @@
 <!--      <div v-else></div>-->
 <!--    </template>-->
     <template v-slot:addExpr>
-      <PlusOutlined @click="addExpr" class="ast-connector-plus ast-connector-plus-up" />
+      <PlusOutlined @click.stop="addExpr" class="ast-connector-plus ast-connector-plus-up" />
     </template>
     <template v-slot:innerText>
       <PreviewAggregate :preview="aggregateExpr" :isShowExpr="true"/>

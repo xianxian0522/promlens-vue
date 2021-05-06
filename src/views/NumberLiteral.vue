@@ -2,7 +2,7 @@
 <div>
   <TreeCommon :outermost="outermost" :isLeft="isLeft">
     <template v-slot:addExpr>
-      <PlusOutlined @click="addExpr" class="ast-connector-plus ast-connector-plus-up" />
+      <PlusOutlined @click.stop="addExpr" class="ast-connector-plus ast-connector-plus-up" />
     </template>
     <template v-slot:innerText>
       <PreviewLiteralValue :preview="numberLiteral" numOrStr="numberLiteral" />

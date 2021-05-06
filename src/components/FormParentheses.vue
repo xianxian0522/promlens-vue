@@ -1,6 +1,6 @@
 <template>
 <div>
-  <a-button class="btn btn-secondary btn-sm" @click="onSubmit">
+  <a-button class="btn btn-secondary btn-sm" @click.stop="onSubmit">
     <CheckOutlined />Apply changes
   </a-button>
 </div>

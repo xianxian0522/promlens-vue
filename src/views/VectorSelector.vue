@@ -1,5 +1,5 @@
 <template>
-<div ref="nodeRef">
+<div ref="nodeRef" @click="queryInfo">
   <TreeCommon @nodeRefHeight="nodeRefHeight" :outermost="outermost" :isLeft="isLeft" >
 <!--    <template v-slot:connector>-->
 <!--      <div v-if="!outermost">-->
@@ -8,7 +8,7 @@
 <!--      </div>-->
 <!--    </template>-->
     <template v-slot:addExpr>
-      <PlusOutlined @click="addExpr" class="ast-connector-plus ast-connector-plus-up" />
+      <PlusOutlined @click.stop="addExpr" class="ast-connector-plus ast-connector-plus-up" />
     </template>
     <template v-slot:innerText>
       <span class="promql-code">
@@ -51,7 +51,7 @@
 import TreeCommon from "@/components/TreeCommon.vue";
 import MatrixSelector from "@/views/MatrixSelector.vue";
 import PreviewSelectData from "@/components/PreviewSelectData.vue";
-import {reactive, ref} from "vue";
+import {inject, reactive, ref} from "vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
 
 export default {
@@ -66,6 +66,7 @@ export default {
   },
   setup(props: any, content) {
 
+    const formValue: any = inject('exprChange')
     const nodeRef = ref()
 
     // const preview = {
@@ -75,6 +76,10 @@ export default {
     //   offset: props.vectorSelector?.matrixSelector?.duration || '0s',
     //   range: props.vectorSelector?.offsetExpr?.duration,
     // }
+
+    const queryInfo = async () => {
+      console.log(formValue(), 'select query')
+    }
 
     const nodeRefHeight = () => {
       console.log(nodeRef.value.offsetHeight, 'height')
@@ -98,6 +103,7 @@ export default {
       // preview,
       nodeRef,
       addExpr,
+      queryInfo,
       nodeRefHeight,
     }
   }

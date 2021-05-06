@@ -1,5 +1,5 @@
 <template>
-<div ref="childRef">
+<div ref="childRef" >
   <slot name="nodeLeftChild"></slot>
   <div class="ast-node-inner-wrapper">
 <!--    <slot name="connector"></slot>-->
@@ -14,7 +14,7 @@
         <div class="ast-node-inner-text">
           <slot name="innerText"></slot>
         </div>
-        <a-button @click="isShowFormClick" class="ast-node-inner-action-btn btn btn-outline-secondary btn-sm">
+        <a-button @click.stop="isShowFormClick" class="ast-node-inner-action-btn btn btn-outline-secondary btn-sm">
           <SwapOutlined />Form
         </a-button>
         <a-button class="ast-node-inner-action-btn btn btn-outline-secondary btn-sm">
@@ -64,9 +64,9 @@ export default {
   setup(props, content) {
     const isShowForm = ref(false)
     const childRef = ref()
-    const heightBottom = ref(81)
+    const heightBottom = ref(36)
 
-    const formValue = inject('exprChange')
+    const formValue: any = inject('exprChange')
     // const addExpr = () => {
     //   console.log('aa add child', formValue, props.showLeft)
     //   const value = {
@@ -76,6 +76,11 @@ export default {
     //   console.log(value, 'value unknown')
     //   content.emit('updateValue', [value, 'unknownExpr'])
     // }
+
+    const queryInfo = async () => {
+      console.log(formValue(), 'expr change')
+    }
+
     const isShowFormClick = (r) => {
       isShowForm.value = !isShowForm.value
 
@@ -84,7 +89,8 @@ export default {
     onMounted(() => {
       watch(isShowForm, () => {
         setTimeout(() => {
-          heightBottom.value = childRef.value.offsetHeight + 80
+          // heightBottom.value = childRef.value.offsetHeight + 80
+          heightBottom.value = childRef.value.offsetHeight
           console.log(childRef.value.offsetHeight, 'setTimeout',)
         }, 100)
       })
@@ -96,6 +102,7 @@ export default {
       isShowForm,
       // addExpr,
       isShowFormClick,
+      queryInfo,
     }
   }
 }
