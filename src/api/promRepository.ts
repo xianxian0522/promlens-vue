@@ -51,14 +51,14 @@ promRepository.queryAll = (params?: any) => {
             queryData.data = res.data.result
             queryData.isLoading = false
             queryData.resultType = res.data.resultType
-            if (queryData.resultType !== 'scalar') {
+            if (queryData.resultType === 'vector') {
                 queryData.keyInfo = dataInfo(queryData.data)
             }
             // console.log(res, 'query res', queryData,)
             // return {...res}
         })
         .catch(err => {
-            const value = {...err.response.data}
+            const value = {...err.response?.data}
             queryData.status = value.status
             queryData.error = value.error
             queryData.isLoading = false

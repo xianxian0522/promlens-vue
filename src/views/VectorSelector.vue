@@ -95,7 +95,7 @@ export default {
 
     const queryInfo = async () => {
       // console.log(formValue(), 'select query info =====')
-      promRepository.queryAll({query: querySelectData(formValue())})
+      promRepository.queryAll({query: querySelectData(props)})
     }
 
     const nodeRefHeight = () => {

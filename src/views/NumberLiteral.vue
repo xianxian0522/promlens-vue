@@ -5,10 +5,10 @@
       <PlusOutlined @click.stop="addExpr" class="ast-connector-plus ast-connector-plus-up" />
     </template>
     <template v-slot:innerText>
-      <PreviewLiteralValue :preview="numberLiteral" numOrStr="numberLiteral" />
-<!--       <span class="promql-code">-->
+      <span class="promql-code" @click="queryInfo">
+        <PreviewLiteralValue :preview="numberLiteral" numOrStr="numberLiteral" />
 <!--          <span class="promql-keyword">{{numberLiteral}}</span>-->
-<!--       </span>-->
+      </span>
     </template>
 <!--    <template v-slot:connector>-->
 <!--      <div v-if="!outermost">-->
@@ -24,6 +24,8 @@
 import TreeCommon from "@/components/TreeCommon.vue";
 import PreviewLiteralValue from "@/components/PreviewLiteralValue.vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
+import {inject} from "vue";
+import {promRepository} from "@/api/promRepository";
 
 export default {
   name: "NumberLiteral",
@@ -35,6 +37,11 @@ export default {
     PreviewLiteralValue,
   },
   setup(props, content) {
+
+    const queryInfo = async () => {
+      promRepository.queryAll({query: props.numberLiteral})
+    }
+
     const addExpr = () => {
       // const data = {
       //   unknownExpr: {
@@ -51,6 +58,7 @@ export default {
 
     return {
       addExpr,
+      queryInfo,
     }
   }
 }

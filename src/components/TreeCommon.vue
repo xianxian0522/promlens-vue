@@ -25,14 +25,16 @@
     </div>
     <div class="ast-node-infos">
       <div class="ast-node-query-info">
-        <div class="ast-node-stats" style="display: inline-block" v-if="data.resultType === 'vector'">
+        <div class="ast-node-stats" style="display: inline-block">
 <!--          <slot name="infoLabel"></slot>-->
           <div style="display: inline-block" v-if="data.status === 'success'">
             <div style="display: inline-block" v-if="!data.isLoading">
-              {{ data.data.length }} results - 91ms -
-              <div class="ast-node-label-stats" v-for="(item, index) in data.keyInfo" :key="index">
-                <span class="ast-label-name" style="color: green;">{{ item.name }}</span>
-                :{{ item.value }},
+              <div style="display: inline-block" v-if="data.resultType === 'vector'">
+                {{ data.data.length }} results - 91ms -
+                <div class="ast-node-label-stats" v-for="(item, index) in data.keyInfo" :key="index">
+                  <span class="ast-label-name" style="color: green;">{{ item.name }}</span>
+                  :{{ item.value }},
+                </div>
               </div>
             </div>
             <span v-else><a-spin /></span>
