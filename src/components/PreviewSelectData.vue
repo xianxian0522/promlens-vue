@@ -17,12 +17,12 @@
     <span class="promql-label-name">{{ vector.labelName }}</span>{{vector.matchOp}}<span class="promql-string">"{{vector.labelValue}}"</span>
     <span v-if="preview?.labelMatchers?.length > 1 && (preview?.labelMatchers?.length - 1 !== index)">, </span></span>}
   </span>
-  <span v-if="preview?.matrixSelector">[<span class="promql-duration">{{preview?.matrixSelector?.duration}}</span>]
+  <span v-if="preview?.offsetExpr">[<span class="promql-duration">{{preview?.offsetExpr?.duration}}</span>]
     <!--          <MatrixSelector :matrixSelector="vectorSelector.matrixSelector"/>-->
   </span>
-  <span v-if="preview?.offsetExpr">
+  <span v-if="preview?.offsetExpr && (preview?.matrixSelector && preview?.matrixSelector?.duration.slice(0, -1) !== '0')">
     <span class="promql-keyword" v-if="preview?.offsetExpr?.offset">offset </span>
-    <span class="promql-duration">{{preview?.offsetExpr?.duration}}</span>
+    <span class="promql-duration">{{preview?.matrixSelector?.duration}}</span>
   </span>
 </span>
 </template>

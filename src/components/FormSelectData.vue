@@ -87,7 +87,7 @@
         </a-radio-group>
       </div>
     </a-form-item>
-    <a-form-item v-if="formState.select === 'range'">
+    <a-form-item v-if="formState.select === 'range'" name="range">
       <label class="label-svg">Range: <QuestionCircleOutlined /></label>
       <a-input v-model:value="formState.range"></a-input>
     </a-form-item>
@@ -164,6 +164,10 @@ export default {
         validator: validatorRule,
         trigger: 'blur',
       }],
+      range: [{
+        validator: validatorRule,
+        trigger: 'blur',
+      }]
     }
 
     const handleSearch = (value: string) => {
