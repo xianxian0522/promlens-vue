@@ -62,6 +62,7 @@ import PreviewSelectData from "@/components/PreviewSelectData.vue";
 import {inject, provide, reactive, ref, watch} from "vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
 import {promRepository, queryData} from "@/api/promRepository";
+import {querySelectData} from "@/utils/common";
 
 export default {
   name: "VectorSelector",
@@ -93,16 +94,12 @@ export default {
     // provide('queryAllData', queryAllData)
 
     const queryInfo = async () => {
-      // console.log(formValue(), 'select query info =====')
-      // const value = {
-      //   query: formValue().vectorSelector.metricIdentifier
-      // }
-      // const data = await promRepository.queryAll(value)
-      console.log('-----------', props)
+      console.log(formValue(), 'select query info =====')
+      promRepository.queryAll({query: querySelectData(formValue())})
     }
 
     const nodeRefHeight = () => {
-      console.log(nodeRef.value.offsetHeight, 'height')
+      // console.log(nodeRef.value.offsetHeight, 'height')
     }
 
     const addExpr = () => {

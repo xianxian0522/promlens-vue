@@ -34,3 +34,22 @@ export const dataInfo = (data) => {
 
     return dataInfo
 }
+
+export const querySelectData = (value) => {
+    let query = value.vectorSelector.metricIdentifier
+    if (value.vectorSelector.labelMatchers.length > 0) {
+        query += '{'
+        value.vectorSelector.labelMatchers.forEach(label => {
+            query += label.labelName + label.matchOp + '"' + label.labelValue + '"' + ','
+        })
+        query = query.slice(0, -1)
+        query += '}'
+    }
+    if (value.vectorSelector.offsetExpr?.duration) {
+        query += '[' + value.vectorSelector.offsetExpr.duration + ']'
+    }
+    if (value.vectorSelector.matrixSelector.duration.slice(0, -1) !== '0') {
+        query += ' offset ' + value.vectorSelector.matrixSelector.duration
+    }
+    return query
+}

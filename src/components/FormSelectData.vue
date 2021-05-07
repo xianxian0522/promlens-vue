@@ -106,7 +106,7 @@
 import {QuestionCircleOutlined, DeleteOutlined, PlusOutlined, CheckOutlined, } from '@ant-design/icons-vue'
 import {onMounted, reactive, ref, toRefs, watch, readonly, toRaw, inject} from "vue";
 import {labelNameData, metricNameData, promRepository} from "@/api/promRepository";
-import {validatorRule} from "@/utils/common";
+import {querySelectData, validatorRule} from "@/utils/common";
 
 export interface Label {
   labelName: string;
@@ -253,13 +253,13 @@ export default {
         showLeft: updateLeft
       }
       const data = {
-        query: value.vectorSelector.metricIdentifier
+        query: querySelectData(value)
       }
       await promRepository.queryAll(data)
       await updateExprValue([value, 'vectorSelector', updateExprIndex])
-      if (props.vectorSelector) {
-        // queryAllData()
-      }
+      // if (props.vectorSelector) {
+      //   queryAllData()
+      // }
     }
 
     onMounted(() => {
