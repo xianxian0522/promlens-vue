@@ -12,7 +12,7 @@
   <div v-else-if="expr?.binaryExpr">
     <BinaryExpr :outermost="outermost" :binaryExpr="expr.binaryExpr" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
-  <div v-else-if="expr?.numberLiteral">
+  <div v-else-if="expr?.numberLiteral === 0 || expr?.numberLiteral">
     <NumberLiteral :outermost="outermost" :numberLiteral="expr.numberLiteral" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
   <div v-else-if="expr?.stringLiteral">

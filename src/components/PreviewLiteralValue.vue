@@ -12,7 +12,7 @@ export default {
   name: "PreviewLiteralValue",
   props: ['preview', 'numOrStr'],
   setup(props) {
-    console.log(props)
+
   },
 }
 </script>

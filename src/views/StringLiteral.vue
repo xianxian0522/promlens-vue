@@ -16,6 +16,19 @@
 <!--        <div v-else class="ast-connector ast-connector-up" style="top: -4px"></div>-->
 <!--      </div>-->
 <!--    </template>-->
+    <template v-slot:infoLabel>
+      <div style="display: inline-block" v-if="data.status === 'success'">
+        <span v-if="!data.isLoading"></span>
+        <span v-else><a-spin /></span>
+      </div>
+      <div style="display: inline-block" v-else>
+        <span v-if="!data.isLoading">
+          <span class="ast-query-icon"></span>
+          <span class="ast-node-query-error-message">Error executing query:{{ data.error }}</span>
+        </span>
+        <span v-else><a-spin /></span>
+      </div>
+    </template>
   </TreeCommon>
 </div>
 </template>
@@ -25,6 +38,8 @@ import TreeCommon from "@/components/TreeCommon.vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
 import PreviewLiteralValue from "@/components/PreviewLiteralValue.vue";
 import {promRepository} from "@/api/promRepository";
+import {ref} from "vue";
+import {stringLiteral} from "@/utils/store";
 
 export default {
   name: "StringLiteral",
@@ -37,8 +52,9 @@ export default {
   },
   setup(props, content) {
 
+    const data = ref(stringLiteral)
     const queryInfo = async () => {
-      promRepository.queryAll({query: props.stringLiteral})
+      promRepository.queryLiteral('stringLiteral', {query: props.stringLiteral})
     }
 
     const addExpr = () => {
@@ -56,6 +72,7 @@ export default {
     }
 
     return {
+      data,
       queryInfo,
       addExpr,
     }

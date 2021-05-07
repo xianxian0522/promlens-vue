@@ -99,6 +99,7 @@
 <script lang="ts">
 import {QuestionCircleOutlined, PlusOutlined, DeleteOutlined, CheckOutlined, } from '@ant-design/icons-vue'
 import {inject, onMounted, reactive, ref, toRefs, watch} from "vue";
+import {queryBinary} from "@/utils/common";
 
 export interface Item {
   name: string;
@@ -225,12 +226,17 @@ export default {
       return data
     }
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
       const value = {
         binaryExpr: getBinary(),
         showLeft: updateLeft,
       }
-      updateExprValue([value, 'binaryExpr', updateExprIndex])
+
+      if (value.binaryExpr.left && value.binaryExpr.right) {
+        console.log(queryBinary(value), 'yyyyy')
+      }
+      console.log(queryBinary(value), 'xxxx')
+      await updateExprValue([value, 'binaryExpr', updateExprIndex])
     }
 
     onMounted(() => {

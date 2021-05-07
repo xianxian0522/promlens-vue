@@ -53,3 +53,10 @@ export const querySelectData = (value) => {
     }
     return query
 }
+
+export const queryBinary = (value) => {
+    let query
+    console.log(value, '+++++++++')
+
+    return query
+}

@@ -255,7 +255,7 @@ export default {
       const data = {
         query: querySelectData(value)
       }
-      await promRepository.queryAll(data)
+      await promRepository.querySelectDataAll(data)
       await updateExprValue([value, 'vectorSelector', updateExprIndex])
       // if (props.vectorSelector) {
       //   queryAllData()

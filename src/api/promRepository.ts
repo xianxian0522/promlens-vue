@@ -1,6 +1,7 @@
 import request from "@/utils/request";
 import {reactive, ref, toRefs} from "vue";
 import {dataInfo} from "@/utils/common";
+import {numberLiteral, selectData, stringLiteral} from "@/utils/store";
 
 const ApiQuery = '/api/v1/query_range';
 const ApiLabelName = '/api/v1/label/__name__/values';
@@ -15,14 +16,14 @@ const storeState = reactive({
     metricNameData: [],
     labelNameData: [],
 })
-const queryData = reactive({
-    status: '',
-    data: [],
-    keyInfo: [],
-    error: '',
-    isLoading: false,
-    resultType: '',
-})
+// const selectData = reactive({
+//     status: '',
+//     data: [],
+//     keyInfo: [],
+//     error: '',
+//     isLoading: false,
+//     resultType: '',
+// })
 
 const promRepository: any = {};
 promRepository.queryLabelName = (params?: any) => request.get(`${ApiLabelName}`, params)
@@ -43,27 +44,64 @@ promRepository.queryLabel = (params?: any) => request.get(`${ApiLabels}`, params
 
 promRepository.queryValueByLabelName = (labelName: string) => request.get(`${ApiValue}/${labelName}/values`).catch(err => console.error(err))
 
-promRepository.queryAll = (params?: any) => {
-    queryData.isLoading = true
+promRepository.querySelectDataAll = (params?: any) => {
+    selectData.isLoading = true
     request.get(`${ApiQueryAll}`, params)
         .then((res: any) => {
-            queryData.status = res.status
-            queryData.data = res.data.result
-            queryData.isLoading = false
-            queryData.resultType = res.data.resultType
-            if (queryData.resultType === 'vector') {
-                queryData.keyInfo = dataInfo(queryData.data)
-            }
+            selectData.status = res.status
+            selectData.data = res.data.result
+            selectData.isLoading = false
+            selectData.keyInfo = dataInfo(selectData.data)
+            // selectData.resultType = res.data.resultType
+            // if (selectData.resultType === 'vector') {
+            //     selectData.keyInfo = dataInfo(selectData.data)
+            // }
             // console.log(res, 'query res', queryData,)
             // return {...res}
         })
         .catch(err => {
             const value = {...err.response?.data}
-            queryData.status = value.status
-            queryData.error = value.error
-            queryData.isLoading = false
+            selectData.status = value.status
+            selectData.error = value.error
+            selectData.isLoading = false
             // console.log({...err.response}, queryData)
         })
 }
+
+promRepository.queryLiteral = (str: string, params?: any) => {
+    if (str === 'numberLiteral') {
+        numberLiteral.isLoading = true
+    } else {
+        stringLiteral.isLoading = true
+    }
+    request.get(`${ApiQueryAll}`, params)
+        .then((res: any) => {
+            if (str === 'numberLiteral') {
+                numberLiteral.status = res.status
+                numberLiteral.data = res.data.result
+                numberLiteral.isLoading = false
+            } else {
+                stringLiteral.status = res.status
+                stringLiteral.data = res.data.result
+                stringLiteral.isLoading = false
+            }
+        })
+        .catch(err => {
+            const value = {...err.response?.data}
+            if (str === 'numberLiteral') {
+                numberLiteral.status = value.status
+                numberLiteral.error = value.error
+                numberLiteral.isLoading = false
+            } else {
+                stringLiteral.status = value.status
+                stringLiteral.error = value.error
+                stringLiteral.isLoading = false
+            }
+        })
+}
+
+// promRepository.queryStringLiteral = (params?: any) => {
+
+
 // export default promRepository
-export {promRepository, metricNameData, labelNameData, queryData}
+export {promRepository, metricNameData, labelNameData}
