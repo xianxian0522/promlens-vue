@@ -10,3 +10,27 @@ export const validatorRule = async (rule, value) => {
         return Promise.reject('Unable to parse duration string: invalid duration string');
     }
 }
+
+export const dataInfo = (data) => {
+    const value = {}
+    const dataInfo: any = []
+    data.forEach(item => {
+        Object.keys(item.metric).filter(key => key !== '__name__').map((key) => {
+            value[key] = []
+        })
+    })
+    data.forEach((item) => {
+        Object.keys(item.metric).filter(key => key !== '__name__').map(key => {
+            value[key].push(item.metric[key])
+        })
+    })
+    Object.keys(value).map((key, index) => {
+        value[key] = Array.from(new Set(value[key]))
+        dataInfo.push({
+            name: key,
+            value: value[key].length
+        })
+    })
+
+    return dataInfo
+}

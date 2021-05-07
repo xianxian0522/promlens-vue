@@ -1,5 +1,5 @@
 <template>
-<div ref="nodeRef" @click="queryInfo">
+<span ref="nodeRef" @click="queryInfo">
   <TreeCommon @nodeRefHeight="nodeRefHeight" :outermost="outermost" :isLeft="isLeft" >
 <!--    <template v-slot:connector>-->
 <!--      <div v-if="!outermost">-->
@@ -33,26 +33,35 @@
       </span>
     </template>
     <template v-slot:infoLabel>
-      16 results - 91ms -
-      <div class="ast-node-label-stats">
-        <span class="ast-label-name" style="color: green;">host</span>
-        :16,
+      <div style="display: inline-block" v-if="data.status === 'success'">
+        <div style="display: inline-block" v-if="!data.isLoading">
+          {{ data.data.length }} results - 91ms -
+          <div class="ast-node-label-stats" v-for="(item, index) in data.keyInfo" :key="index">
+            <span class="ast-label-name" style="color: green;">{{ item.name }}</span>
+            :{{ item.value }},
+          </div>
+        </div>
+        <span v-else><a-spin /></span>
       </div>
-      <div class="ast-node-label-stats">
-        <span class="ast-label-name" style="color: green;">instance</span>
-        :16,
+      <div style="display: inline-block" v-else>
+        <span v-if="!data.isLoading">
+          <span class="ast-query-icon"></span>
+          <span class="ast-node-query-error-message">Error executing query:{{ data.error }}</span>
+        </span>
+        <span v-else><a-spin /></span>
       </div>
     </template>
   </TreeCommon>
-</div>
+</span>
 </template>
 
 <script lang="ts">
 import TreeCommon from "@/components/TreeCommon.vue";
 import MatrixSelector from "@/views/MatrixSelector.vue";
 import PreviewSelectData from "@/components/PreviewSelectData.vue";
-import {inject, reactive, ref} from "vue";
+import {inject, provide, reactive, ref, watch} from "vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
+import {promRepository, queryData} from "@/api/promRepository";
 
 export default {
   name: "VectorSelector",
@@ -67,6 +76,7 @@ export default {
   setup(props: any, content) {
 
     const formValue: any = inject('exprChange')
+    const data = ref(queryData)
     const nodeRef = ref()
 
     // const preview = {
@@ -77,8 +87,18 @@ export default {
     //   range: props.vectorSelector?.offsetExpr?.duration,
     // }
 
+    const queryAllData = async () => {
+      console.log(data.value, '============')
+    }
+    // provide('queryAllData', queryAllData)
+
     const queryInfo = async () => {
-      console.log(formValue(), 'select query')
+      // console.log(formValue(), 'select query info =====')
+      // const value = {
+      //   query: formValue().vectorSelector.metricIdentifier
+      // }
+      // const data = await promRepository.queryAll(value)
+      console.log('-----------', props)
     }
 
     const nodeRefHeight = () => {
@@ -101,6 +121,7 @@ export default {
 
     return {
       // preview,
+      data,
       nodeRef,
       addExpr,
       queryInfo,

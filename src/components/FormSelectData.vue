@@ -130,6 +130,8 @@ export default {
     const updateExprValue: any = inject('updateExprValue')
     const updateExprIndex: number | undefined = inject('updateExprIndex')
     const updateLeft: boolean | undefined = inject('updateLeft')
+    // const queryAllData: any = inject('queryAllData')
+
     const formRef = ref()
     const formState = reactive({
       metricName: (props.vectorSelector?.metricIdentifier) || undefined,
@@ -233,16 +235,32 @@ export default {
           .validate()
           .then(() => {
             console.log('values', formState, toRaw(formState));
-            const value = {
-              vectorSelector: getVectorSelector(),
-              showLeft: updateLeft
-            }
-            updateExprValue([value, 'vectorSelector', updateExprIndex])
+            // const value = {
+            //   vectorSelector: getVectorSelector(),
+            //   showLeft: updateLeft
+            // }
+            queryAll()
+            // updateExprValue([value, 'vectorSelector', updateExprIndex])
           })
           .catch((error: any) => {
             console.log('error', error);
           });
     };
+
+    const queryAll = async () => {
+      const value = {
+        vectorSelector: getVectorSelector(),
+        showLeft: updateLeft
+      }
+      const data = {
+        query: value.vectorSelector.metricIdentifier
+      }
+      await promRepository.queryAll(data)
+      await updateExprValue([value, 'vectorSelector', updateExprIndex])
+      if (props.vectorSelector) {
+        // queryAllData()
+      }
+    }
 
     onMounted(() => {
       content.emit('previewChange', props.vectorSelector)

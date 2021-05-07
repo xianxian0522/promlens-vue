@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import TreeCommon from "@/components/TreeCommon.vue";
-import {defineAsyncComponent} from "vue";
+import {defineAsyncComponent, inject, provide} from "vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
 export default {
   name: "UnknownExpr",
@@ -34,6 +34,12 @@ export default {
     Expr: defineAsyncComponent(() => import('./Expr.vue'))
   },
   setup(props, content) {
+
+    const queryAllData = async () => {
+      // console.log( '+++============')
+    }
+    // provide('queryAllData', queryAllData)
+
     const addExpr = () => {
       // const value = {
       //   unknownExpr: {
