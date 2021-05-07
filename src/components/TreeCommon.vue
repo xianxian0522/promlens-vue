@@ -25,7 +25,7 @@
     </div>
     <div class="ast-node-infos">
       <div class="ast-node-query-info">
-        <div class="ast-node-stats" style="display: inline-block" v-if="data.resultType !== 'scalar'">
+        <div class="ast-node-stats" style="display: inline-block" v-if="data.resultType === 'vector'">
 <!--          <slot name="infoLabel"></slot>-->
           <div style="display: inline-block" v-if="data.status === 'success'">
             <div style="display: inline-block" v-if="!data.isLoading">

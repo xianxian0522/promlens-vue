@@ -23,6 +23,7 @@
 <script lang="ts">
 import {inject, onMounted, reactive, watch} from "vue";
 import {CheckOutlined} from "@ant-design/icons-vue";
+import {promRepository} from "@/api/promRepository";
 
 export default {
   name: "FormLiteralValue",
@@ -52,16 +53,18 @@ export default {
       return value
     }
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
       const value: any = {
         showLeft: updateLeft,
       }
       if (formState.valueType === 'numberLiteral') {
         value.numberLiteral = getLiteral()
-        updateExprValue([value, 'numberLiteral', updateExprIndex])
+        await promRepository.queryAll({query: value.numberLiteral})
+        await updateExprValue([value, 'numberLiteral', updateExprIndex])
       } else {
         value.stringLiteral = getLiteral()
-        updateExprValue([value, 'stringLiteral', updateExprIndex])
+        await promRepository.queryAll({query: '"' + value.stringLiteral + '"'})
+        await updateExprValue([value, 'stringLiteral', updateExprIndex])
       }
     }
 
