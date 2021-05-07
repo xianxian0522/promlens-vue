@@ -94,7 +94,7 @@ export default {
     // provide('queryAllData', queryAllData)
 
     const queryInfo = async () => {
-      console.log(formValue(), 'select query info =====')
+      // console.log(formValue(), 'select query info =====')
       promRepository.queryAll({query: querySelectData(formValue())})
     }
 
