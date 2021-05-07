@@ -25,18 +25,28 @@
     </div>
     <div class="ast-node-infos">
       <div class="ast-node-query-info">
-        <span class="ast-node-stats">
-          <slot name="infoLabel"></slot>
-<!--          16 results - 91ms - -->
-<!--          <div class="ast-node-label-stats">-->
-<!--            <span class="ast-label-name" style="color: green;">host</span>-->
-<!--            :16,-->
-<!--          </div>-->
-<!--          <div class="ast-node-label-stats">-->
-<!--            <span class="ast-label-name" style="color: green;">instance</span>-->
-<!--            :16,-->
-<!--          </div>-->
-        </span>
+        <div class="ast-node-stats" style="display: inline-block" v-if="data.resultType !== 'scalar'">
+<!--          <slot name="infoLabel"></slot>-->
+          <div style="display: inline-block" v-if="data.status === 'success'">
+            <div style="display: inline-block" v-if="!data.isLoading">
+              {{ data.data.length }} results - 91ms -
+              <div class="ast-node-label-stats" v-for="(item, index) in data.keyInfo" :key="index">
+                <span class="ast-label-name" style="color: green;">{{ item.name }}</span>
+                :{{ item.value }},
+              </div>
+            </div>
+            <span v-else><a-spin /></span>
+          </div>
+          <div style="display: inline-block" v-else>
+            <span v-if="!data.isLoading">
+              <span v-if="data.status === 'error'">
+                <span class="ast-query-icon"></span>
+                <span class="ast-node-query-error-message">Error executing query:{{ data.error }}</span>
+              </span>
+            </span>
+            <span v-else><a-spin /></span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -50,6 +60,7 @@
 import {PlusOutlined, SwapOutlined, EditOutlined} from '@ant-design/icons-vue'
 import FormCommon from "@/components/FormCommon.vue";
 import {defineAsyncComponent, inject, onMounted, ref, watch} from "vue";
+import {queryData} from "@/api/promRepository";
 
 export default {
   name: "TreeCommon",
@@ -62,6 +73,8 @@ export default {
   props: ['showLeft', 'updateValue', 'outermost', 'isLeft' ],
   emits: ['nodeRefHeight'],
   setup(props, content) {
+    const data = ref(queryData)
+
     const isShowForm = ref(false)
     const childRef = ref()
     const heightBottom = ref(36)
@@ -97,6 +110,7 @@ export default {
     })
 
     return {
+      data,
       heightBottom,
       childRef,
       isShowForm,

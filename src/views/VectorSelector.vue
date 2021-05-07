@@ -1,5 +1,5 @@
 <template>
-<span ref="nodeRef" @click="queryInfo">
+<span ref="nodeRef" >
   <TreeCommon @nodeRefHeight="nodeRefHeight" :outermost="outermost" :isLeft="isLeft" >
 <!--    <template v-slot:connector>-->
 <!--      <div v-if="!outermost">-->
@@ -11,7 +11,7 @@
       <PlusOutlined @click.stop="addExpr" class="ast-connector-plus ast-connector-plus-up" />
     </template>
     <template v-slot:innerText>
-      <span class="promql-code">
+      <span class="promql-code" @click="queryInfo">
         <PreviewSelectData :preview="vectorSelector"/>
 <!--        <span class="promql-metric-name">{{vectorSelector.metricIdentifier}}</span>-->
 <!--        <span class="promql-metric-name" v-if="vectorSelector.labelMatchers.length > 0">-->
@@ -32,25 +32,25 @@
 <!--        </span>-->
       </span>
     </template>
-    <template v-slot:infoLabel>
-      <div style="display: inline-block" v-if="data.status === 'success'">
-        <div style="display: inline-block" v-if="!data.isLoading">
-          {{ data.data.length }} results - 91ms -
-          <div class="ast-node-label-stats" v-for="(item, index) in data.keyInfo" :key="index">
-            <span class="ast-label-name" style="color: green;">{{ item.name }}</span>
-            :{{ item.value }},
-          </div>
-        </div>
-        <span v-else><a-spin /></span>
-      </div>
-      <div style="display: inline-block" v-else>
-        <span v-if="!data.isLoading">
-          <span class="ast-query-icon"></span>
-          <span class="ast-node-query-error-message">Error executing query:{{ data.error }}</span>
-        </span>
-        <span v-else><a-spin /></span>
-      </div>
-    </template>
+<!--    <template v-slot:infoLabel>-->
+<!--      <div style="display: inline-block" v-if="data.status === 'success'">-->
+<!--        <div style="display: inline-block" v-if="!data.isLoading">-->
+<!--          {{ data.data.length }} results - 91ms - -->
+<!--          <div class="ast-node-label-stats" v-for="(item, index) in data.keyInfo" :key="index">-->
+<!--            <span class="ast-label-name" style="color: green;">{{ item.name }}</span>-->
+<!--            :{{ item.value }},-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <span v-else><a-spin /></span>-->
+<!--      </div>-->
+<!--      <div style="display: inline-block" v-else>-->
+<!--        <span v-if="!data.isLoading">-->
+<!--          <span class="ast-query-icon"></span>-->
+<!--          <span class="ast-node-query-error-message">Error executing query:{{ data.error }}</span>-->
+<!--        </span>-->
+<!--        <span v-else><a-spin /></span>-->
+<!--      </div>-->
+<!--    </template>-->
   </TreeCommon>
 </span>
 </template>

@@ -21,6 +21,7 @@ const queryData = reactive({
     keyInfo: [],
     error: '',
     isLoading: false,
+    resultType: '',
 })
 
 const promRepository: any = {};
@@ -49,7 +50,10 @@ promRepository.queryAll = (params?: any) => {
             queryData.status = res.status
             queryData.data = res.data.result
             queryData.isLoading = false
-            queryData.keyInfo = dataInfo(queryData.data)
+            queryData.resultType = res.data.resultType
+            if (queryData.resultType !== 'scalar') {
+                queryData.keyInfo = dataInfo(queryData.data)
+            }
             // console.log(res, 'query res', queryData,)
             // return {...res}
         })
