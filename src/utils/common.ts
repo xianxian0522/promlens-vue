@@ -36,42 +36,46 @@ export const dataInfo = (data) => {
 }
 
 export const querySelectData = (value) => {
-    let query = value.vectorSelector.metricIdentifier
-    if (value.vectorSelector.labelMatchers.length > 0) {
+    let query = value.metricIdentifier
+    if (value.labelMatchers.length > 0) {
         query += '{'
-        value.vectorSelector.labelMatchers.forEach(label => {
+        value.labelMatchers.forEach(label => {
             query += label.labelName + label.matchOp + '"' + label.labelValue + '"' + ','
         })
         query = query.slice(0, -1)
         query += '}'
     }
-    if (value.vectorSelector.offsetExpr?.duration) {
-        query += '[' + value.vectorSelector.offsetExpr.duration + ']'
+    if (value.offsetExpr?.duration) {
+        query += '[' + value.offsetExpr.duration + ']'
     }
-    if (value.vectorSelector.matrixSelector.duration.slice(0, -1) !== '0') {
-        query += ' offset ' + value.vectorSelector.matrixSelector.duration
+    if (value.matrixSelector.duration.slice(0, -1) !== '0') {
+        query += ' offset ' + value.matrixSelector.duration
     }
     return query
 }
 
 export const queryBinary = (value) => {
     let query = ''
-    if (value.binaryExpr.left?.vectorSelector) {
-        query += querySelectData(value.binaryExpr.left)
-    } else if (value.binaryExpr.left?.numberLiteral) {
-        query += value.binaryExpr.left.numberLiteral
-    } else if (value.binaryExpr.left?.stringLiteral) {
-        query += '"' + value.binaryExpr.left.stringLiteral + '"'
+    if (value.left?.vectorSelector) {
+        query += querySelectData(value.left.vectorSelector)
+    } else if (value.left?.numberLiteral) {
+        query += value.left.numberLiteral
+    } else if (value.left?.stringLiteral) {
+        query += '"' + value.left.stringLiteral + '"'
+    } else if (value.left?.binaryExpr) {
+        query += queryBinary(value.left.binaryExpr)
     }
 
-    query += ' ' + value.binaryExpr.operator + ' '
+    query += ' ' + value.operator + ' '
 
-    if (value.binaryExpr.right?.numberLiteral) {
-        query += value.binaryExpr.right.numberLiteral
-    } else if (value.binaryExpr.right?.stringLiteral) {
-        query += '"' + value.binaryExpr.right.stringLiteral + '"'
-    } else if (value.binaryExpr.right?.vectorSelector) {
-        query += querySelectData(value.binaryExpr.right)
+    if (value.right?.numberLiteral) {
+        query += value.right.numberLiteral
+    } else if (value.right?.stringLiteral) {
+        query += '"' + value.right.stringLiteral + '"'
+    } else if (value.right?.binaryExpr) {
+        query += queryBinary(value.right.binaryExpr)
+    } else if (value.right?.vectorSelector) {
+        query += querySelectData(value.right.vectorSelector)
     }
 
     return query

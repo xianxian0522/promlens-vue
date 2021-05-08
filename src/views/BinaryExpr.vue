@@ -83,7 +83,7 @@ export default {
       error: '',
       isLoading: false,
     })
-    const showTips = ref(false)
+    const showTips = ref(true)
     const preview = {
       operator: props.binaryExpr?.operator || '/',
       switchOpen: !!props.binaryExpr?.binModifiers,
@@ -103,7 +103,7 @@ export default {
       if (props.binaryExpr.right && props.binaryExpr.left) {
         data.isLoading = true
         try {
-          await promRepository.queryDataAll( {query: queryBinary(props)})
+          await promRepository.queryDataAll( {query: queryBinary(props.binaryExpr)})
               .then((res: any) => {
                 data.status = res.status
                 data.data = res.data.result
@@ -141,6 +141,7 @@ export default {
       }
       console.log(v, str, data, '+++++++update binary', props.isLeft)
       content.emit('updateValue', [data, 'binaryExpr', index])
+      queryInfo()
     }
 
     const addExpr = () => {

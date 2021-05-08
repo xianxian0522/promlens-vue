@@ -252,9 +252,9 @@ export default {
         vectorSelector: getVectorSelector(),
         showLeft: updateLeft
       }
-      const data = {
-        query: querySelectData(value)
-      }
+      // const data = {
+      //   query: querySelectData(value)
+      // }
       await queryAllData()
       await updateExprValue([value, 'vectorSelector', updateExprIndex])
     }

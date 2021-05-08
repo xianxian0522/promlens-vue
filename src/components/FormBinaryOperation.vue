@@ -233,9 +233,9 @@ export default {
         binaryExpr: getBinary(),
         showLeft: updateLeft,
       }
-      const data = {
-        query: queryBinary(value)
-      }
+      // const data = {
+      //   query: queryBinary(value)
+      // }
 
       await queryAllData()
       await updateExprValue([value, 'binaryExpr', updateExprIndex])

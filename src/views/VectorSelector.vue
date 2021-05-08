@@ -103,7 +103,7 @@ export default {
     const queryInfo = async () => {
       data.isLoading = true
       try {
-        await promRepository.queryDataAll( {query: querySelectData(props)})
+        await promRepository.queryDataAll( {query: querySelectData(props.vectorSelector)})
             .then((res: any) => {
               data.status = res.status
               data.data = res.data.result
