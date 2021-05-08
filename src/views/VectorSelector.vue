@@ -33,16 +33,16 @@
       </span>
     </template>
     <template v-slot:infoLabel>
-      <div style="display: inline-block" v-if="data.status === 'success'">
-        <div style="display: inline-block" v-if="!data.isLoading">
+      <span style="display: inline-block" v-if="data.status === 'success'">
+        <span style="display: inline-block" v-if="!data.isLoading">
           {{ data.data.length }} results - 91ms -
           <div class="ast-node-label-stats" v-for="(item, index) in data.keyInfo" :key="index">
             <span class="ast-label-name" style="color: green;">{{ item.name }}</span>
             :{{ item.value }},
           </div>
-        </div>
+        </span>
         <span v-else><a-spin /></span>
-      </div>
+      </span>
       <div style="display: inline-block" v-else>
         <span v-if="!data.isLoading">
           <span class="ast-query-icon"></span>
@@ -59,11 +59,10 @@
 import TreeCommon from "@/components/TreeCommon.vue";
 import MatrixSelector from "@/views/MatrixSelector.vue";
 import PreviewSelectData from "@/components/PreviewSelectData.vue";
-import {inject, provide, reactive, ref, watch} from "vue";
+import {inject, onMounted, provide, reactive, ref, watch} from "vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
 import {promRepository} from "@/api/promRepository";
-import {querySelectData} from "@/utils/common";
-import {selectData} from "@/utils/store";
+import {dataInfo, querySelectData} from "@/utils/common";
 
 export default {
   name: "VectorSelector",
@@ -78,7 +77,14 @@ export default {
   setup(props: any, content) {
 
     const formValue: any = inject('exprChange')
-    const data = ref(selectData)
+    const data = reactive({
+      status: '',
+      data: [],
+      keyInfo: [],
+      error: '',
+      isLoading: false,
+      resultType: '',
+    })
     const nodeRef = ref()
 
     // const preview = {
@@ -90,13 +96,29 @@ export default {
     // }
 
     const queryAllData = async () => {
-      console.log(data.value, '============')
+      await queryInfo()
     }
-    // provide('queryAllData', queryAllData)
+    provide('queryAllData', queryAllData)
 
     const queryInfo = async () => {
-      // console.log(formValue(), 'select query info =====')
-      promRepository.querySelectDataAll({query: querySelectData(props)})
+      data.isLoading = true
+      try {
+        await promRepository.queryDataAll( {query: querySelectData(props)})
+            .then((res: any) => {
+              data.status = res.status
+              data.data = res.data.result
+              data.isLoading = false
+              data.keyInfo = dataInfo(data.data)
+            })
+            .catch(err => {
+              const value = {...err.response?.data}
+              data.status = value.status
+              data.error = value.error
+              data.isLoading = false
+            })
+      } catch (err) {
+        console.error(err)
+      }
     }
 
     const nodeRefHeight = () => {
@@ -116,6 +138,10 @@ export default {
       }
       content.emit('updateValue', [value, 'unknown', props.index])
     }
+
+    onMounted(() => {
+      queryInfo()
+    })
 
     return {
       // preview,

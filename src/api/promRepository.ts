@@ -44,29 +44,37 @@ promRepository.queryLabel = (params?: any) => request.get(`${ApiLabels}`, params
 
 promRepository.queryValueByLabelName = (labelName: string) => request.get(`${ApiValue}/${labelName}/values`).catch(err => console.error(err))
 
-promRepository.querySelectDataAll = (params?: any) => {
-    selectData.isLoading = true
-    request.get(`${ApiQueryAll}`, params)
-        .then((res: any) => {
-            selectData.status = res.status
-            selectData.data = res.data.result
-            selectData.isLoading = false
-            selectData.keyInfo = dataInfo(selectData.data)
-            // selectData.resultType = res.data.resultType
-            // if (selectData.resultType === 'vector') {
-            //     selectData.keyInfo = dataInfo(selectData.data)
-            // }
-            // console.log(res, 'query res', queryData,)
-            // return {...res}
-        })
-        .catch(err => {
-            const value = {...err.response?.data}
-            selectData.status = value.status
-            selectData.error = value.error
-            selectData.isLoading = false
-            // console.log({...err.response}, queryData)
-        })
-}
+promRepository.queryDataAll = (params?: any) => request.get(`${ApiQueryAll}`, params)
+
+// promRepository.queryDataAll = (str: string, params?: any) => {
+//     if (str === 'vector') {
+//         selectData.isLoading = true
+//     }
+//     request.get(`${ApiQueryAll}`, params)
+//         .then((res: any) => {
+//             if (str === 'vector') {
+//                 selectData.status = res.status
+//                 selectData.data = res.data.result
+//                 selectData.isLoading = false
+//                 selectData.keyInfo = dataInfo(selectData.data)
+//             }
+//             // selectData.resultType = res.data.resultType
+//             // if (selectData.resultType === 'vector') {
+//             //     selectData.keyInfo = dataInfo(selectData.data)
+//             // }
+//             // console.log(res, 'query res', queryData,)
+//             // return {...res}
+//         })
+//         .catch(err => {
+//             const value = {...err.response?.data}
+//             if (str === 'vector') {
+//                 selectData.status = value.status
+//                 selectData.error = value.error
+//                 selectData.isLoading = false
+//             }
+//             // console.log({...err.response}, queryData)
+//         })
+// }
 
 promRepository.queryLiteral = (str: string, params?: any) => {
     if (str === 'numberLiteral') {

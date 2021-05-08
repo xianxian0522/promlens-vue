@@ -22,3 +22,11 @@ export const stringLiteral = reactive({
     error: '',
     isLoading: false,
 })
+
+export const binaryOperation = reactive({
+    status: '',
+    data: [],
+    keyInfo: [],
+    error: '',
+    isLoading: false,
+})

@@ -481,15 +481,25 @@ p {
 .my-bottom:not(:last-child) {
   margin-bottom: .25rem!important;
 }
-.ast-query-icon {
+.ast-query-icon, .ast-query-icon-tips {
   display: inline-block;
   margin-right: 5px;
   height: 7px;
   width: 7px;
-  background: #a31515;
   border-radius: 50%;
 }
-.ast-node-query-error-message {
+.ast-query-icon {
+  background: #a31515;
+}
+.ast-query-icon-tips {
+ background: orange;
+}
+.ast-node-query-error-message, .ast-node-child-query-error-message {
   font-size: .8em;
+}
+.ast-node-query-error-message {
   color: #a31515;
+}
+.ast-node-child-query-error-message {
+  color: #a57723;
 }

@@ -106,7 +106,7 @@
 import {QuestionCircleOutlined, DeleteOutlined, PlusOutlined, CheckOutlined, } from '@ant-design/icons-vue'
 import {onMounted, reactive, ref, toRefs, watch, readonly, toRaw, inject} from "vue";
 import {labelNameData, metricNameData, promRepository} from "@/api/promRepository";
-import {querySelectData, validatorRule} from "@/utils/common";
+import {dataInfo, querySelectData, validatorRule} from "@/utils/common";
 
 export interface Label {
   labelName: string;
@@ -130,7 +130,7 @@ export default {
     const updateExprValue: any = inject('updateExprValue')
     const updateExprIndex: number | undefined = inject('updateExprIndex')
     const updateLeft: boolean | undefined = inject('updateLeft')
-    // const queryAllData: any = inject('queryAllData')
+    const queryAllData: any = inject('queryAllData')
 
     const formRef = ref()
     const formState = reactive({
@@ -255,11 +255,8 @@ export default {
       const data = {
         query: querySelectData(value)
       }
-      await promRepository.querySelectDataAll(data)
       await updateExprValue([value, 'vectorSelector', updateExprIndex])
-      // if (props.vectorSelector) {
-      //   queryAllData()
-      // }
+      await queryAllData()
     }
 
     onMounted(() => {

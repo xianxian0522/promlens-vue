@@ -38,7 +38,7 @@ export default {
     const queryAllData = async () => {
       // console.log( '+++============')
     }
-    // provide('queryAllData', queryAllData)
+    provide('queryAllData', queryAllData)
 
     const addExpr = () => {
       // const value = {

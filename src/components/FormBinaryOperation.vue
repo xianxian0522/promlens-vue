@@ -231,11 +231,14 @@ export default {
         binaryExpr: getBinary(),
         showLeft: updateLeft,
       }
+      const data = {
+        query: queryBinary(value)
+      }
 
       if (value.binaryExpr.left && value.binaryExpr.right) {
-        console.log(queryBinary(value), 'yyyyy')
+        console.log(data, 'yyyyy')
       }
-      console.log(queryBinary(value), 'xxxx')
+      console.log(data, 'xxxx')
       await updateExprValue([value, 'binaryExpr', updateExprIndex])
     }
 
