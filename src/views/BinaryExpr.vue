@@ -10,7 +10,7 @@
     </template>
     <template v-slot:innerText>
       <span class="promql-code" @click="queryInfo">
-        <PreviewBinary :preview="binaryExpr" :leftPreview="binaryExpr.left" :rightPreview="binaryExpr.right" :ellipsis="false" />
+        <PreviewBinary :preview="binaryExpr" :ellipsis="false" />
       </span>
 <!--      <div>{{ binaryExpr.operator }}</div>-->
     </template>

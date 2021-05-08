@@ -1,7 +1,7 @@
 <template>
 <span>
   <span v-if="ellipsis">
-    <span v-if="leftPreview">
+    <span v-if="preview?.left">
 <!--      <span class="promql-code" v-if="leftPreview.numberLiteral">-->
 <!--        <span class="promql-keyword">{{leftPreview.numberLiteral}}</span>-->
 <!--      </span>-->
@@ -84,7 +84,7 @@
   </span>
 
   <span v-if="ellipsis">
-    <span v-if="rightPreview">
+    <span v-if="preview?.right">
 <!--      <span class="promql-code" v-if="rightPreview.numberLiteral">-->
 <!--        <span class="promql-keyword">{{rightPreview.numberLiteral}}</span>-->
 <!--      </span>-->
@@ -110,7 +110,7 @@ export default {
     // PreviewAggregate: defineAsyncComponent(() => import('./PreviewAggregate.vue')),
     // PreviewSelectData: defineAsyncComponent(() => import('./PreviewSelectData.vue')),
   },
-  props: ['preview', 'leftPreview', 'rightPreview', 'ellipsis'],
+  props: ['preview', 'ellipsis'],
   setup(props) {
     console.log(props.leftPreview, props.rightPreview)
     let previewData
