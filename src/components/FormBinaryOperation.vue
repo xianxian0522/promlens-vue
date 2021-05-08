@@ -121,6 +121,8 @@ export default {
     const updateExprValue: any = inject('updateExprValue')
     const updateExprIndex: number | undefined = inject('updateExprIndex')
     const updateLeft: boolean | undefined = inject('updateLeft')
+    const queryAllData: any = inject('queryAllData')
+
     const formState = reactive({
       operator: props.binaryExpr?.operator || '/',
       switchOpen: !!props.binaryExpr?.binModifiers,
@@ -235,10 +237,7 @@ export default {
         query: queryBinary(value)
       }
 
-      if (value.binaryExpr.left && value.binaryExpr.right) {
-        console.log(data, 'yyyyy')
-      }
-      console.log(data, 'xxxx')
+      await queryAllData()
       await updateExprValue([value, 'binaryExpr', updateExprIndex])
     }
 

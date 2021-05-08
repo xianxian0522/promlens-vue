@@ -32,36 +32,36 @@
         <span class="ast-node-child-query-error-message">Please fill out missing child nodes</span>
       </span>
       <div style="display: inline-block" v-else>
-<!--        <div style="display: inline-block" v-if="data.status === 'success'">-->
-<!--          <div style="display: inline-block" v-if="!data.isLoading">-->
-<!--            {{ data.data.length }} results - 91ms - -->
-<!--            <div class="ast-node-label-stats" v-for="(item, index) in data.keyInfo" :key="index">-->
-<!--              <span class="ast-label-name" style="color: green;">{{ item.name }}</span>-->
-<!--              :{{ item.value }},-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <span v-else><a-spin /></span>-->
-<!--        </div>-->
-<!--        <div style="display: inline-block" v-else>-->
-<!--          <span v-if="!data.isLoading">-->
-<!--            <span class="ast-query-icon"></span>-->
-<!--            <span class="ast-node-query-error-message">Error executing query:{{ data.error }}</span>-->
-<!--          </span>-->
-<!--          <span v-else><a-spin /></span>-->
-<!--        </div>-->
+        <span style="display: inline-block" v-if="data.status === 'success'">
+          <span style="display: inline-block" v-if="!data.isLoading">
+            {{ data.data.length }} results - 91ms -
+            <div class="ast-node-label-stats" v-for="(item, index) in data.keyInfo" :key="index">
+              <span class="ast-label-name" style="color: green;">{{ item.name }}</span>
+              :{{ item.value }},
+            </div>
+          </span>
+          <span v-else><a-spin /></span>
+        </span>
+        <div style="display: inline-block" v-else>
+          <span v-if="!data.isLoading">
+            <span class="ast-query-icon"></span>
+            <span class="ast-node-query-error-message">Error executing query:{{ data.error }}</span>
+          </span>
+          <span v-else><a-spin /></span>
+        </div>
       </div>
     </template>
   </TreeCommon>
 </template>
 
 <script lang="ts">
-import {defineAsyncComponent, inject, provide, ref} from "vue";
+import {defineAsyncComponent, inject, provide, reactive, ref} from "vue";
 import TreeCommon from "@/components/TreeCommon.vue";
 import PreviewBinary from "@/components/PreviewBinary.vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
 import {binaryOperation} from "@/utils/store";
 import {promRepository} from "@/api/promRepository";
-import {queryBinary} from "@/utils/common";
+import {dataInfo, queryBinary} from "@/utils/common";
 
 export default {
   name: "BinaryExpr",
@@ -76,7 +76,13 @@ export default {
   setup(props: any, content) {
     // console.log(props, 'binary')
 
-    const data = ref(binaryOperation)
+    const data = reactive({
+      status: '',
+      data: [],
+      keyInfo: [],
+      error: '',
+      isLoading: false,
+    })
     const showTips = ref(false)
     const preview = {
       operator: props.binaryExpr?.operator || '/',
@@ -88,11 +94,31 @@ export default {
       includeLabels: props.binaryExpr?.binModifiers?.group.GroupRight || props.binaryExpr?.binModifiers?.group.GroupLeft,
     }
 
+    const queryAllData = async () => {
+      await queryInfo()
+    }
+    provide('queryAllData', queryAllData)
+
     const queryInfo = async () => {
       if (props.binaryExpr.right && props.binaryExpr.left) {
-        let query
-        console.log(props.binaryExpr.left, 'left')
-        // await promRepository.queryDataAll('binary', {query: queryBinary(props)})
+        data.isLoading = true
+        try {
+          await promRepository.queryDataAll( {query: queryBinary(props)})
+              .then((res: any) => {
+                data.status = res.status
+                data.data = res.data.result
+                data.isLoading = false
+                data.keyInfo = dataInfo(data.data)
+              })
+              .catch(err => {
+                const value = {...err.response?.data}
+                data.status = value.status
+                data.error = value.error
+                data.isLoading = false
+              })
+        } catch (err) {
+          console.error(err)
+        }
         showTips.value = false
       } else {
         showTips.value = true

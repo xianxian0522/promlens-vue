@@ -55,8 +55,24 @@ export const querySelectData = (value) => {
 }
 
 export const queryBinary = (value) => {
-    let query
-    console.log(value, '+++++++++')
+    let query = ''
+    if (value.binaryExpr.left?.vectorSelector) {
+        query += querySelectData(value.binaryExpr.left)
+    } else if (value.binaryExpr.left?.numberLiteral) {
+        query += value.binaryExpr.left.numberLiteral
+    } else if (value.binaryExpr.left?.stringLiteral) {
+        query += '"' + value.binaryExpr.left.stringLiteral + '"'
+    }
+
+    query += ' ' + value.binaryExpr.operator + ' '
+
+    if (value.binaryExpr.right?.numberLiteral) {
+        query += value.binaryExpr.right.numberLiteral
+    } else if (value.binaryExpr.right?.stringLiteral) {
+        query += '"' + value.binaryExpr.right.stringLiteral + '"'
+    } else if (value.binaryExpr.right?.vectorSelector) {
+        query += querySelectData(value.binaryExpr.right)
+    }
 
     return query
 }
