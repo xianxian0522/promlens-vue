@@ -8,7 +8,7 @@
               <a-form layout="vertical" ref="formRef" :model="formState" class="small">
                 <a-form-item label="Preview:">
                   <p class="ast-formatted" v-if="formState.queryType === 'BinaryOperation'">
-                    <PreviewBinary :preview="formState.preview" />
+                    <PreviewBinary :preview="formState.preview" :ellipsis="true" />
                   </p>
                   <p class="ast-formatted" v-if="formState.queryType === 'CallFunction'">
                     <PreviewFunction :preview="formState.preview" />
