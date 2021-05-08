@@ -126,7 +126,7 @@ export default {
     const formState = reactive({
       operator: props.binaryExpr?.operator || '/',
       switchOpen: !!props.binaryExpr?.binModifiers,
-      matchOn: props.binaryExpr?.binModifiers?.OnOrIgnoring.Ignoring ? 'ignoring' : 'on',
+      matchOn: props.binaryExpr?.binModifiers?.OnOrIgnoring.On ? 'on' : 'ignoring',
       ComparisonBehavior: props.binaryExpr?.binModifiers?.Bool ? 'bool' : 'filter',
       ignoreLabels: [] as string[],
       matchType: 'one-to-one',
@@ -237,8 +237,8 @@ export default {
       //   query: queryBinary(value)
       // }
 
-      await queryAllData()
       await updateExprValue([value, 'binaryExpr', updateExprIndex])
+      await queryAllData()
     }
 
     onMounted(() => {

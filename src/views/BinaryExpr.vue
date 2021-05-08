@@ -167,6 +167,7 @@ export default {
       content.emit('updateValue', [value, 'unknown', props.index])
     }
 
+
     return {
       data,
       showTips,

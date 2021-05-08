@@ -45,7 +45,6 @@
   <span class="ast-operator"> {{ preview ? preview?.operator : '/' }} </span>
   <span v-if="preview?.binModifiers">
     <span class="ast-keyword" v-if="preview?.binModifiers?.Bool"> bool </span>
-    <span class="ast-keyword" v-if="preview?.binModifiers?.OnOrIgnoring?.On"> on </span>
     <span v-if="preview?.binModifiers?.OnOrIgnoring?.Ignoring?.length > 0">
       <span class="ast-keyword" v-if="preview?.binModifiers?.OnOrIgnoring?.Ignoring"> ignoring </span>
       <span class="ast-parens">(</span>
@@ -55,11 +54,14 @@
       </span>
       <span class="ast-parens">)</span>
     </span>
-    <span v-if="preview?.binModifiers?.OnOrIgnoring?.On?.length > 0">
+    <span v-if="preview?.binModifiers?.OnOrIgnoring?.On">
+      <span class="ast-keyword"> on</span>
       <span class="ast-parens">(</span>
+      <span v-if="preview?.binModifiers?.OnOrIgnoring?.On?.length > 0">
       <span v-for="(item, index) in preview?.binModifiers?.OnOrIgnoring?.On" :key="index">
         <span class="ast-label-name">{{ item }}</span>
-        <span v-if="preview?.binModifiers?.OnOrIgnoring?.On.length > 1 && (preview?.binModifiers?.OnOrIgnoring?.On - 1) !== index">,</span>
+        <span v-if="preview?.binModifiers?.OnOrIgnoring?.On.length > 1 && (preview?.binModifiers?.OnOrIgnoring?.On.length - 1) !== index">,</span>
+      </span>
       </span>
       <span class="ast-parens">)</span>
     </span>

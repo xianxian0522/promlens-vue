@@ -68,6 +68,19 @@ export const queryBinary = (value) => {
 
     query += ' ' + value.operator + ' '
 
+    if (value.binModifiers?.Bool) {
+        query += 'bool '
+    }
+    if (value.binModifiers?.OnOrIgnoring && Object.prototype.hasOwnProperty.call(value.binModifiers?.OnOrIgnoring, 'On')) {
+        query += 'on('
+        if (value.binModifiers?.OnOrIgnoring.On?.length > 0) {
+            query += value.binModifiers?.OnOrIgnoring.On.join(',')
+        }
+        query += ') '
+    } else if (value.binModifiers?.OnOrIgnoring.Ignoring?.length > 0) {
+        query += 'ignoring(' + value.binModifiers?.OnOrIgnoring.Ignoring.join(',') + ') '
+    }
+
     if (value.right?.numberLiteral) {
         query += value.right.numberLiteral
     } else if (value.right?.stringLiteral) {
