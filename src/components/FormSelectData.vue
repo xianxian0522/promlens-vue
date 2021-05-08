@@ -255,8 +255,8 @@ export default {
       const data = {
         query: querySelectData(value)
       }
-      await updateExprValue([value, 'vectorSelector', updateExprIndex])
       await queryAllData()
+      await updateExprValue([value, 'vectorSelector', updateExprIndex])
     }
 
     onMounted(() => {

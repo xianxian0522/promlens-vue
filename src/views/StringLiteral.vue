@@ -38,7 +38,7 @@ import TreeCommon from "@/components/TreeCommon.vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
 import PreviewLiteralValue from "@/components/PreviewLiteralValue.vue";
 import {promRepository} from "@/api/promRepository";
-import {ref} from "vue";
+import {onMounted, provide, reactive, ref} from "vue";
 import {stringLiteral} from "@/utils/store";
 
 export default {
@@ -52,9 +52,36 @@ export default {
   },
   setup(props, content) {
 
-    const data = ref(stringLiteral)
+    const data = reactive({
+      status: '',
+      data: [],
+      error: '',
+      isLoading: false,
+    })
+
+    const queryAllData = async () => {
+      await queryInfo()
+    }
+    provide('queryAllData', queryAllData)
+
     const queryInfo = async () => {
-      promRepository.queryLiteral('stringLiteral', {query: props.stringLiteral})
+      data.isLoading = true
+      try {
+        await promRepository.queryDataAll( {query: '"' + props.stringLiteral + '"'})
+            .then((res: any) => {
+              data.status = res.status
+              data.data = res.data.result
+              data.isLoading = false
+            })
+            .catch(err => {
+              const value = {...err.response?.data}
+              data.status = value.status
+              data.error = value.error
+              data.isLoading = false
+            })
+      } catch (err) {
+        console.error(err)
+      }
     }
 
     const addExpr = () => {
@@ -70,6 +97,10 @@ export default {
       }
       content.emit('updateValue', [data, 'unknown', props.index])
     }
+
+    onMounted(() => {
+      queryInfo()
+    })
 
     return {
       data,

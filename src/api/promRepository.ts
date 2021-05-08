@@ -16,14 +16,6 @@ const storeState = reactive({
     metricNameData: [],
     labelNameData: [],
 })
-// const selectData = reactive({
-//     status: '',
-//     data: [],
-//     keyInfo: [],
-//     error: '',
-//     isLoading: false,
-//     resultType: '',
-// })
 
 const promRepository: any = {};
 promRepository.queryLabelName = (params?: any) => request.get(`${ApiLabelName}`, params)
