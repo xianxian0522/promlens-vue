@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts">
-import {defineAsyncComponent, inject, provide, reactive, ref} from "vue";
+import {defineAsyncComponent, inject, onMounted, provide, reactive, ref} from "vue";
 import TreeCommon from "@/components/TreeCommon.vue";
 import PreviewBinary from "@/components/PreviewBinary.vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
@@ -167,6 +167,9 @@ export default {
       content.emit('updateValue', [value, 'unknown', props.index])
     }
 
+    onMounted(() => {
+      queryInfo()
+    })
 
     return {
       data,
