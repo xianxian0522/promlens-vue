@@ -35,6 +35,21 @@ export const dataInfo = (data) => {
     return dataInfo
 }
 
+export const queryExpr = (value) => {
+    let query = ''
+    if (value.vectorSelector) {
+        query += querySelectData(value.vectorSelector)
+    } else if (value.numberLiteral) {
+        query += value.numberLiteral
+    } else if (value.stringLiteral) {
+        query += '"' + value.stringLiteral + '"'
+    } else if (value.binaryExpr) {
+        query += queryBinary(value.binaryExpr)
+    }
+
+    return query
+}
+
 export const querySelectData = (value) => {
     let query = value.metricIdentifier
     if (value.labelMatchers.length > 0) {
@@ -56,15 +71,16 @@ export const querySelectData = (value) => {
 
 export const queryBinary = (value) => {
     let query = ''
-    if (value.left?.vectorSelector) {
-        query += querySelectData(value.left.vectorSelector)
-    } else if (value.left?.numberLiteral) {
-        query += value.left.numberLiteral
-    } else if (value.left?.stringLiteral) {
-        query += '"' + value.left.stringLiteral + '"'
-    } else if (value.left?.binaryExpr) {
-        query += queryBinary(value.left.binaryExpr)
-    }
+    // if (value.left?.vectorSelector) {
+    //     query += querySelectData(value.left.vectorSelector)
+    // } else if (value.left?.numberLiteral) {
+    //     query += value.left.numberLiteral
+    // } else if (value.left?.stringLiteral) {
+    //     query += '"' + value.left.stringLiteral + '"'
+    // } else if (value.left?.binaryExpr) {
+    //     query += queryBinary(value.left.binaryExpr)
+    // }
+    query += queryExpr(value.left)
 
     query += ' ' + value.operator + ' '
 
@@ -94,15 +110,16 @@ export const queryBinary = (value) => {
         query += ') '
     }
 
-    if (value.right?.numberLiteral) {
-        query += value.right.numberLiteral
-    } else if (value.right?.stringLiteral) {
-        query += '"' + value.right.stringLiteral + '"'
-    } else if (value.right?.binaryExpr) {
-        query += queryBinary(value.right.binaryExpr)
-    } else if (value.right?.vectorSelector) {
-        query += querySelectData(value.right.vectorSelector)
-    }
+    // if (value.right?.numberLiteral) {
+    //     query += value.right.numberLiteral
+    // } else if (value.right?.stringLiteral) {
+    //     query += '"' + value.right.stringLiteral + '"'
+    // } else if (value.right?.binaryExpr) {
+    //     query += queryBinary(value.right.binaryExpr)
+    // } else if (value.right?.vectorSelector) {
+    //     query += querySelectData(value.right.vectorSelector)
+    // }
+    query += queryExpr(value.right)
 
     return query
 }
