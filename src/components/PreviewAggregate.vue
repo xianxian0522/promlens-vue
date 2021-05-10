@@ -11,7 +11,7 @@
 <!--    </span>-->
 <!--    <span class="promql-paren" v-if="(preview.preserve !== 'by' || preview.groupingLabels?.length > 0)">)</span>-->
 
-    <span class="promql-keyword">{{ preview ? preview?.aggregateOp : 'sum()' }}</span>
+    <span class="promql-keyword">{{ preview ? preview?.aggregateOp : 'sum' }}</span>
     <span v-if="preview?.aggregateModifier">
       <span v-if="preview?.aggregateModifier?.Without">
         <span class="promql-keyword"> without</span>
@@ -33,10 +33,12 @@
       </span>
     </span>
 
-    <span v-if="!isShowExpr && preview?.functionArgs">
+    <span v-if="!isShowExpr">
+      (<span v-if="preview?.functionArgs">
       <span v-for="(item, index) in preview?.functionArgs" :key="index">
-        (<PreviewSelectData v-if="item.vectorSelector" :preview="item.vectorSelector" />)
+        <PreviewSelectData v-if="item.vectorSelector" :preview="item.vectorSelector" />
       </span>
+      </span><span class="ast-ellipsis" v-else>...</span>)
     </span>
 
   </span>

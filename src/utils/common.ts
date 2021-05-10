@@ -123,3 +123,12 @@ export const queryBinary = (value) => {
 
     return query
 }
+
+export const queryAggregate = (value) => {
+    let query = value.aggregateOp + '('
+    value.functionArgs.forEach(fun => {
+        query += queryExpr(fun)
+    })
+    query += ')'
+    return query
+}

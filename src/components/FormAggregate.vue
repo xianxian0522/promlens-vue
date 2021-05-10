@@ -68,6 +68,8 @@ export default {
     const updateExprValue: any = inject('updateExprValue')
     const updateExprIndex: number | undefined = inject('updateExprIndex')
     const updateLeft = inject('updateLeft')
+    const queryAllData: any = inject('queryAllData')
+
     const formState = reactive({
       aggregationType: props.aggregateExpr?.aggregateOp || 'sum',
       preserve: 'by',
@@ -130,12 +132,13 @@ export default {
       return data
     }
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
       const value = {
         aggregateExpr: getAggregate(),
         showLeft: updateLeft,
       }
-      updateExprValue([value, 'aggregateExpr', updateExprIndex])
+      await updateExprValue([value, 'aggregateExpr', updateExprIndex])
+      await queryAllData()
     }
 
     onMounted(() => {
