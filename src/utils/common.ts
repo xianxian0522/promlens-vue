@@ -80,6 +80,19 @@ export const queryBinary = (value) => {
     } else if (value.binModifiers?.OnOrIgnoring.Ignoring?.length > 0) {
         query += 'ignoring(' + value.binModifiers?.OnOrIgnoring.Ignoring.join(',') + ') '
     }
+    if (value.binModifiers?.group && Object.prototype.hasOwnProperty.call(value.binModifiers?.group, 'GroupLeft')) {
+        query += 'group_left('
+        if (value.binModifiers?.group.GroupLeft?.length > 0) {
+            query += value.binModifiers?.group.GroupLeft.join(',')
+        }
+        query += ') '
+    } else if (value.binModifiers?.group && Object.prototype.hasOwnProperty.call(value.binModifiers?.group, 'GroupRight')) {
+        query += 'group_right('
+        if (value.binModifiers?.group.GroupRight?.length > 0) {
+            query += value.binModifiers?.group.GroupRight.join(',')
+        }
+        query += ') '
+    }
 
     if (value.right?.numberLiteral) {
         query += value.right.numberLiteral
