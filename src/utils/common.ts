@@ -45,6 +45,8 @@ export const queryExpr = (value) => {
         query += '"' + value.stringLiteral + '"'
     } else if (value.binaryExpr) {
         query += queryBinary(value.binaryExpr)
+    } else if (value.aggregateExpr) {
+        query += queryAggregate(value.aggregateExpr)
     }
 
     return query
@@ -125,10 +127,24 @@ export const queryBinary = (value) => {
 }
 
 export const queryAggregate = (value) => {
-    let query = value.aggregateOp + '('
-    value.functionArgs.forEach(fun => {
-        query += queryExpr(fun)
-    })
+    let query = value.aggregateOp
+    if (value.aggregateModifier && Object.prototype.hasOwnProperty.call(value.aggregateModifier, 'Without')) {
+        query += ' without('
+        if (value.aggregateModifier.Without?.length > 0) {
+            query += value.aggregateModifier.Without.join(',')
+        }
+        query += ') '
+    } else if (value.aggregateModifier.By?.length > 0) {
+        query += ' by(' + value.aggregateModifier.By.join(',') + ') '
+    }
+    query += '('
+    if (value.functionArgs?.length > 0) {
+        value.functionArgs.forEach(fun => {
+            query += queryExpr(fun)
+        })
+    } else {
+        return ''
+    }
     query += ')'
     return query
 }

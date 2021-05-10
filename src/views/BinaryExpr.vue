@@ -128,7 +128,7 @@ export default {
       }
     }
 
-    const updateValue = (value) => {
+    const updateValue = async (value) => {
       const [v, str, index] = value
       // let data = {
       //   left: props.binaryExpr.left,
@@ -143,8 +143,8 @@ export default {
         data.right = v;
       }
       console.log(v, str, data, '+++++++update binary', props.isLeft)
-      content.emit('updateValue', [data, 'binaryExpr', index])
-      queryInfo()
+      await content.emit('updateValue', [data, 'binaryExpr', index])
+      await queryInfo()
     }
 
     const addExpr = () => {

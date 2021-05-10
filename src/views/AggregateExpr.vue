@@ -135,7 +135,7 @@ export default {
       content.emit('updateValue', [value, 'unknown', props.index])
     }
 
-    const updateValue = (value) => {
+    const updateValue = async (value) => {
       const [v, str, index] = value
       const k = props.aggregateExpr.aggregateModifier.Without ? 'Without' : 'By'
       const data = {
@@ -153,8 +153,8 @@ export default {
       }
       data.aggregateExpr.functionArgs[index] = v;
       console.log('updata agg', v, str, data)
-      content.emit('updateValue', [data, 'aggregateExpr', index])
-      queryInfo()
+      await content.emit('updateValue', [data, 'aggregateExpr', index])
+      await queryInfo()
     }
 
     onMounted(() => {
