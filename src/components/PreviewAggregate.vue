@@ -20,7 +20,7 @@
           <span class="promql-code promql-label-name">{{item}}</span>
           <span v-if="preview?.aggregateModifier?.Without?.length > 1 && (preview?.aggregateModifier?.Without?.length - 1) !== index">,</span>
         </span>
-        <span class="promql-paren">)</span>
+        <span class="promql-paren">) </span>
       </span>
       <span v-if="preview?.aggregateModifier?.By?.length > 0">
         <span class="promql-keyword"> by</span>
@@ -29,30 +29,32 @@
           <span class="promql-code promql-label-name">{{item}}</span>
           <span v-if="preview?.aggregateModifier?.By?.length > 1 && (preview?.aggregateModifier?.By?.length - 1) !== index">,</span>
         </span>
-        <span class="promql-paren">)</span>
+        <span class="promql-paren">) </span>
       </span>
     </span>
 
-    <span v-if="!isShowExpr">
-      (<span v-if="preview?.functionArgs">
-      <span v-for="(item, index) in preview?.functionArgs" :key="index">
-        <PreviewSelectData v-if="item.vectorSelector" :preview="item.vectorSelector" />
+    <span v-if="!isShowExpr">(<span v-if="preview?.functionArgs">
+        <span v-for="(item, index) in preview?.functionArgs" :key="index">
+          <PreviewExpr :preview="item" />
+<!--          <PreviewSelectData v-if="item.vectorSelector" :preview="item.vectorSelector" />-->
+<!--          <PreviewAggregate v-if="item.aggregateExpr" :preview="item.aggregateExpr"/>-->
+        </span>
       </span>
-      </span><span class="ast-ellipsis" v-else>...</span>)
-    </span>
-
+      <span class="ast-ellipsis" v-else>...</span>)</span>
   </span>
 </span>
 </template>
 
 <script lang="ts">
 import PreviewSelectData from "@/components/PreviewSelectData.vue";
+import {defineAsyncComponent} from "vue";
 
 export default {
   name: "PreviewAggregate",
   props: ['preview', 'isShowExpr'],
   components: {
-    PreviewSelectData,
+    // PreviewSelectData,
+    PreviewExpr: defineAsyncComponent(() => import('./PreviewExpr.vue')),
   },
   setup() {
     const previewData = (item) => {

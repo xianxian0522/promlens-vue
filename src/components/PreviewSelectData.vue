@@ -21,7 +21,7 @@
     <!--          <MatrixSelector :matrixSelector="vectorSelector.matrixSelector"/>-->
   </span>
   <span v-if="(preview?.matrixSelector && preview?.matrixSelector?.duration.slice(0, -1) !== '0')">
-    <span class="promql-keyword" >offset </span>
+    <span class="promql-keyword" > offset </span>
     <span class="promql-duration">{{preview?.matrixSelector?.duration}}</span>
   </span>
 </span>

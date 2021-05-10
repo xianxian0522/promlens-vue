@@ -2,15 +2,17 @@
 <span>
   <span v-if="ellipsis">
     <span v-if="preview?.left">
-<!--      <span class="promql-code" v-if="leftPreview.numberLiteral">-->
-<!--        <span class="promql-keyword">{{leftPreview.numberLiteral}}</span>-->
+      <PreviewExpr :preview="preview.left" rightOrLeft="right"/>
+<!--      <span v-if="preview.left.numberLiteral || preview.left.numberLiteral === 0">-->
+<!--        <PreviewLiteralValue :preview="preview.left.numberLiteral" numOrStr="numberLiteral" />-->
 <!--      </span>-->
-<!--      <span class="promql-code" v-else-if="leftPreview.stringLiteral">-->
-<!--        <span class="promql-keyword">{{leftPreview.stringLiteral}}</span>-->
+<!--      <PreviewLiteralValue v-else-if="preview.left.stringLiteral" :preview="preview.left.stringLiteral" numOrStr="stringLiteral" />-->
+<!--      <PreviewFunction v-else-if="preview.left.functionCall" :preview="preview.left.functionCall" />-->
+<!--      <PreviewAggregate v-else-if="preview.left.aggregateExpr" :preview="preview.left.aggregateExpr" />-->
+<!--      <span v-else-if="preview.left.vectorSelector">-->
+<!--        <PreviewSelectData :preview="preview.left.vectorSelector" />-->
+<!--        <span style="display: inline-block; width: 4px"></span>-->
 <!--      </span>-->
-<!--      <PreviewFunction v-else-if="leftPreview.functionCall" :preview="previewData" />-->
-<!--      <PreviewAggregate v-else-if="leftPreview.aggregateExpr" :preview="previewData" />-->
-<!--      <PreviewSelectData v-else-if="leftPreview.vectorSelector" :preview="previewData" />-->
     </span>
     <span v-else class="ast-ellipsis">...</span>
   </span>
@@ -87,15 +89,12 @@
 
   <span v-if="ellipsis">
     <span v-if="preview?.right">
-<!--      <span class="promql-code" v-if="rightPreview.numberLiteral">-->
-<!--        <span class="promql-keyword">{{rightPreview.numberLiteral}}</span>-->
-<!--      </span>-->
-<!--      <span class="promql-code" v-else-if="rightPreview.stringLiteral">-->
-<!--        <span class="promql-keyword">{{rightPreview.stringLiteral}}</span>-->
-<!--      </span>-->
-<!--      <PreviewFunction v-else-if="rightPreview.functionCall" :preview="previewData" />-->
-<!--      <PreviewAggregate v-else-if="rightPreview.aggregateExpr" :preview="previewData" />-->
-<!--      <PreviewSelectData v-else-if="rightPreview.vectorSelector" :preview="previewData" />-->
+      <PreviewExpr :preview="preview.right" rightOrLeft="left" />
+<!--      <PreviewLiteralValue v-if="preview.right.numberLiteral || preview.right.numberLiteral === 0" :preview="preview.right.numberLiteral" numOrStr="numberLiteral" />-->
+<!--      <PreviewLiteralValue v-else-if="preview.right.stringLiteral" :preview="preview.right.stringLiteral" numOrStr="stringLiteral" />-->
+<!--      <PreviewFunction v-else-if="preview.right.functionCall" :preview="preview.right.functionCall" />-->
+<!--      <PreviewAggregate v-else-if="preview.right.aggregateExpr" :preview="preview.right.aggregateExpr" />-->
+<!--      <PreviewSelectData v-else-if="preview.right.vectorSelector" :preview="preview.right.vectorSelector" />-->
     </span>
     <span v-else class="ast-ellipsis">...</span>
   </span>
@@ -108,9 +107,11 @@ import {defineAsyncComponent} from "vue";
 export default {
   name: "PreviewBinary",
   components: {
+    PreviewExpr: defineAsyncComponent(() => import('./PreviewExpr.vue')),
     // PreviewFunction: defineAsyncComponent(() => import('./PreviewFunction.vue')),
     // PreviewAggregate: defineAsyncComponent(() => import('./PreviewAggregate.vue')),
     // PreviewSelectData: defineAsyncComponent(() => import('./PreviewSelectData.vue')),
+    // PreviewLiteralValue: defineAsyncComponent(() => import('./PreviewLiteralValue.vue')),
   },
   props: ['preview', 'ellipsis'],
   setup(props) {
