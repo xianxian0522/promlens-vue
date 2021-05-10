@@ -37,16 +37,18 @@ export const dataInfo = (data) => {
 
 export const queryExpr = (value) => {
     let query = ''
-    if (value.vectorSelector) {
-        query += querySelectData(value.vectorSelector)
-    } else if (value.numberLiteral) {
-        query += value.numberLiteral
-    } else if (value.stringLiteral) {
-        query += '"' + value.stringLiteral + '"'
-    } else if (value.binaryExpr) {
-        query += queryBinary(value.binaryExpr)
-    } else if (value.aggregateExpr) {
-        query += queryAggregate(value.aggregateExpr)
+    if (value?.vectorSelector) {
+        query += querySelectData(value?.vectorSelector)
+    } else if (value?.numberLiteral) {
+        query += value?.numberLiteral
+    } else if (value?.stringLiteral) {
+        query += '"' + value?.stringLiteral + '"'
+    } else if (value?.binaryExpr) {
+        query += queryBinary(value?.binaryExpr)
+    } else if (value?.aggregateExpr) {
+        query += queryAggregate(value?.aggregateExpr)
+    } else if (value?.functionCall) {
+        query += queryFunction(value?.functionCall)
     }
 
     return query
@@ -138,6 +140,19 @@ export const queryAggregate = (value) => {
         query += ' by(' + value.aggregateModifier.By.join(',') + ') '
     }
     query += '('
+    if (value.functionArgs?.length > 0) {
+        value.functionArgs.forEach(fun => {
+            query += queryExpr(fun)
+        })
+    } else {
+        return ''
+    }
+    query += ')'
+    return query
+}
+
+export const queryFunction = (value) => {
+    let query = value.functionIdentifier + '('
     if (value.functionArgs?.length > 0) {
         value.functionArgs.forEach(fun => {
             query += queryExpr(fun)

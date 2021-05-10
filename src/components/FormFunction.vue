@@ -31,6 +31,8 @@ export default {
     const updateExprValue: any = inject('updateExprValue')
     const updateExprIndex: number | undefined = inject('updateExprIndex')
     const updateLeft = inject('updateLeft')
+    const queryAllData: any = inject('queryAllData')
+
     const formState = reactive({
       functionIdentifier: (props.functionCall && props.functionCall.functionIdentifier) || 'rate',
       functionArgs: (props.functionCall && props.functionCall.functionArgs)
@@ -142,12 +144,13 @@ export default {
       return data
     }
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
       const value = {
         functionCall: getFunction(),
         showLeft: updateLeft,
       }
-      updateExprValue([value, 'functionCall', updateExprIndex])
+      await updateExprValue([value, 'functionCall', updateExprIndex])
+      await queryAllData()
     }
 
     onMounted(() => {

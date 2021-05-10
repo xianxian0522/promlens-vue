@@ -33,26 +33,27 @@
       </span>
     </template>
     <template v-slot:infoLabel>
-      <span style="display: inline-block" v-if="data.status === 'success'">
-        <span style="display: inline-block" v-if="!data.isLoading">
-          {{ data.data.length }} results - 91ms -
-          <span v-if="data.keyInfo.length > 0">
-            <div class="ast-node-label-stats" v-for="(item, index) in data.keyInfo" :key="index">
-            <span class="ast-label-name" style="color: green;">{{ item.name }}</span>
-            :{{ item.value }},
-            </div>
-          </span>
-          <span v-else>no labels</span>
-        </span>
-        <span v-else><a-spin /></span>
-      </span>
-      <div style="display: inline-block" v-else>
-        <span v-if="!data.isLoading">
-          <span class="ast-query-icon"></span>
-          <span class="ast-node-query-error-message">Error executing query:{{ data.error }}</span>
-        </span>
-        <span v-else><a-spin /></span>
-      </div>
+      <CommonInfoLabel :data="data" />
+<!--      <span style="display: inline-block" v-if="data.status === 'success'">-->
+<!--        <span style="display: inline-block" v-if="!data.isLoading">-->
+<!--          {{ data.data.length }} results - 91ms - -->
+<!--          <span v-if="data.keyInfo.length > 0">-->
+<!--            <div class="ast-node-label-stats" v-for="(item, index) in data.keyInfo" :key="index">-->
+<!--            <span class="ast-label-name" style="color: green;">{{ item.name }}</span>-->
+<!--            :{{ item.value }},-->
+<!--            </div>-->
+<!--          </span>-->
+<!--          <span v-else>no labels</span>-->
+<!--        </span>-->
+<!--        <span v-else><a-spin /></span>-->
+<!--      </span>-->
+<!--      <div style="display: inline-block" v-else>-->
+<!--        <span v-if="!data.isLoading">-->
+<!--          <span class="ast-query-icon"></span>-->
+<!--          <span class="ast-node-query-error-message">Error executing query:{{ data.error }}</span>-->
+<!--        </span>-->
+<!--        <span v-else><a-spin /></span>-->
+<!--      </div>-->
     </template>
   </TreeCommon>
 </span>
@@ -60,7 +61,7 @@
 
 <script lang="ts">
 import TreeCommon from "@/components/TreeCommon.vue";
-import MatrixSelector from "@/views/MatrixSelector.vue";
+import CommonInfoLabel from "@/components/CommonInfoLabel.vue";
 import PreviewSelectData from "@/components/PreviewSelectData.vue";
 import {inject, onMounted, provide, reactive, ref, watch} from "vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
@@ -74,7 +75,7 @@ export default {
   components: {
     PlusOutlined,
     TreeCommon,
-    // MatrixSelector,
+    CommonInfoLabel,
     PreviewSelectData,
   },
   setup(props: any, content) {

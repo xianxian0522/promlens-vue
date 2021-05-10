@@ -13,36 +13,33 @@
         <PlusOutlined @click.stop="addExpr" class="ast-connector-plus ast-connector-plus-up" />
       </template>
       <template v-slot:innerText>
-        <span class="promql-code">
+        <span class="promql-code" @click="queryInfo">
           <span class="promql-keyword">{{functionCall.functionIdentifier}}</span>
         </span>
       </template>
-<!--    需要判断是否有  -->
-<!--      <template v-slot:infoLabel>-->
-<!--        16 results - 91ms - -->
-<!--        <div class="ast-node-label-stats">-->
-<!--          <span class="ast-label-name" style="color: green;">host</span>-->
-<!--          :16,-->
-<!--        </div>-->
-<!--        <div class="ast-node-label-stats">-->
-<!--          <span class="ast-label-name" style="color: green;">instance</span>-->
-<!--          :16,-->
-<!--        </div>-->
-<!--      </template>-->
+      <template v-slot:infoLabel>
+        <CommonInfoLabel :showTips="showTips" :data="data" />
+      </template>
     </TreeCommon>
     <div class="ast-node">
-      <div v-for="(fun, index) in functionCall.functionArgs" :key="index">
-        <Expr :expr="fun" @updateValue="updateValue" :index="index" :showLeft="showLeft"/>
+      <div v-if="functionCall.functionArgs">
+        <div v-for="(fun, index) in functionCall.functionArgs" :key="index">
+          <Expr :expr="fun" @updateValue="updateValue" :index="index" :showLeft="showLeft"/>
+        </div>
       </div>
+      <div v-else><Expr :expr="functionCall.functionArgs" @updateValue="updateValue" :index="0" :showLeft="showLeft" /></div>
     </div>
   </div>
 </div>
 </template>
 
 <script lang="ts">
-import {Component, defineAsyncComponent, inject, onMounted, ref, watch} from "vue";
+import {Component, defineAsyncComponent, inject, onMounted, provide, reactive, ref, watch} from "vue";
 import TreeCommon from "@/components/TreeCommon.vue";
+import CommonInfoLabel from "@/components/CommonInfoLabel.vue";
 import {PlusOutlined,} from '@ant-design/icons-vue'
+import {promRepository} from "@/api/promRepository";
+import {dataInfo, queryFunction} from "@/utils/common";
 
 export default {
   name: "FunctionCall",
@@ -50,6 +47,7 @@ export default {
   components: {
     PlusOutlined,
     TreeCommon,
+    CommonInfoLabel,
     Expr: defineAsyncComponent(() => import('./Expr.vue'))
   },
   emits: ['updateValue'],
@@ -57,9 +55,49 @@ export default {
     // console.log(props);
 
     const nodeRef = ref()
+    const data = reactive({
+      status: '',
+      data: [],
+      keyInfo: [],
+      error: '',
+      isLoading: false,
+    })
+    const showTips = ref(true)
 
     const nodeRefHeight = () => {
       console.log(nodeRef.value.offsetHeight, 'height')
+    }
+
+    const queryAllData = async () => {
+      await queryInfo()
+    }
+    provide('queryAllData', queryAllData)
+
+    const queryInfo = async () => {
+      console.log(props.functionCall, 'query info +++')
+      if (props.functionCall.functionArgs?.length > 0) {
+        data.isLoading = true
+        try {
+          await promRepository.queryDataAll( {query: queryFunction(props.functionCall)})
+              .then((res: any) => {
+                data.status = res.status
+                data.data = res.data.result
+                data.isLoading = false
+                data.keyInfo = dataInfo(data.data)
+              })
+              .catch(err => {
+                const value = {...err.response?.data}
+                data.status = value.status
+                data.error = value.error
+                data.isLoading = false
+              })
+        } catch (err) {
+          console.error(err)
+        }
+        showTips.value = false
+      } else {
+        showTips.value = true
+      }
     }
 
     const addExpr = () => {
@@ -77,7 +115,7 @@ export default {
       content.emit('updateValue', [value, 'unknown', props.index])
     }
 
-    const updateValue = (value) => {
+    const updateValue = async (value) => {
       const [v, str, index] = value
       // const data = {
       //   functionCall: {
@@ -90,19 +128,27 @@ export default {
         functionCall: props.functionCall,
         showLeft: props.showLeft,
       }
+      if (!data.functionCall.functionArgs) {
+        data.functionCall.functionArgs = []
+      }
       data.functionCall.functionArgs[index] = v;
       console.log(v, str, data, 'function updata')
-      content.emit('updateValue', [data, 'functionCall', index])
+      await content.emit('updateValue', [data, 'functionCall', index])
+      await queryInfo()
     }
 
     onMounted(() => {
+      queryInfo()
     })
 
     return {
+      data,
+      showTips,
       nodeRef,
       addExpr,
       updateValue,
       nodeRefHeight,
+      queryInfo,
     }
   },
 }
