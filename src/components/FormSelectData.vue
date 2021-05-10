@@ -206,18 +206,22 @@ export default {
     }
 
     const getVectorSelector = () => {
+      formState.offset = Number(formState.offset.slice(0, -1)) + formState.offset.slice(-1)
+      formState.range = Number(formState.range.slice(0, -1)) + formState.range.slice(-1)
       const data: any = {
         metricIdentifier: formState.metricName,
         labelMatchers: [],
         matrixSelector: {
           expr: {},
-          duration: formState.offset,
+          // duration: Number(formState.offset.slice(0, -1)) + formState.offset.slice(-1),
+          duration: formState.offset
         },
       }
       if (formState.select === 'range') {
         data.offsetExpr = {
           offset: true,
-          duration: formState.range,
+          // duration: Number(formState.range.slice(0, -1)) + formState.range.slice(-1)
+          duration: formState.range
         }
       }
       state.labelMatchers.map((item, index) => {

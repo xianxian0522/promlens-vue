@@ -12,29 +12,29 @@
         <PlusOutlined @click.stop="addExpr" class="ast-connector-plus ast-connector-plus-up" />
       </template>
       <template v-slot:innerText>
-        <PreviewSubQuery :preview="subqueryExpr" :ellipsis="false"/>
+        <span class="promql-code" @click="queryInfo">
+          <PreviewSubQuery :preview="subqueryExpr" :ellipsis="false"/>
+        </span>
 <!--        [<span class="ast-duration">{{ subqueryExpr.duration }}</span>:<span class="ast-duration">1m</span>]-->
       </template>
       <template v-slot:infoLabel>
-        16 results - 91ms -
-        <div class="ast-node-label-stats">
-          <span class="ast-label-name" style="color: green;">host</span>
-          :16,
-        </div>
-        <div class="ast-node-label-stats">
-          <span class="ast-label-name" style="color: green;">instance</span>
-          :16,
-        </div>
+        <CommonInfoLabel :data="data" :showTips="showTips" />
       </template>
     </TreeCommon>
+    <div class="ast-node">
+      <Expr :expr="subqueryExpr.expr" @updateValue="updateValue" :showLeft="showLeft" :index="index" />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import TreeCommon from '@/components/TreeCommon.vue'
+import CommonInfoLabel from "@/components/CommonInfoLabel.vue";
 import PreviewSubQuery from "@/components/PreviewSubQuery.vue";
-import {defineAsyncComponent} from "vue";
+import {defineAsyncComponent, onMounted, provide, reactive, ref} from "vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
+import {promRepository} from "@/api/promRepository";
+import {dataInfo, querySubquery} from "@/utils/common";
 
 export default {
   name: "SubqueryExpr",
@@ -43,7 +43,8 @@ export default {
     TreeCommon,
     PlusOutlined,
     PreviewSubQuery,
-    // Expr: defineAsyncComponent(() => import('./Expr.vue'))
+    CommonInfoLabel,
+    Expr: defineAsyncComponent(() => import('./Expr.vue'))
   },
   emits: ['updateValue'],
   setup(props, content) {
@@ -51,6 +52,46 @@ export default {
       offset: props.subqueryExpr?.offsetExpr?.duration || '0s',
       range: props.subqueryExpr?.range || '1h',
       step: props.subqueryExpr?.step || '0s',
+    }
+
+    const data = reactive({
+      status: '',
+      data: [],
+      keyInfo: [],
+      error: '',
+      isLoading: false,
+    })
+    const showTips = ref(true)
+
+    const queryAllData = async () => {
+      await queryInfo()
+    }
+    provide('queryAllData', queryAllData)
+
+    const queryInfo = async () => {
+      if (props.subqueryExpr?.expr) {
+        data.isLoading = true
+        try {
+          await promRepository.queryDataAll( {query: querySubquery(props.subqueryExpr)})
+              .then((res: any) => {
+                data.status = res.status
+                data.data = res.data.result
+                data.isLoading = false
+                data.keyInfo = dataInfo(data.data)
+              })
+              .catch(err => {
+                const value = {...err.response?.data}
+                data.status = value.status
+                data.error = value.error
+                data.isLoading = false
+              })
+        } catch (err) {
+          console.error(err)
+        }
+        showTips.value = false
+      } else {
+        showTips.value = true
+      }
     }
 
     const addExpr = () => {
@@ -68,9 +109,29 @@ export default {
       content.emit('updateValue', [value, 'unknown', props.index])
     }
 
+    const updateValue = async (value) => {
+      const [v, str, index] = value
+      const data = {
+        subqueryExpr: props.subqueryExpr,
+        showLeft: props.showLeft
+      }
+      data.subqueryExpr.expr = v
+      console.log(v, str, data, 'subqueryExpr')
+      await content.emit('updateValue', [data, 'subqueryExpr', index])
+      await queryInfo()
+    }
+
+    onMounted(() => {
+      queryInfo()
+    })
+
     return {
+      data,
+      showTips,
       preview,
       addExpr,
+      updateValue,
+      queryInfo,
     }
   }
 }

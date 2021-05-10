@@ -172,3 +172,18 @@ export const queryParentheses = (value) => {
     query += ')'
     return query
 }
+
+export const querySubquery = (value) => {
+    let query = queryExpr(value.expr)
+    if (value.range) {
+        query += '[' + value.range + ':'
+    }
+    if (value.step && value.step.slice(0, -1) !== '0') {
+        query += value.step
+    }
+    query += ']'
+    if (value.offsetExpr?.offset) {
+        query += ' offset ' + value.offsetExpr.duration
+    }
+    return query
+}

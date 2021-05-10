@@ -37,6 +37,8 @@ export default {
     const updateExprValue: any = inject('updateExprValue')
     const updateExprIndex: number | undefined = inject('updateExprIndex')
     const updateLeft = inject('updateLeft')
+    const queryAllData: any = inject('queryAllData')
+
     const formState = reactive({
       offset: props.subqueryExpr?.offsetExpr?.duration || '0s',
       range: props.subqueryExpr?.range || '1h',
@@ -57,25 +59,29 @@ export default {
     }
 
     const getSubquery = () => {
+      formState.step = Number(formState.step.slice(0, -1)) + formState.step.slice(-1)
+      formState.offset = Number(formState.offset.slice(0, -1)) + formState.offset.slice(-1)
       const data: any = {
         range: formState.range,
         step: formState.step,
+        expr: props.subqueryExpr?.expr
       }
-      if (formState.offset.slice(0, -1) !== '0') {
+      if (Number(formState.offset.slice(0, -1)) !== 0) {
         data.offsetExpr = {
           offset: true,
-          duration: formState.offset,
+          duration: formState.offset
         }
       }
       return data
     }
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
       const value = {
         subqueryExpr: getSubquery(),
         showLeft: updateLeft,
       }
-      updateExprValue([value, 'subqueryExpr', updateExprIndex])
+      await updateExprValue([value, 'subqueryExpr', updateExprIndex])
+      await queryAllData()
     }
 
     content.emit('previewChange', props.subqueryExpr)
