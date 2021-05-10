@@ -37,13 +37,10 @@ export default {
     const queryAllData: any = inject('queryAllData')
 
     const formState = reactive({
-      valueType: props.stringLiteral ? 'stringLiteral' : 'numberLiteral',
+      valueType: props.stringLiteral === '' || props.stringLiteral ? 'stringLiteral' : 'numberLiteral',
       numValue: props.numberLiteral || 0,
       stringValue: props.stringLiteral || '',
     })
-    if (props.numberLiteral || props.stringLiteral === '') {
-      formState.valueType = 'numberLiteral'
-    }
 
     const getLiteral = () => {
       let value

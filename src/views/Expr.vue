@@ -15,7 +15,7 @@
   <div v-else-if="expr?.numberLiteral === 0 || expr?.numberLiteral">
     <NumberLiteral :outermost="outermost" :numberLiteral="expr.numberLiteral" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
-  <div v-else-if="expr?.stringLiteral">
+  <div v-else-if="expr?.stringLiteral === '' || expr?.stringLiteral">
     <StringLiteral :outermost="outermost" :stringLiteral="expr.stringLiteral" @updateValue="updateValue" :index="index" :isLeft="isLeft" :showLeft="showLeft" />
   </div>
   <div v-else-if="expr?.aggregateExpr">

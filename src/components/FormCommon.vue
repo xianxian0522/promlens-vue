@@ -136,7 +136,8 @@ export default {
     formState.queryType = exprChange()?.functionCall ? 'CallFunction' : exprChange()?.binaryExpr ? 'BinaryOperation'
         : exprChange()?.aggregateExpr ? 'AggregateOverLabels' : exprChange()?.subqueryExpr ? 'Subquery'
             : exprChange()?.unaryExpr ? 'UnaryExpression' : exprChange()?.parenExpr ? 'Parentheses'
-                : exprChange()?.numberLiteral === 0 || exprChange()?.numberLiteral ? 'LiteralValue' : exprChange()?.stringLiteral ? 'LiteralValue' : 'SelectData'
+                : exprChange()?.numberLiteral === 0 || exprChange()?.numberLiteral ? 'LiteralValue'
+                    : exprChange()?.stringLiteral === '' || exprChange()?.stringLiteral ? 'LiteralValue' : 'SelectData'
 
     const onSubmit = () => {
       formRef.value

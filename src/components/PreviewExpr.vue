@@ -5,7 +5,7 @@
     <PreviewLiteralValue :preview="preview.numberLiteral" numOrStr="numberLiteral" />
     <span v-if="rightOrLeft === 'right'" class="left-or-right"></span>
   </span>
-  <span v-else-if="preview.stringLiteral">
+  <span v-else-if="preview.stringLiteral || preview.stringLiteral === ''">
     <span v-if="rightOrLeft === 'left'" class="left-or-right"></span>
     <PreviewLiteralValue :preview="preview.stringLiteral" numOrStr="stringLiteral" />
     <span v-if="rightOrLeft === 'right'" class="left-or-right"></span>
