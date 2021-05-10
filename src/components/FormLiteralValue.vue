@@ -59,13 +59,13 @@ export default {
       if (formState.valueType === 'numberLiteral') {
         value.numberLiteral = getLiteral()
         // await promRepository.queryLiteral('numberLiteral', {query: value.numberLiteral})
-        await queryAllData()
         await updateExprValue([value, 'numberLiteral', updateExprIndex])
+        await queryAllData()
       } else {
         value.stringLiteral = getLiteral()
         // await promRepository.queryLiteral('stringLiteral', {query: '"' + value.stringLiteral + '"'})
-        await queryAllData()
         await updateExprValue([value, 'stringLiteral', updateExprIndex])
+        await queryAllData()
       }
     }
 
