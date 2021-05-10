@@ -19,15 +19,21 @@ export default {
     const updateExprValue: any = inject('updateExprValue')
     const updateExprIndex: number | undefined = inject('updateExprIndex')
     const updateLeft = inject('updateLeft')
+    const queryAllData: any = inject('queryAllData')
+
     const formState = reactive({})
     content.emit('previewChange', props.parenExpr)
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
       const value = {
-        parenExpr: props.parenExpr,
+        parenExpr: {
+          expr: props.parenExpr?.expr,
+          parentheses: '()',
+        },
         showLeft: updateLeft,
       }
-      updateExprValue([value, 'parenExpr', updateExprIndex])
+      await updateExprValue([value, 'parenExpr', updateExprIndex])
+      await queryAllData()
     }
 
     return {

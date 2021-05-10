@@ -74,7 +74,6 @@ export default {
     provide('queryAllData', queryAllData)
 
     const queryInfo = async () => {
-      console.log(props.functionCall, 'query info +++')
       if (props.functionCall.functionArgs?.length > 0) {
         data.isLoading = true
         try {

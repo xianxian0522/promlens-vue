@@ -11,11 +11,16 @@
       <PlusOutlined @click.stop="addExpr" class="ast-connector-plus ast-connector-plus-up" />
     </template>
     <template v-slot:innerText>
-      <PreviewParentheses :preview="parenExpr" />
+      <span class="promql-code" @click="queryInfo">
+        <span class="promql-paren">()</span>
+      </span>
+    </template>
+    <template v-slot:infoLabel>
+      <CommonInfoLabel :showTips="showTips" :data="data" />
     </template>
   </TreeCommon>
   <div class="ast-node">
-    <Expr :expr="parenExpr" @updateValue="updateValue" :showLeft="showLeft" :index="index" />
+    <Expr :expr="parenExpr.expr" @updateValue="updateValue" :showLeft="showLeft" :index="index" />
   </div>
 </span>
 </template>
@@ -24,19 +29,64 @@
 import TreeCommon from "@/components/TreeCommon.vue";
 import PreviewParentheses from "@/components/PreviewParentheses.vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
-import {defineAsyncComponent} from "vue";
+import {defineAsyncComponent, onMounted, provide, reactive, ref} from "vue";
+import {promRepository} from "@/api/promRepository";
+import {dataInfo, queryParentheses} from "@/utils/common";
+import CommonInfoLabel from "@/components/CommonInfoLabel.vue";
 
 export default {
   name: "ParenthesesExpr",
   components: {
     TreeCommon,
-    PreviewParentheses,
+    CommonInfoLabel,
+    // PreviewParentheses,
     PlusOutlined,
     Expr: defineAsyncComponent(() => import('./Expr.vue')),
   },
   props: ['isLeft', 'parenExpr', 'index', 'showLeft', 'outermost'],
   emits: ['updateValue'],
   setup(props, content) {
+
+    const data = reactive({
+      status: '',
+      data: [],
+      keyInfo: [],
+      error: '',
+      isLoading: false,
+    })
+    const showTips = ref(true)
+
+    const queryAllData = async () => {
+      await queryInfo()
+    }
+    provide('queryAllData', queryAllData)
+
+    const queryInfo = async () => {
+      if (props.parenExpr?.expr) {
+        data.isLoading = true
+        try {
+          await promRepository.queryDataAll( {query: queryParentheses(props.parenExpr)})
+              .then((res: any) => {
+                data.status = res.status
+                data.data = res.data.result
+                data.isLoading = false
+                data.keyInfo = dataInfo(data.data)
+              })
+              .catch(err => {
+                const value = {...err.response?.data}
+                data.status = value.status
+                data.error = value.error
+                data.isLoading = false
+              })
+        } catch (err) {
+          console.error(err)
+        }
+        showTips.value = false
+      } else {
+        showTips.value = true
+      }
+    }
+
     const addExpr = () => {
       // const value = {
       //   unknownExpr: {
@@ -50,19 +100,30 @@ export default {
       }
       content.emit('updateValue', [value, 'unknown', props.index])
     }
-    const updateValue = (value) => {
+    const updateValue = async (value) => {
       const [v, str, index] = value
       const data = {
-        parenExpr: v,
+        parenExpr: {
+          expr: v,
+          parentheses: props.parenExpr.parentheses
+        },
         showLeft: props.showLeft
       }
       console.log(v, str, data, 'parentheses')
-      content.emit('updateValue', [data, 'parenExpr', index])
+      await content.emit('updateValue', [data, 'parenExpr', index])
+      await queryInfo()
     }
 
+    onMounted(() => {
+      queryInfo()
+    })
+
     return {
+      data,
+      showTips,
       addExpr,
       updateValue,
+      queryInfo,
     }
   }
 }

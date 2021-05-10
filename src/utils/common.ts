@@ -163,3 +163,12 @@ export const queryFunction = (value) => {
     query += ')'
     return query
 }
+
+export const queryParentheses = (value) => {
+    let query = '('
+    if (value.expr) {
+        query += queryExpr(value.expr)
+    }
+    query += ')'
+    return query
+}

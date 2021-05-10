@@ -10,7 +10,7 @@ export interface Expr {
     numberLiteral?: number;
     stringLiteral?: string;
     // offsetExpr?: OffsetExpr;
-    parenExpr?: Expr;
+    parenExpr?: parenExpr;
     subqueryExpr?: SubqueryExpr;
     unaryExpr?: UnaryExpr;
     stepInvariantExpr?: StepInvariantExpr;
@@ -85,4 +85,8 @@ export interface UnaryExpr {
 export interface StepInvariantExpr {
     expr: Expr;
     at?: string;
+}
+export interface parenExpr {
+    expr: Expr;
+    parentheses: string;
 }
