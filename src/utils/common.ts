@@ -49,6 +49,12 @@ export const queryExpr = (value) => {
         query += queryAggregate(value?.aggregateExpr)
     } else if (value?.functionCall) {
         query += queryFunction(value?.functionCall)
+    } else if (value?.subqueryExpr) {
+        query += querySubquery(value?.subqueryExpr)
+    } else if (value?.parenExpr) {
+        query += queryParentheses(value?.parenExpr)
+    } else if (value?.unaryExpr) {
+        query += queryUnary(value?.unaryExpr)
     }
 
     return query
@@ -185,5 +191,11 @@ export const querySubquery = (value) => {
     if (value.offsetExpr?.offset) {
         query += ' offset ' + value.offsetExpr.duration
     }
+    return query
+}
+
+export const queryUnary = (value) => {
+    let query = value.unaryOp
+    query += queryExpr(value.expr)
     return query
 }

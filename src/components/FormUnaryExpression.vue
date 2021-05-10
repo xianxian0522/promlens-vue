@@ -31,6 +31,8 @@ export default {
     const updateExprValue: any = inject('updateExprValue')
     const updateExprIndex: number | undefined = inject('updateExprIndex')
     const updateLeft = inject('updateLeft')
+    const queryAllData: any = inject('queryAllData')
+
     const formState = reactive({
       unaryOp: props.unaryExpr?.unaryOp || '-',
       expr: props.unaryExpr?.expr
@@ -44,12 +46,13 @@ export default {
       return data
     }
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
       const value = {
         unaryExpr: getUnary(),
         showLeft: updateLeft,
       }
-      updateExprValue([value, 'unaryExpr', updateExprIndex])
+      await updateExprValue([value, 'unaryExpr', updateExprIndex])
+      await queryAllData()
     }
 
     content.emit('previewChange', props.unaryExpr)

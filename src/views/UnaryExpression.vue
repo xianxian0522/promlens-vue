@@ -11,7 +11,10 @@
       <PlusOutlined @click.stop="addExpr" class="ast-connector-plus ast-connector-plus-up" />
     </template>
     <template v-slot:innerText>
-      <span >{{ unaryExpr.unaryOp }}</span>
+      <span class="promql-code" @click="queryInfo">{{ unaryExpr.unaryOp }}</span>
+    </template>
+    <template v-slot:infoLabel>
+      <CommonInfoLabel :data="data" :showTips="showTips" />
     </template>
   </TreeCommon>
   <div class="ast-node">
@@ -24,12 +27,16 @@
 import TreeCommon from "@/components/TreeCommon.vue";
 import PreviewUnary from "@/components/PreviewUnary.vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
-import {defineAsyncComponent} from "vue";
+import {defineAsyncComponent, onMounted, provide, reactive, ref} from "vue";
+import CommonInfoLabel from "@/components/CommonInfoLabel.vue";
+import {promRepository} from "@/api/promRepository";
+import {dataInfo, queryUnary} from "@/utils/common";
 
 export default {
   name: "UnaryExpression",
   components: {
     TreeCommon,
+    CommonInfoLabel,
     PlusOutlined,
     Expr: defineAsyncComponent(() => import('./Expr.vue')),
   },
@@ -41,6 +48,46 @@ export default {
     //   unaryOp: props.unaryExpr?.unaryOp || '-',
     //   expr: props.unaryExpr?.expr,
     // }
+
+    const data = reactive({
+      status: '',
+      data: [],
+      keyInfo: [],
+      error: '',
+      isLoading: false,
+    })
+    const showTips = ref(true)
+
+    const queryAllData = async () => {
+      await queryInfo()
+    }
+    provide('queryAllData', queryAllData)
+
+    const queryInfo = async () => {
+      if (props.unaryExpr?.expr) {
+        data.isLoading = true
+        try {
+          await promRepository.queryDataAll( {query: queryUnary(props.unaryExpr)})
+              .then((res: any) => {
+                data.status = res.status
+                data.data = res.data.result
+                data.isLoading = false
+                data.keyInfo = dataInfo(data.data)
+              })
+              .catch(err => {
+                const value = {...err.response?.data}
+                data.status = value.status
+                data.error = value.error
+                data.isLoading = false
+              })
+        } catch (err) {
+          console.error(err)
+        }
+        showTips.value = false
+      } else {
+        showTips.value = true
+      }
+    }
 
     const addExpr = () => {
       // const value = {
@@ -56,7 +103,7 @@ export default {
       content.emit('updateValue', [value, 'unknown', props.index])
     }
 
-    const updateValue = (value) => {
+    const updateValue = async (value) => {
       const [v, str, index] = value
       const data = {
         unaryExpr: {
@@ -66,13 +113,21 @@ export default {
         showLeft: props.showLeft
       }
       console.log('update unary', v, str, data)
-      content.emit('updateValue', [data, 'unaryExpr', index])
+      await content.emit('updateValue', [data, 'unaryExpr', index])
+      await queryInfo()
     }
 
+    onMounted(() => {
+      queryInfo()
+    })
+
     return {
+      showTips,
+      data,
       // parenExpr,
       addExpr,
       updateValue,
+      queryInfo,
     }
   },
 }
