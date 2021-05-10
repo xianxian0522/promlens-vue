@@ -48,12 +48,12 @@
     </template>
   </TreeCommon>
   <div class="ast-node">
-    <div v-if="aggregateExpr.functionArgs">
+    <div v-if="aggregateExpr.functionArgs.length > 0">
       <div v-for="(fun, index) in aggregateExpr.functionArgs" :key="index">
         <Expr :expr="fun" @updateValue="updateValue" :index="index" :showLeft="showLeft"/>
       </div>
     </div>
-    <div v-else><Expr :expr="aggregateExpr.functionArgs" @updateValue="updateValue" :index="0" :showLeft="showLeft" /></div>
+    <div v-else><Expr :expr="aggregateExpr.functionArgs[0]" @updateValue="updateValue" :index="0" :showLeft="showLeft" /></div>
   </div>
 </div>
 </template>

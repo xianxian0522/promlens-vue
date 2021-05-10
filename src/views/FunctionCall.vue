@@ -22,12 +22,12 @@
       </template>
     </TreeCommon>
     <div class="ast-node">
-      <div v-if="functionCall.functionArgs">
+      <div v-if="functionCall.functionArgs.length > 0">
         <div v-for="(fun, index) in functionCall.functionArgs" :key="index">
           <Expr :expr="fun" @updateValue="updateValue" :index="index" :showLeft="showLeft"/>
         </div>
       </div>
-      <div v-else><Expr :expr="functionCall.functionArgs" @updateValue="updateValue" :index="0" :showLeft="showLeft" /></div>
+      <div v-else><Expr :expr="functionCall.functionArgs[0]" @updateValue="updateValue" :index="0" :showLeft="showLeft" /></div>
     </div>
   </div>
 </div>

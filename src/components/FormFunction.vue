@@ -139,7 +139,7 @@ export default {
     const getFunction = () => {
       const data: any = {
         functionIdentifier: formState.functionIdentifier,
-        functionArgs: formState.functionArgs
+        functionArgs: formState.functionArgs || []
       }
       return data
     }

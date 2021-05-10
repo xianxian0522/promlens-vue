@@ -112,7 +112,7 @@ export default {
         aggregateOp: formState.aggregationType,
         aggregateModifier: {
         },
-        functionArgs: formState.functionArgs
+        functionArgs: formState.functionArgs || []
       }
       if (formState.preserve === 'by') {
         data.aggregateModifier.By = []
