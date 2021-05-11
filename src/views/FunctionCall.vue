@@ -23,8 +23,8 @@
     </TreeCommon>
     <div class="ast-node">
       <div v-if="functionCall.functionArgs.length > 0">
-        <div v-for="(fun, index) in functionCall.functionArgs" :key="index">
-          <Expr :expr="fun" @updateValue="updateValue" :qlIndex="qlIndex" :index="index" :showLeft="showLeft"/>
+        <div v-for="(fun, num) in functionCall.functionArgs" :key="num">
+          <Expr :expr="fun" @updateValue="updateValue" :qlIndex="qlIndex" :index="num" :showLeft="showLeft"/>
         </div>
       </div>
       <div v-else><Expr :expr="functionCall.functionArgs[0]" @updateValue="updateValue" :qlIndex="qlIndex" :index="0" :showLeft="showLeft" /></div>
@@ -43,7 +43,7 @@ import {dataInfo, queryFunction} from "@/utils/common";
 
 export default {
   name: "FunctionCall",
-  props: ['isLeft', 'functionCall', 'showLeft', 'outermost', 'qlIndex'],
+  props: ['isLeft', 'functionCall', 'showLeft', 'outermost', 'qlIndex', 'index'],
   components: {
     PlusOutlined,
     TreeCommon,
@@ -75,25 +75,29 @@ export default {
 
     const queryInfo = async () => {
       if (props.functionCall.functionArgs?.length > 0) {
-        data.isLoading = true
-        try {
-          await promRepository.queryDataAll( {query: queryFunction(props.functionCall)})
-              .then((res: any) => {
-                data.status = res.status
-                data.data = res.data.result
-                data.isLoading = false
-                data.keyInfo = dataInfo(data.data)
-              })
-              .catch(err => {
-                const value = {...err.response?.data}
-                data.status = value.status
-                data.error = value.error
-                data.isLoading = false
-              })
-        } catch (err) {
-          console.error(err)
+        if (!Object.prototype.hasOwnProperty.call(props.functionCall?.functionArgs[0], 'unknownExpr')) {
+          data.isLoading = true
+          try {
+            await promRepository.queryDataAll( {query: queryFunction(props.functionCall)})
+                .then((res: any) => {
+                  data.status = res.status
+                  data.data = res.data.result
+                  data.isLoading = false
+                  data.keyInfo = dataInfo(data.data)
+                })
+                .catch(err => {
+                  const value = {...err.response?.data}
+                  data.status = value.status
+                  data.error = value.error
+                  data.isLoading = false
+                })
+          } catch (err) {
+            console.error(err)
+          }
+          showTips.value = false
+        } else {
+          showTips.value = true
         }
-        showTips.value = false
       } else {
         showTips.value = true
       }
@@ -110,7 +114,6 @@ export default {
         functionCall: props.functionCall,
         showLeft: props.showLeft,
       }
-      // console.log(value, 'functionCall unknown');
       content.emit('updateValue', [value, 'unknown', props.index, props.qlIndex])
     }
 

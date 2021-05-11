@@ -49,8 +49,8 @@
   </TreeCommon>
   <div class="ast-node">
     <div v-if="aggregateExpr.functionArgs.length > 0">
-      <div v-for="(fun, index) in aggregateExpr.functionArgs" :key="index">
-        <Expr :expr="fun" @updateValue="updateValue" :qlIndex="qlIndex" :index="index" :showLeft="showLeft"/>
+      <div v-for="(fun, num) in aggregateExpr.functionArgs" :key="num">
+        <Expr :expr="fun" @updateValue="updateValue" :qlIndex="qlIndex" :index="num" :showLeft="showLeft"/>
       </div>
     </div>
     <div v-else><Expr :expr="aggregateExpr.functionArgs[0]" @updateValue="updateValue" :qlIndex="qlIndex" :index="0" :showLeft="showLeft" /></div>
@@ -76,7 +76,7 @@ export default {
     CommonInfoLabel,
     Expr: defineAsyncComponent(() => import('./Expr.vue'))
   },
-  props: ['isLeft', 'aggregateExpr', 'showLeft', 'outermost', 'qlIndex'],
+  props: ['isLeft', 'aggregateExpr', 'showLeft', 'outermost', 'qlIndex', 'index'],
   emits: ['updateValue'],
   setup(props, content) {
 
@@ -102,25 +102,29 @@ export default {
 
     const queryInfo = async () => {
       if (props.aggregateExpr.functionArgs?.length > 0) {
-        data.isLoading = true
-        try {
-          await promRepository.queryDataAll( {query: queryAggregate(props.aggregateExpr)})
-              .then((res: any) => {
-                data.status = res.status
-                data.data = res.data.result
-                data.isLoading = false
-                data.keyInfo = dataInfo(data.data)
-              })
-              .catch(err => {
-                const value = {...err.response?.data}
-                data.status = value.status
-                data.error = value.error
-                data.isLoading = false
-              })
-        } catch (err) {
-          console.error(err)
+        if (!Object.prototype.hasOwnProperty.call(props.aggregateExpr?.functionArgs[0], 'unknownExpr')) {
+          data.isLoading = true
+          try {
+            await promRepository.queryDataAll( {query: queryAggregate(props.aggregateExpr)})
+                .then((res: any) => {
+                  data.status = res.status
+                  data.data = res.data.result
+                  data.isLoading = false
+                  data.keyInfo = dataInfo(data.data)
+                })
+                .catch(err => {
+                  const value = {...err.response?.data}
+                  data.status = value.status
+                  data.error = value.error
+                  data.isLoading = false
+                })
+          } catch (err) {
+            console.error(err)
+          }
+          showTips.value = false
+        } else {
+          showTips.value = true
         }
-        showTips.value = false
       } else {
         showTips.value = true
       }
@@ -157,7 +161,7 @@ export default {
         data.aggregateExpr.functionArgs = []
       }
       data.aggregateExpr.functionArgs[index] = v;
-      console.log('updata agg', v, str, data)
+      console.log('updata agg', v, str, data, index)
       await content.emit('updateValue', [data, 'aggregateExpr', index, qlIndex])
       await queryInfo()
     }

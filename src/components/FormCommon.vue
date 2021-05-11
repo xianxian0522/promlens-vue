@@ -178,8 +178,8 @@ export default {
 
     onMounted(() => {
       // console.log('props form common', formState.preview, exprChange())
-      watch(() => formState.queryType, () => {
-
+      watch(() => formState.queryType, (value) => {
+        console.log(value, 'query Type')
       })
     })
 

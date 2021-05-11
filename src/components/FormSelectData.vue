@@ -126,12 +126,13 @@ export default {
     CheckOutlined,
   },
   setup(props: any, content) {
-    console.log(props, 'props select data')
     const updateExprValue: any = inject('updateExprValue')
     const updateExprIndex: number | undefined = inject('updateExprIndex')
     const updateLeft: boolean | undefined = inject('updateLeft')
     const updateQlIndex = inject('updateQlIndex')
     const queryAllData: any = inject('queryAllData')
+    const exprChange: any = inject('exprChange')
+    console.log(props, 'props select data', exprChange())
 
     const formRef = ref()
     const formState = reactive({

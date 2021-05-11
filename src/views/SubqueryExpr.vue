@@ -70,25 +70,29 @@ export default {
 
     const queryInfo = async () => {
       if (props.subqueryExpr?.expr) {
-        data.isLoading = true
-        try {
-          await promRepository.queryDataAll( {query: querySubquery(props.subqueryExpr)})
-              .then((res: any) => {
-                data.status = res.status
-                data.data = res.data.result
-                data.isLoading = false
-                data.keyInfo = dataInfo(data.data)
-              })
-              .catch(err => {
-                const value = {...err.response?.data}
-                data.status = value.status
-                data.error = value.error
-                data.isLoading = false
-              })
-        } catch (err) {
-          console.error(err)
+        if (!Object.prototype.hasOwnProperty.call(props.subqueryExpr?.expr, 'unknownExpr')) {
+          data.isLoading = true
+          try {
+            await promRepository.queryDataAll( {query: querySubquery(props.subqueryExpr)})
+                .then((res: any) => {
+                  data.status = res.status
+                  data.data = res.data.result
+                  data.isLoading = false
+                  data.keyInfo = dataInfo(data.data)
+                })
+                .catch(err => {
+                  const value = {...err.response?.data}
+                  data.status = value.status
+                  data.error = value.error
+                  data.isLoading = false
+                })
+          } catch (err) {
+            console.error(err)
+          }
+          showTips.value = false
+        } else {
+          showTips.value = true
         }
-        showTips.value = false
       } else {
         showTips.value = true
       }
