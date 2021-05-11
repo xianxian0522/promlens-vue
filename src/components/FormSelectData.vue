@@ -131,8 +131,6 @@ export default {
     const updateLeft: boolean | undefined = inject('updateLeft')
     const updateQlIndex = inject('updateQlIndex')
     const queryAllData: any = inject('queryAllData')
-    // const exprChange: any = inject('exprChange')
-    // console.log(props, 'props select data', exprChange())
 
     const formRef = ref()
     const formState = reactive({
