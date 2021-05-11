@@ -50,10 +50,10 @@
   <div class="ast-node">
     <div v-if="aggregateExpr.functionArgs.length > 0">
       <div v-for="(fun, index) in aggregateExpr.functionArgs" :key="index">
-        <Expr :expr="fun" @updateValue="updateValue" :index="index" :showLeft="showLeft"/>
+        <Expr :expr="fun" @updateValue="updateValue" :qlIndex="qlIndex" :index="index" :showLeft="showLeft"/>
       </div>
     </div>
-    <div v-else><Expr :expr="aggregateExpr.functionArgs[0]" @updateValue="updateValue" :index="0" :showLeft="showLeft" /></div>
+    <div v-else><Expr :expr="aggregateExpr.functionArgs[0]" @updateValue="updateValue" :qlIndex="qlIndex" :index="0" :showLeft="showLeft" /></div>
   </div>
 </div>
 </template>
@@ -76,7 +76,7 @@ export default {
     CommonInfoLabel,
     Expr: defineAsyncComponent(() => import('./Expr.vue'))
   },
-  props: ['isLeft', 'aggregateExpr', 'showLeft', 'outermost'],
+  props: ['isLeft', 'aggregateExpr', 'showLeft', 'outermost', 'qlIndex'],
   emits: ['updateValue'],
   setup(props, content) {
 
@@ -137,11 +137,11 @@ export default {
         aggregateExpr: props.aggregateExpr,
         showLeft: props.showLeft,
       }
-      content.emit('updateValue', [value, 'unknown', props.index])
+      content.emit('updateValue', [value, 'unknown', props.index, props.qlIndex])
     }
 
     const updateValue = async (value) => {
-      const [v, str, index] = value
+      const [v, str, index, qlIndex] = value
       const k = props.aggregateExpr.aggregateModifier.Without ? 'Without' : 'By'
       const data = {
         aggregateExpr: {
@@ -158,7 +158,7 @@ export default {
       }
       data.aggregateExpr.functionArgs[index] = v;
       console.log('updata agg', v, str, data)
-      await content.emit('updateValue', [data, 'aggregateExpr', index])
+      await content.emit('updateValue', [data, 'aggregateExpr', index, qlIndex])
       await queryInfo()
     }
 

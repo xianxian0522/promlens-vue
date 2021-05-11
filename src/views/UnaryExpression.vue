@@ -18,7 +18,7 @@
     </template>
   </TreeCommon>
   <div class="ast-node">
-    <Expr :expr="unaryExpr.expr" @updateValue="updateValue" :showLeft="showLeft" :index="index" />
+    <Expr :expr="unaryExpr.expr" @updateValue="updateValue" :qlIndex="qlIndex" :showLeft="showLeft" :index="index" />
   </div>
 </div>
 </template>
@@ -40,7 +40,7 @@ export default {
     PlusOutlined,
     Expr: defineAsyncComponent(() => import('./Expr.vue')),
   },
-  props: ['unaryExpr', 'index', 'isLeft', 'showLeft', 'outermost'],
+  props: ['unaryExpr', 'index', 'isLeft', 'showLeft', 'outermost', 'qlIndex'],
   emits: ['updateValue'],
   setup(props, content) {
 
@@ -100,11 +100,11 @@ export default {
         unaryExpr: props.unaryExpr,
         showLeft: props.showLeft,
       }
-      content.emit('updateValue', [value, 'unknown', props.index])
+      content.emit('updateValue', [value, 'unknown', props.index, props.qlIndex])
     }
 
     const updateValue = async (value) => {
-      const [v, str, index] = value
+      const [v, str, index, qlIndex] = value
       const data = {
         unaryExpr: {
           unaryOp: props.unaryExpr.unaryOp,
@@ -113,7 +113,7 @@ export default {
         showLeft: props.showLeft
       }
       console.log('update unary', v, str, data)
-      await content.emit('updateValue', [data, 'unaryExpr', index])
+      await content.emit('updateValue', [data, 'unaryExpr', index, qlIndex])
       await queryInfo()
     }
 

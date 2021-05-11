@@ -24,10 +24,10 @@
     <div class="ast-node">
       <div v-if="functionCall.functionArgs.length > 0">
         <div v-for="(fun, index) in functionCall.functionArgs" :key="index">
-          <Expr :expr="fun" @updateValue="updateValue" :index="index" :showLeft="showLeft"/>
+          <Expr :expr="fun" @updateValue="updateValue" :qlIndex="qlIndex" :index="index" :showLeft="showLeft"/>
         </div>
       </div>
-      <div v-else><Expr :expr="functionCall.functionArgs[0]" @updateValue="updateValue" :index="0" :showLeft="showLeft" /></div>
+      <div v-else><Expr :expr="functionCall.functionArgs[0]" @updateValue="updateValue" :qlIndex="qlIndex" :index="0" :showLeft="showLeft" /></div>
     </div>
   </div>
 </div>
@@ -43,7 +43,7 @@ import {dataInfo, queryFunction} from "@/utils/common";
 
 export default {
   name: "FunctionCall",
-  props: ['isLeft', 'functionCall', 'showLeft', 'outermost'],
+  props: ['isLeft', 'functionCall', 'showLeft', 'outermost', 'qlIndex'],
   components: {
     PlusOutlined,
     TreeCommon,
@@ -111,11 +111,11 @@ export default {
         showLeft: props.showLeft,
       }
       // console.log(value, 'functionCall unknown');
-      content.emit('updateValue', [value, 'unknown', props.index])
+      content.emit('updateValue', [value, 'unknown', props.index, props.qlIndex])
     }
 
     const updateValue = async (value) => {
-      const [v, str, index] = value
+      const [v, str, index, qlIndex] = value
       // const data = {
       //   functionCall: {
       //     functionIdentifier: props.functionCall.functionIdentifier,
@@ -132,7 +132,7 @@ export default {
       }
       data.functionCall.functionArgs[index] = v;
       console.log(v, str, data, 'function updata')
-      await content.emit('updateValue', [data, 'functionCall', index])
+      await content.emit('updateValue', [data, 'functionCall', index, qlIndex])
       await queryInfo()
     }
 

@@ -34,6 +34,7 @@ export default {
     const updateExprValue: any = inject('updateExprValue')
     const updateExprIndex: number | undefined = inject('updateExprIndex')
     const updateLeft = inject('updateLeft')
+    const updateQlIndex = inject('updateQlIndex')
     const queryAllData: any = inject('queryAllData')
 
     const formState = reactive({
@@ -59,12 +60,12 @@ export default {
       if (formState.valueType === 'numberLiteral') {
         value.numberLiteral = getLiteral()
         // await promRepository.queryLiteral('numberLiteral', {query: value.numberLiteral})
-        await updateExprValue([value, 'numberLiteral', updateExprIndex])
+        await updateExprValue([value, 'numberLiteral', updateExprIndex, updateQlIndex])
         await queryAllData()
       } else {
         value.stringLiteral = getLiteral()
         // await promRepository.queryLiteral('stringLiteral', {query: '"' + value.stringLiteral + '"'})
-        await updateExprValue([value, 'stringLiteral', updateExprIndex])
+        await updateExprValue([value, 'stringLiteral', updateExprIndex, updateQlIndex])
         await queryAllData()
       }
     }

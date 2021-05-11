@@ -4,7 +4,7 @@ import NotFound from "@/views/NotFound.vue";
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
-        redirect: '/home',
+        redirect: '/promql',
     },
     {
         path: '/home',

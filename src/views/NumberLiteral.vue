@@ -43,7 +43,7 @@ import {numberLiteral} from "@/utils/store";
 
 export default {
   name: "NumberLiteral",
-  props: ['numberLiteral', 'isLeft', 'showLeft', 'index', 'outermost'],
+  props: ['numberLiteral', 'isLeft', 'showLeft', 'index', 'outermost', 'qlIndex'],
   emits: ['updateValue'],
   components: {
     PlusOutlined,
@@ -96,7 +96,7 @@ export default {
         numberLiteral: props.numberLiteral,
         showLeft: props.showLeft,
       }
-      content.emit('updateValue', [data, 'unknown', props.index])
+      content.emit('updateValue', [data, 'unknown', props.index, props.qlIndex])
     }
 
     onMounted(() => {

@@ -70,7 +70,7 @@ import {dataInfo, querySelectData} from "@/utils/common";
 
 export default {
   name: "VectorSelector",
-  props: ['vectorSelector', 'showLeft', 'isLeft', 'index', 'outermost'],
+  props: ['vectorSelector', 'showLeft', 'isLeft', 'index', 'outermost', 'qlIndex'],
   emits: ['updateValue'],
   components: {
     PlusOutlined,
@@ -140,7 +140,7 @@ export default {
         vectorSelector: props.vectorSelector,
         showLeft: props.showLeft,
       }
-      content.emit('updateValue', [value, 'unknown', props.index])
+      content.emit('updateValue', [value, 'unknown', props.index, props.qlIndex])
     }
 
     onMounted(() => {

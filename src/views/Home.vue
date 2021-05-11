@@ -21,7 +21,7 @@
         <div class="row">
           <div class="col">
             <div class="ast-node ast-node-selected ast-node-root">
-              <PromQL />
+              <PromQL :expr="isShow.expr" />
 <!--              <div class="ast-node-inner-wrapper">-->
 <!--                <PlusOutlined class="ast-connector-plus ast-connector-plus-up" />-->
 <!--                <div class="ast-node-inner ast-node-inner-placeholder ast-node-inner-tree-view">-->
@@ -93,18 +93,24 @@ export default {
     PromQL,
   },
   setup() {
-    const isShowForm = ref<boolean[]>([false]);
+    const isShowForm = ref([{expr: {}}]);
     const state = reactive({
       metricNameData: [],
       labelNameData: [],
+      isShowForm: [{expr: {}}]
     })
 
     const addAnotherQuery = () => {
-      isShowForm.value.push(false)
+      // isShowForm.value.push({expr: {}})
+      state.isShowForm.push({expr: {}})
     }
     const deleteAnotherQuery = (index: number) => {
-      if (isShowForm.value.length > 1) {
-        isShowForm.value.splice(index, 1)
+      // if (isShowForm.value.length > 1) {
+      //   isShowForm.value.splice(index, 1)
+      // }
+      if (state.isShowForm.length > 1) {
+        state.isShowForm.splice(index, 1)
+        console.log(state.isShowForm, index, 'xxxxx 没有重新加载promQl组件')
       }
     }
 
@@ -113,7 +119,7 @@ export default {
       // state.metricNameData = data.data;
     }
     const queryLabels = async () => {
-      const data = await promRepository.queryLabel()
+      await promRepository.queryLabel()
       // state.labelNameData = data.data;
     }
 
@@ -123,7 +129,8 @@ export default {
     })
 
     return {
-      isShowForm,
+      ...toRefs(state),
+      // isShowForm,
       addAnotherQuery,
       deleteAnotherQuery,
     }

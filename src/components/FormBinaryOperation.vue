@@ -121,6 +121,7 @@ export default {
     const updateExprValue: any = inject('updateExprValue')
     const updateExprIndex: number | undefined = inject('updateExprIndex')
     const updateLeft: boolean | undefined = inject('updateLeft')
+    const updateQlIndex = inject('updateQlIndex')
     const queryAllData: any = inject('queryAllData')
 
     const formState = reactive({
@@ -237,7 +238,7 @@ export default {
       //   query: queryBinary(value)
       // }
 
-      await updateExprValue([value, 'binaryExpr', updateExprIndex])
+      await updateExprValue([value, 'binaryExpr', updateExprIndex, updateQlIndex])
       await queryAllData()
     }
 

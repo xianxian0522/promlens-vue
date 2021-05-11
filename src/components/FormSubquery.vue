@@ -37,6 +37,7 @@ export default {
     const updateExprValue: any = inject('updateExprValue')
     const updateExprIndex: number | undefined = inject('updateExprIndex')
     const updateLeft = inject('updateLeft')
+    const updateQlIndex = inject('updateQlIndex')
     const queryAllData: any = inject('queryAllData')
 
     const formState = reactive({
@@ -80,7 +81,7 @@ export default {
         subqueryExpr: getSubquery(),
         showLeft: updateLeft,
       }
-      await updateExprValue([value, 'subqueryExpr', updateExprIndex])
+      await updateExprValue([value, 'subqueryExpr', updateExprIndex, updateQlIndex])
       await queryAllData()
     }
 

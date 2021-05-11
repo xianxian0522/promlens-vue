@@ -5,7 +5,7 @@
     </template>
     <template v-slot:nodeLeftChild>
       <div class="ast-node">
-        <Expr :expr="binaryExpr.left" :isLeft="true" :showLeft="true" @updateValue="updateValue" :index="index" />
+        <Expr :expr="binaryExpr.left" :isLeft="true" :showLeft="true" :qlIndex="qlIndex" @updateValue="updateValue" :index="index" />
       </div>
     </template>
     <template v-slot:innerText>
@@ -22,7 +22,7 @@
 <!--    </template>-->
     <template v-slot:nodeRightChild>
       <div class="ast-node">
-        <Expr :expr="binaryExpr.right" @updateValue="updateValue" :index="index" />
+        <Expr :expr="binaryExpr.right" @updateValue="updateValue" :qlIndex="qlIndex" :index="index" />
       </div>
     </template>
 
@@ -44,7 +44,7 @@ import {dataInfo, queryBinary} from "@/utils/common";
 
 export default {
   name: "BinaryExpr",
-  props: ['binaryExpr', 'index', 'outermost', 'isLeft'],
+  props: ['binaryExpr', 'index', 'outermost', 'isLeft', 'qlIndex'],
   components: {
     PlusOutlined,
     TreeCommon,
@@ -106,7 +106,7 @@ export default {
     }
 
     const updateValue = async (value) => {
-      const [v, str, index] = value
+      const [v, str, index, qlIndex] = value
       // let data = {
       //   left: props.binaryExpr.left,
       //   operator: props.binaryExpr.operator,
@@ -120,7 +120,7 @@ export default {
         data.right = v;
       }
       console.log(v, str, data, '+++++++update binary', props.isLeft)
-      await content.emit('updateValue', [data, 'binaryExpr', index])
+      await content.emit('updateValue', [data, 'binaryExpr', index, qlIndex])
       await queryInfo()
     }
 
@@ -144,7 +144,7 @@ export default {
         // }
         binaryExpr: props.binaryExpr
       }
-      content.emit('updateValue', [value, 'unknown', props.index])
+      content.emit('updateValue', [value, 'unknown', props.index, props.qlIndex])
     }
 
     onMounted(() => {

@@ -20,7 +20,7 @@
     </template>
   </TreeCommon>
   <div class="ast-node">
-    <Expr :expr="parenExpr.expr" @updateValue="updateValue" :showLeft="showLeft" :index="index" />
+    <Expr :expr="parenExpr.expr" @updateValue="updateValue" :qlIndex="qlIndex" :showLeft="showLeft" :index="index" />
   </div>
 </span>
 </template>
@@ -43,7 +43,7 @@ export default {
     PlusOutlined,
     Expr: defineAsyncComponent(() => import('./Expr.vue')),
   },
-  props: ['isLeft', 'parenExpr', 'index', 'showLeft', 'outermost'],
+  props: ['isLeft', 'parenExpr', 'index', 'showLeft', 'outermost', 'qlIndex'],
   emits: ['updateValue'],
   setup(props, content) {
 
@@ -98,10 +98,10 @@ export default {
         parenExpr: props.parenExpr,
         showLeft: props.showLeft,
       }
-      content.emit('updateValue', [value, 'unknown', props.index])
+      content.emit('updateValue', [value, 'unknown', props.index, props.qlIndex])
     }
     const updateValue = async (value) => {
-      const [v, str, index] = value
+      const [v, str, index, qlIndex] = value
       const data = {
         parenExpr: {
           expr: v,
@@ -110,7 +110,7 @@ export default {
         showLeft: props.showLeft
       }
       console.log(v, str, data, 'parentheses')
-      await content.emit('updateValue', [data, 'parenExpr', index])
+      await content.emit('updateValue', [data, 'parenExpr', index, qlIndex])
       await queryInfo()
     }
 

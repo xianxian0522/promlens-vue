@@ -43,7 +43,7 @@ import {stringLiteral} from "@/utils/store";
 
 export default {
   name: "StringLiteral",
-  props: ['stringLiteral', 'showLeft', 'isLeft', 'index', 'outermost'],
+  props: ['stringLiteral', 'showLeft', 'isLeft', 'index', 'outermost', 'qlIndex'],
   emits: ['updateValue'],
   components: {
     PlusOutlined,
@@ -95,7 +95,7 @@ export default {
         numberLiteral: props.stringLiteral,
         showLeft: props.showLeft,
       }
-      content.emit('updateValue', [data, 'unknown', props.index])
+      content.emit('updateValue', [data, 'unknown', props.index, props.qlIndex])
     }
 
     onMounted(() => {

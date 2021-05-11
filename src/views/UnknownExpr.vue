@@ -15,7 +15,7 @@
 <!--    </template>-->
   </TreeCommon>
   <div class="ast-node" v-if="unknownExpr">
-    <Expr :expr="unknownExpr" @updateValue="updateValue" :showLeft="showLeft" :index="index" />
+    <Expr :expr="unknownExpr" @updateValue="updateValue" :qlIndex="qlIndex" :showLeft="showLeft" :index="index" />
   </div>
 </span>
 </template>
@@ -26,7 +26,7 @@ import {defineAsyncComponent, inject, provide} from "vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
 export default {
   name: "UnknownExpr",
-  props: ['unknownExpr', 'showLeft', 'isLeft', 'index', 'outermost'],
+  props: ['unknownExpr', 'showLeft', 'isLeft', 'index', 'outermost', 'qlIndex'],
   emits: ['updateValue'],
   components: {
     PlusOutlined,
@@ -51,18 +51,18 @@ export default {
         unknownExpr: props.unknownExpr,
         showLeft: props.showLeft,
       }
-      content.emit('updateValue', [value, 'unknown', props.index])
+      content.emit('updateValue', [value, 'unknown', props.index, props.qlIndex])
     }
 
     const updateValue = (value) => {
-      const [v, str, index] = value
+      const [v, str, index, qlIndex] = value
       const data = {
         unknownExpr: v,
         showLeft: props.showLeft
       }
 
       console.log(v, str, data, 'unk update')
-      content.emit('updateValue', [data, 'unknownExpr', index])
+      content.emit('updateValue', [data, 'unknownExpr', index, qlIndex])
     }
 
     return {

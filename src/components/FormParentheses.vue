@@ -19,6 +19,7 @@ export default {
     const updateExprValue: any = inject('updateExprValue')
     const updateExprIndex: number | undefined = inject('updateExprIndex')
     const updateLeft = inject('updateLeft')
+    const updateQlIndex = inject('updateQlIndex')
     const queryAllData: any = inject('queryAllData')
 
     const formState = reactive({})
@@ -32,7 +33,7 @@ export default {
         },
         showLeft: updateLeft,
       }
-      await updateExprValue([value, 'parenExpr', updateExprIndex])
+      await updateExprValue([value, 'parenExpr', updateExprIndex, updateQlIndex])
       await queryAllData()
     }
 

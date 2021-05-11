@@ -130,6 +130,7 @@ export default {
     const updateExprValue: any = inject('updateExprValue')
     const updateExprIndex: number | undefined = inject('updateExprIndex')
     const updateLeft: boolean | undefined = inject('updateLeft')
+    const updateQlIndex = inject('updateQlIndex')
     const queryAllData: any = inject('queryAllData')
 
     const formRef = ref()
@@ -259,7 +260,7 @@ export default {
       // const data = {
       //   query: querySelectData(value)
       // }
-      await updateExprValue([value, 'vectorSelector', updateExprIndex])
+      await updateExprValue([value, 'vectorSelector', updateExprIndex, updateQlIndex])
       await queryAllData()
     }
 

@@ -22,7 +22,7 @@
       </template>
     </TreeCommon>
     <div class="ast-node">
-      <Expr :expr="subqueryExpr.expr" @updateValue="updateValue" :showLeft="showLeft" :index="index" />
+      <Expr :expr="subqueryExpr.expr" @updateValue="updateValue" :qlIndex="qlIndex" :showLeft="showLeft" :index="index" />
     </div>
   </div>
 </template>
@@ -38,7 +38,7 @@ import {dataInfo, querySubquery} from "@/utils/common";
 
 export default {
   name: "SubqueryExpr",
-  props: ['subqueryExpr', 'isLeft', 'showLeft', 'index', 'outermost'],
+  props: ['subqueryExpr', 'isLeft', 'showLeft', 'index', 'outermost', 'qlIndex'],
   components: {
     TreeCommon,
     PlusOutlined,
@@ -106,18 +106,18 @@ export default {
         subqueryExpr: props.subqueryExpr,
         showLeft: props.showLeft,
       }
-      content.emit('updateValue', [value, 'unknown', props.index])
+      content.emit('updateValue', [value, 'unknown', props.index, props.qlIndex])
     }
 
     const updateValue = async (value) => {
-      const [v, str, index] = value
+      const [v, str, index, qlIndex] = value
       const data = {
         subqueryExpr: props.subqueryExpr,
         showLeft: props.showLeft
       }
       data.subqueryExpr.expr = v
       console.log(v, str, data, 'subqueryExpr')
-      await content.emit('updateValue', [data, 'subqueryExpr', index])
+      await content.emit('updateValue', [data, 'subqueryExpr', index, qlIndex])
       await queryInfo()
     }
 
