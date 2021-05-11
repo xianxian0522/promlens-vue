@@ -9,7 +9,7 @@
           <div class="expression-input-wrapper">
             <div class="expression-input expression-input-stale">
               <a-button class="expression-input-sync-btn btn btn-light btn-sm"><SyncOutlined /></a-button>
-              <div class="cm-expression-input"></div>
+              <div class="cm-expression-input" id="editor"></div>
               <div class="expression-input-enter">
                 <EnterOutlined />
               </div>
@@ -48,6 +48,10 @@ import Expr from "@/views/Expr.vue";
 import {onMounted, reactive, ref, toRefs} from "vue";
 import {CloseOutlined, EnterOutlined, PlusOutlined, ReadOutlined, SyncOutlined} from "@ant-design/icons-vue";
 import {promRepository} from "@/api/promRepository";
+import {PromQLExtension} from "codemirror-promql";
+import {EditorView} from "@codemirror/view";
+import {EditorState} from "@codemirror/state";
+import {basicSetup} from "@codemirror/basic-setup";
 
 export default {
   name: "PromQL",
@@ -156,6 +160,7 @@ export default {
       ql: [{expr: {}}] as PromQL[],
     })
     console.log(state.ql);
+    const promQL = new PromQLExtension()
 
     const updateValue = (value) => {
       const [v, str, index, qlIndex] = value;
@@ -189,6 +194,16 @@ export default {
     }
 
     onMounted(() => {
+      const doc = document.getElementById('editor')
+      if (doc !== null) {
+        new EditorView({
+          state: EditorState.create({
+            extensions: [basicSetup, promQL.asExtension()]
+          }),
+          parent: doc
+        })
+      }
+
       queryLabelValue()
       queryLabels()
     })
