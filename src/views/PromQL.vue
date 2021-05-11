@@ -49,8 +49,8 @@ import {onMounted, reactive, ref, toRefs} from "vue";
 import {CloseOutlined, EnterOutlined, PlusOutlined, ReadOutlined, SyncOutlined} from "@ant-design/icons-vue";
 import {metricNameData, promRepository} from "@/api/promRepository";
 import {PromQLExtension} from "codemirror-promql";
-import {EditorView} from "@codemirror/view";
-import {EditorState} from "@codemirror/state";
+import {EditorView, keymap, placeholder, ViewUpdate} from "@codemirror/view";
+import {EditorState, Prec} from "@codemirror/state";
 import {basicSetup} from "@codemirror/basic-setup";
 import {HighlightStyle, tags} from "@codemirror/highlight";
 
@@ -161,6 +161,7 @@ export default {
       ql: [{expr: {}}] as PromQL[],
     })
     console.log(state.ql);
+    const exprValue = ref('node_arp_entries')
     const promQL = new PromQLExtension().setComplete({
       remote: {
         url: 'http://prometheus.proxy.sumscope.com:8000',
@@ -272,6 +273,10 @@ export default {
       await promRepository.queryLabel()
     }
 
+    const parseExpr = (v) => {
+      console.log(exprValue.value, '=======', v.state.doc)
+    }
+
     onMounted(() => {
       const doc = document.getElementById('editor')
       if (doc !== null) {
@@ -282,9 +287,25 @@ export default {
               promQL.asExtension(),
               EditorView.lineWrapping,
               promQLHighlightMaterialTheme,
-            ]
+              placeholder('Enter query or edit tree view below...'),
+              Prec.override(
+                  keymap.of([
+                    {
+                      key: 'Enter',
+                      run: (v: EditorView): boolean => {
+                        parseExpr(v)
+                        return true
+                      }
+                    }
+                  ])
+              ),
+              // EditorView.updateListener.of((update: ViewUpdate) => {
+              //   console.log('xxx', update.state.doc)
+              // })
+            ],
+            doc: exprValue.value,
           }),
-          parent: doc
+          parent: doc,
         })
       }
 
