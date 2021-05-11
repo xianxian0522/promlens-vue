@@ -33,6 +33,7 @@ export default {
     const updateLeft = inject('updateLeft')
     const updateQlIndex = inject('updateQlIndex')
     const queryAllData: any = inject('queryAllData')
+    const exprChange: any = inject('exprChange')
 
     const formState = reactive({
       functionIdentifier: (props.functionCall && props.functionCall.functionIdentifier) || 'rate',
@@ -141,6 +142,10 @@ export default {
       const data: any = {
         functionIdentifier: formState.functionIdentifier,
         functionArgs: formState.functionArgs || []
+      }
+
+      if (exprChange()?.unknownExpr) {
+        data.functionArgs.push(exprChange()?.unknownExpr)
       }
       return data
     }

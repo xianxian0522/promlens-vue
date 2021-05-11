@@ -70,6 +70,7 @@ export default {
     const updateLeft = inject('updateLeft')
     const updateQlIndex = inject('updateQlIndex')
     const queryAllData: any = inject('queryAllData')
+    const exprChange: any = inject('exprChange')
 
     const formState = reactive({
       aggregationType: props.aggregateExpr?.aggregateOp || 'sum',
@@ -129,6 +130,10 @@ export default {
             data.aggregateModifier.Without.splice(index, 1, item.value)
           }
         })
+      }
+
+      if (exprChange()?.unknownExpr) {
+        data.functionArgs.push(exprChange()?.unknownExpr)
       }
       return data
     }

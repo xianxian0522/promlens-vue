@@ -121,7 +121,6 @@ export default {
     // labelNameData: Array,
   },
   setup(props: any) {
-    // console.log(props, 'props', inject('addExpr'))
     const updateExprIndex: number | undefined = inject('updateExprIndex')
     const updateExprValue: any = inject('updateExprValue')
     const exprChange: any = inject('exprChange')
@@ -179,7 +178,7 @@ export default {
     onMounted(() => {
       // console.log('props form common', formState.preview, exprChange())
       watch(() => formState.queryType, (value) => {
-        console.log(value, 'query Type')
+        // console.log(value, 'query Type')
       })
     })
 

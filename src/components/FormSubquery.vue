@@ -39,6 +39,7 @@ export default {
     const updateLeft = inject('updateLeft')
     const updateQlIndex = inject('updateQlIndex')
     const queryAllData: any = inject('queryAllData')
+    const exprChange: any = inject('exprChange')
 
     const formState = reactive({
       offset: props.subqueryExpr?.offsetExpr?.duration || '0s',
@@ -73,6 +74,11 @@ export default {
           duration: formState.offset
         }
       }
+
+      if (exprChange()?.unknownExpr) {
+        data.expr = exprChange()?.unknownExpr
+      }
+
       return data
     }
 

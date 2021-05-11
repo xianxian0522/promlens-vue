@@ -33,6 +33,7 @@ export default {
     const updateLeft = inject('updateLeft')
     const updateQlIndex = inject('updateQlIndex')
     const queryAllData: any = inject('queryAllData')
+    const exprChange: any = inject('exprChange')
 
     const formState = reactive({
       unaryOp: props.unaryExpr?.unaryOp || '-',
@@ -44,6 +45,11 @@ export default {
         unaryOp: formState.unaryOp,
         expr: formState.expr,
       }
+
+      if (exprChange()?.unknownExpr) {
+        data.expr = exprChange()?.unknownExpr
+      }
+
       return data
     }
 

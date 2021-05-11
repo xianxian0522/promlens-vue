@@ -21,6 +21,7 @@ export default {
     const updateLeft = inject('updateLeft')
     const updateQlIndex = inject('updateQlIndex')
     const queryAllData: any = inject('queryAllData')
+    const exprChange: any = inject('exprChange')
 
     const formState = reactive({})
     content.emit('previewChange', props.parenExpr)
@@ -33,6 +34,11 @@ export default {
         },
         showLeft: updateLeft,
       }
+
+      if (exprChange()?.unknownExpr) {
+        value.parenExpr.expr = exprChange()?.unknownExpr
+      }
+
       await updateExprValue([value, 'parenExpr', updateExprIndex, updateQlIndex])
       await queryAllData()
     }

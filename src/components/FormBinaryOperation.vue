@@ -123,6 +123,7 @@ export default {
     const updateLeft: boolean | undefined = inject('updateLeft')
     const updateQlIndex = inject('updateQlIndex')
     const queryAllData: any = inject('queryAllData')
+    const exprChange: any = inject('exprChange')
 
     const formState = reactive({
       operator: props.binaryExpr?.operator || '/',
@@ -225,6 +226,10 @@ export default {
             }
           })
         }
+      }
+
+      if (exprChange()?.unknownExpr) {
+        data.left = exprChange()?.unknownExpr
       }
       return data
     }
