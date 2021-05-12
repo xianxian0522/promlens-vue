@@ -10,8 +10,8 @@
             <div class="expression-input expression-input-stale">
               <a-button class="expression-input-sync-btn btn btn-light btn-sm"><SyncOutlined /></a-button>
 <!--              <div class="cm-expression-input" :id="'editor' + index"></div>-->
-              <PromQLCodeMirror :codeId="index" />
-              <div class="expression-input-enter">
+              <PromQLCodeMirror :codeId="index" :expr="q.expr" />
+              <div class="expression-input-enter" style="color: #bbbbbb">
                 <EnterOutlined />
               </div>
             </div>

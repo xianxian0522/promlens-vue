@@ -9,12 +9,13 @@ import {HighlightStyle, tags} from "@codemirror/highlight";
 import {EditorView, keymap, placeholder, ViewUpdate} from "@codemirror/view";
 import {EditorState, Prec} from "@codemirror/state";
 import {basicSetup} from "@codemirror/basic-setup";
+import {queryExpr} from "@/utils/common";
 
 export default {
   name: "PromQLCodeMirror",
-  props: ['codeId'],
+  props: ['codeId', 'expr'],
   setup(props) {
-    const exprValue = ref('node_arp_entries')
+    const exprValue = ref()
     const promQL = new PromQLExtension().setComplete({
       remote: {
         url: 'http://prometheus.proxy.sumscope.com:8000',
@@ -133,6 +134,10 @@ export default {
     }
 
     onMounted(() => {
+      console.log(props.expr, 'expr')
+      if (props.expr) {
+        exprValue.value = queryExpr(props.expr)
+      }
       inputExpr(props.codeId)
     })
 
