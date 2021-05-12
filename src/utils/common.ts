@@ -211,6 +211,7 @@ export const exprParser = (value) => {
     if (tr.children?.length > 0) {
         num = 0
         console.log(treeToModel(tr.cursor(), value), '...........')
+        // return treeToModel(tr.cursor(), value)
     }
 }
 const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => {

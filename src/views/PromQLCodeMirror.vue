@@ -97,7 +97,7 @@ export default {
     ])
 
     const parseExpr = (v) => {
-      console.log(exprValue.value, '=======', v.state.doc)
+      console.log(exprValue.value, '!!!=======返回结果去修改promql', v.state.doc)
       exprParser(v.state.doc.text[0])
     }
 
