@@ -9,7 +9,7 @@ import {HighlightStyle, tags} from "@codemirror/highlight";
 import {EditorView, keymap, placeholder, ViewUpdate} from "@codemirror/view";
 import {EditorState, Prec} from "@codemirror/state";
 import {basicSetup} from "@codemirror/basic-setup";
-import {queryExpr} from "@/utils/common";
+import {exprParser, queryExpr} from "@/utils/common";
 
 export default {
   name: "PromQLCodeMirror",
@@ -98,6 +98,7 @@ export default {
 
     const parseExpr = (v) => {
       console.log(exprValue.value, '=======', v.state.doc)
+      exprParser(v.state.doc.text[0])
     }
 
     const inputExpr = (codeId) => {

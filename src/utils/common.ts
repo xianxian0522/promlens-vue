@@ -1,3 +1,5 @@
+import {parser} from "lezer-promql";
+
 export const validatorRule = async (rule, value) => {
     const num = value.slice(0, -1)
     const str = value.slice(-1)
@@ -198,4 +200,212 @@ export const queryUnary = (value) => {
     let query = value.unaryOp
     query += queryExpr(value.expr)
     return query
+}
+
+
+let num = 0
+export const exprParser = (value) => {
+    console.log(value, '=====jie xi', parser.parse(value))
+    const tr = parser.parse(value)
+    print(tr)
+    if (tr.children?.length > 0) {
+        num = 0
+        console.log(treeToModel(tr.cursor(), value), '...........')
+    }
+}
+const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => {
+    console.log(c.name, 'ccccc')
+    if (c.name === 'PromQL') {
+        num++
+        if (num === 1) {
+            c.next()
+            return treeToModel(c, str, exprStr, length)
+        } else {
+            return
+        }
+    }
+    if (c.name === 'Expr') {
+        c.next()
+        if (c.name === 'MatrixSelector') {
+            return treeToModel(c, str, 'matrixSelector')
+        }
+        if (c.name === 'OffsetExpr') {
+            return treeToModel(c, str, 'offsetExpr')
+        }
+        if (c.name === 'VectorSelector') {
+            return {
+                vectorSelector: treeToModel(c, str, exprStr, c.to - c.from)
+            }
+        }
+        if (c.name === 'FunctionCall') {
+            return {
+                functionCall: treeToModel(c, str, exprStr)
+            }
+        }
+        if (c.name === 'AggregateExpr') {
+            return {
+                aggregateExpr: treeToModel(c, str, exprStr)
+            }
+        }
+        if (c.name === 'ParenExpr') {
+            return {
+                parenExpr: treeToModel(c, str, exprStr)
+            }
+        }
+        if (c.name === 'BinaryExpr') {
+            return {
+                binaryExpr: treeToModel(c, str, exprStr)
+            }
+        }
+        if (c.name === 'NumberLiteral') {
+            return {
+                numberLiteral: Number(str.substring(c.from, c.to))
+            }
+        }
+        if (c.name === 'StringLiteral') {
+            return {
+                stringLiteral: str.substring(c.from, c.to).slice(1, -1)
+            }
+        }
+        if (c.name === 'SubqueryExpr') {
+            return {
+                subqueryExpr: treeToModel(c, str, exprStr)
+            }
+        }
+        if (c.name === 'UnaryExpr') {
+            return {
+                unaryExpr: treeToModel(c, str, exprStr)
+            }
+        }
+    }
+    if (c.name === 'VectorSelector') {
+        c.next()
+        const metricIdentifier = treeToModel(c, str)
+        let labelMatchers
+        if (c.to < Number(length)) {
+            c.next()
+            labelMatchers = treeToModel(c, str)
+        }
+        // c.next()
+        // const labelMatchers = treeToModel(c, str)
+        let matrixSelector
+        if (exprStr === 'matrixSelector') {
+            if (c.name === 'Duration') {
+                matrixSelector = {
+                    duration: str.substring(c.from, c.to)
+                }
+            } else {
+                c.next()
+                matrixSelector = {
+                    duration: treeToModel(c, str)
+                }
+            }
+        }
+        let offsetExpr
+        if (exprStr === 'offsetExpr') {
+            c.next()
+            offsetExpr = {
+                offset: true,
+                duration: treeToModel(c, str)
+            }
+        }
+        return {
+            metricIdentifier,
+            labelMatchers,
+            matrixSelector,
+            offsetExpr,
+        }
+    }
+    if (c.name === 'MetricIdentifier') {
+        c.next()
+        return treeToModel(c, str)
+    }
+    if (c.name === 'Identifier') {
+        return str.substring(c.from, c.to)
+    }
+    if (c.name === 'LabelMatchers') {
+        c.next()
+        if (c.name == 'LabelMatchList') {
+            return treeToModel(c, str)
+        }
+        return []
+    }
+    if (c.name === 'LabelMatchList') {
+        c.next()
+        if (c.name == 'LabelMatcher') {
+            return [treeToModel(c, str)]
+        }
+        if (c.name == 'LabelMatchList') {
+            const xs = treeToModel(c, str)
+            c.next()
+            const x = treeToModel(c, str)
+            return [...xs, x]
+        }
+    }
+    if (c.name == 'LabelMatcher') {
+        c.next()
+        const labelName = treeToModel(c, str)
+        c.next()
+        const matchOp = treeToModel(c, str)
+        c.next()
+        const labelValue = treeToModel(c, str)
+        return {
+            labelName,
+            matchOp,
+            labelValue,
+        }
+    }
+    if (c.name === 'LabelName') {
+        return str.substring(c.from, c.to)
+    }
+    if (c.name === 'MatchOp') {
+        c.next()
+        return str.substring(c.from, c.to)
+    }
+    if (c.name === 'StringLiteral') {
+        return str.substring(c.from, c.to)
+    }
+    if (c.name === 'MatrixSelector') {
+        c.next()
+        return treeToModel(c, str, exprStr)
+    }
+    if (c.name === 'OffsetExpr') {
+        c.next()
+        return treeToModel(c, str, exprStr)
+    }
+    if (c.name === 'Offset') {
+        c.next()
+        return str.substring(c.from, c.to)
+    }
+    if (c.name === 'Duration') {
+        return str.substring(c.from, c.to)
+    }
+}
+const treeVectorSelector = (c: any, str: string) => {
+    if (c.name === 'VectorSelector') {
+        c.next()
+        const metricIdentifier = treeVectorSelector(c, str)
+        c.next()
+        const labelMatchers = treeVectorSelector(c, str)
+        return {
+            metricIdentifier,
+            labelMatchers
+        }
+    }
+    console.log(';;;;;', c)
+    if (c.name === 'MetricIdentifier') {
+        c.next()
+        return treeVectorSelector(c, str)
+    }
+    if (c.name === 'Identifier') {
+        c.next()
+        return str.substring(c.from, c.to)
+    }
+}
+
+const print = (tree) => {
+    const cursor = tree.cursor()
+    do {
+        console.log(`Node ${cursor.name} from ${cursor.from} to ${cursor.to}`)
+    } while (cursor.next())
 }
