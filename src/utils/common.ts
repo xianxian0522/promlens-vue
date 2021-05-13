@@ -105,7 +105,7 @@ export const queryBinary = (value) => {
             query += value.binModifiers?.OnOrIgnoring.On.join(',')
         }
         query += ') '
-    } else if (value.binModifiers?.OnOrIgnoring.Ignoring?.length > 0) {
+    } else if (value.binModifiers?.OnOrIgnoring?.Ignoring?.length > 0) {
         query += 'ignoring(' + value.binModifiers?.OnOrIgnoring.Ignoring.join(',') + ') '
     }
     if (value.binModifiers?.group && Object.prototype.hasOwnProperty.call(value.binModifiers?.group, 'GroupLeft')) {
@@ -140,11 +140,11 @@ export const queryAggregate = (value) => {
     let query = value.aggregateOp
     if (value.aggregateModifier && Object.prototype.hasOwnProperty.call(value.aggregateModifier, 'Without')) {
         query += ' without('
-        if (value.aggregateModifier.Without?.length > 0) {
+        if (value.aggregateModifier?.Without?.length > 0) {
             query += value.aggregateModifier.Without.join(',')
         }
         query += ') '
-    } else if (value.aggregateModifier.By?.length > 0) {
+    } else if (value.aggregateModifier?.By?.length > 0) {
         query += ' by(' + value.aggregateModifier.By.join(',') + ') '
     }
     query += '('
@@ -161,7 +161,7 @@ export const queryAggregate = (value) => {
 
 export const queryFunction = (value) => {
     let query = value.functionIdentifier + '('
-    if (value.functionArgs?.length > 0) {
+    if ( value.functionArgs?.length > 0) {
         value.functionArgs.forEach(fun => {
             query += queryExpr(fun)
         })
@@ -191,7 +191,7 @@ export const querySubquery = (value) => {
     }
     query += ']'
     if (value.offsetExpr?.offset) {
-        query += ' offset ' + value.offsetExpr.duration
+        query += ' offset ' + value.offsetExpr?.duration
     }
     return query
 }
@@ -245,7 +245,7 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
         }
         if (c.name === 'AggregateExpr') {
             return {
-                aggregateExpr: treeToModel(c, str, exprStr)
+                aggregateExpr: treeToModel(c, str, exprStr, c.to - c.from)
             }
         }
         if (c.name === 'ParenExpr') {
@@ -415,26 +415,78 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
             return [...xs, x]
         }
     }
-}
-const treeVectorSelector = (c: any, str: string) => {
-    if (c.name === 'VectorSelector') {
+    if (c.name === 'AggregateExpr') {
         c.next()
-        const metricIdentifier = treeVectorSelector(c, str)
-        c.next()
-        const labelMatchers = treeVectorSelector(c, str)
+        const aggregateOp = treeToModel(c, str)
+
+        let functionArgs = []
+        let aggregateModifier
+        if (c.to + 2 < Number(length)) {
+            c.next()
+            functionArgs = treeToModel(c, str, exprStr, length)
+            c.next()
+            aggregateModifier = treeToModel(c, str)
+        }
+
         return {
-            metricIdentifier,
-            labelMatchers
+            aggregateOp,
+            functionArgs,
+            aggregateModifier,
         }
     }
-    console.log(';;;;;', c)
-    if (c.name === 'MetricIdentifier') {
-        c.next()
-        return treeVectorSelector(c, str)
-    }
-    if (c.name === 'Identifier') {
+    if (c.name === 'AggregateOp') {
         c.next()
         return str.substring(c.from, c.to)
+    }
+    if (c.name === 'AggregateModifier') {
+        c.next()
+        return treeToModel(c, str)
+    }
+    if (c.name === 'By') {
+        c.next()
+        console.log(c.name, '????')
+        if (c.name === 'GroupingLabels') {
+            return {
+                By: treeToModel(c, str)
+            }
+        }
+        return {
+            By: []
+        }
+    }
+    if (c.name === 'Without') {
+        c.next()
+        if (c.name === 'GroupingLabels') {
+            return {
+                Without: treeToModel(c, str)
+            }
+        }
+        return {
+            Without: []
+        }
+    }
+    if (c.name === 'GroupingLabels') {
+        c.next()
+        if (c.name === 'GroupingLabelList') {
+            return treeToModel(c, str)
+        }
+        return []
+    }
+    if (c.name === 'GroupingLabelList') {
+        c.next()
+        if (c.name === 'GroupingLabel') {
+            return [treeToModel(c, str)]
+        }
+        if (c.name === 'GroupingLabelList') {
+            const xs = treeToModel(c, str)
+            c.next()
+            const x = treeToModel(c, str)
+            return [...xs, x]
+        }
+    }
+    if (c.name === 'GroupingLabel') {
+        c.next()
+        return treeToModel(c, str)
     }
 }
 

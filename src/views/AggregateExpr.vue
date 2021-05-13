@@ -48,12 +48,12 @@
     </template>
   </TreeCommon>
   <div class="ast-node">
-    <div v-if="aggregateExpr.functionArgs.length > 0">
+    <div v-if="aggregateExpr?.functionArgs?.length > 0">
       <div v-for="(fun, num) in aggregateExpr.functionArgs" :key="num">
         <Expr :expr="fun" @updateValue="updateValue" :qlIndex="qlIndex" :index="num" :showLeft="showLeft"/>
       </div>
     </div>
-    <div v-else><Expr :expr="aggregateExpr.functionArgs[0]" @updateValue="updateValue" :qlIndex="qlIndex" :index="0" :showLeft="showLeft" /></div>
+    <div v-else><Expr :expr="undefined" @updateValue="updateValue" :qlIndex="qlIndex" :index="0" :showLeft="showLeft" /></div>
   </div>
 </div>
 </template>
@@ -101,7 +101,7 @@ export default {
     provide('queryAllData', queryAllData)
 
     const queryInfo = async () => {
-      if (props.aggregateExpr.functionArgs?.length > 0) {
+      if (props.aggregateExpr?.functionArgs?.length > 0) {
         if (!Object.prototype.hasOwnProperty.call(props.aggregateExpr?.functionArgs[0], 'unknownExpr')) {
           data.isLoading = true
           try {
