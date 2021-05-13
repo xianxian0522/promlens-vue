@@ -64,9 +64,9 @@ export const queryExpr = (value) => {
 
 export const querySelectData = (value) => {
     let query = value.metricIdentifier
-    if (value.labelMatchers.length > 0) {
+    if (value.labelMatchers?.length > 0) {
         query += '{'
-        value.labelMatchers.forEach(label => {
+        value.labelMatchers?.forEach(label => {
             query += label.labelName + label.matchOp + '"' + label.labelValue + '"' + ','
         })
         query = query.slice(0, -1)
@@ -75,8 +75,8 @@ export const querySelectData = (value) => {
     if (value.offsetExpr?.duration) {
         query += '[' + value.offsetExpr.duration + ']'
     }
-    if (value.matrixSelector.duration.slice(0, -1) !== '0') {
-        query += ' offset ' + value.matrixSelector.duration
+    if (value.matrixSelector?.duration && value.matrixSelector?.duration?.slice(0, -1) !== '0') {
+        query += ' offset ' + value.matrixSelector?.duration
     }
     return query
 }
@@ -210,8 +210,8 @@ export const exprParser = (value) => {
     print(tr)
     if (tr.children?.length > 0) {
         num = 0
-        console.log(treeToModel(tr.cursor(), value), '...........')
-        // return treeToModel(tr.cursor(), value)
+        // console.log(treeToModel(tr.cursor(), value), '...........')
+        return treeToModel(tr.cursor(), value)
     }
 }
 const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => {

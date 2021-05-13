@@ -14,7 +14,8 @@ import {exprParser, queryExpr} from "@/utils/common";
 export default {
   name: "PromQLCodeMirror",
   props: ['codeId', 'expr'],
-  setup(props) {
+  emits: ['codeMirrorUpdate'],
+  setup(props, content) {
     const exprValue = ref()
     const promQL = new PromQLExtension().setComplete({
       remote: {
@@ -98,7 +99,8 @@ export default {
 
     const parseExpr = (v) => {
       console.log(exprValue.value, '!!!=======返回结果去修改promql', v.state.doc)
-      exprParser(v.state.doc.text[0])
+      const data = exprParser(v.state.doc.text[0])
+      content.emit('codeMirrorUpdate', [data, props.codeId])
     }
 
     const inputExpr = (codeId) => {

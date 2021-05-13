@@ -10,7 +10,7 @@
             <div class="expression-input expression-input-stale">
               <a-button class="expression-input-sync-btn btn btn-light btn-sm"><SyncOutlined /></a-button>
 <!--              <div class="cm-expression-input" :id="'editor' + index"></div>-->
-              <PromQLCodeMirror :codeId="index" :expr="q.expr" />
+              <PromQLCodeMirror :codeId="index" :expr="q.expr" @codeMirrorUpdate="codeMirrorUpdate" />
               <div class="expression-input-enter" style="color: #bbbbbb">
                 <EnterOutlined />
               </div>
@@ -160,6 +160,11 @@ export default {
     })
     console.log(state.ql);
 
+    const codeMirrorUpdate = (value) => {
+      const [v, index] = value
+      state.ql[index].expr = v
+    }
+
     const updateValue = (value) => {
       const [v, str, index, qlIndex] = value;
       // if (str === 'unknown') {
@@ -200,6 +205,7 @@ export default {
       // ql,
       ...toRefs(state),
       updateValue,
+      codeMirrorUpdate,
       addAnotherQuery,
       deleteAnotherQuery,
     }
