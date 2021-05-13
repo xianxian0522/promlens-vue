@@ -205,7 +205,7 @@ export const queryUnary = (value) => {
 
 let num = 0
 export const exprParser = (value) => {
-    console.log(value, '=====jie xi', parser.parse(value))
+    // const tr = parser.configure({strict: true}).parse(value)
     const tr = parser.parse(value)
     print(tr)
     if (tr.children?.length > 0) {
@@ -224,9 +224,12 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
         } else {
             return
         }
+        // c.next()
+        // return treeToModel(c, str, exprStr, length)
     }
     if (c.name === 'Expr') {
         c.next()
+        console.log(c.name, ';;;;00000')
         if (c.name === 'MatrixSelector') {
             return treeToModel(c, str, 'matrixSelector')
         }
@@ -415,6 +418,7 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
             return [...xs, x]
         }
     }
+
     if (c.name === 'AggregateExpr') {
         c.next()
         const aggregateOp = treeToModel(c, str)
@@ -444,7 +448,6 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
     }
     if (c.name === 'By') {
         c.next()
-        console.log(c.name, '????')
         if (c.name === 'GroupingLabels') {
             return {
                 By: treeToModel(c, str)
@@ -487,6 +490,81 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
     if (c.name === 'GroupingLabel') {
         c.next()
         return treeToModel(c, str)
+    }
+
+    if (c.name === 'ParenExpr') {
+        c.next()
+        return {
+            expr: treeToModel(c, str),
+            parentheses: '()'
+        }
+    }
+
+    if (c.name === 'BinaryExpr') {
+        c.next()
+        const left = treeToModel(c, str)
+        c.next()
+        const operator = str.substring(c.from, c.to)
+        c.next()
+        const binModifiers = treeToModel(c, str)
+        c.next()
+        const right = treeToModel(c, str)
+        c.next()
+        return {
+            left,
+            operator,
+            binModifiers,
+            right,
+        }
+    }
+    if (c.name === 'BinModifiers') {
+        // c.next()
+        console.log(c.name, 'ing on si 循环')
+        let Bool = false
+        if (c.name === 'Bool') {
+            c.next()
+            Bool = true
+        }
+        let OnOrIgnoring
+        if (c.name === 'OnOrIgnoring') {
+            c.next()
+            OnOrIgnoring = treeToModel(c, str)
+        }
+        let group
+        if (c.name === '') {
+            c.next()
+            group = treeToModel(c, str)
+        }
+        return {
+            Bool,
+            OnOrIgnoring,
+            group,
+        }
+    }
+    if (c.name === 'OnOrIgnoring'){
+        return treeToModel(c, str)
+    }
+    if (c.name === 'On') {
+        c.next()
+        if (c.name === 'GroupingLabels') {
+            return {
+                On: treeToModel(c, str)
+            }
+        }
+        return {
+            On: []
+        }
+    }
+    if (c.name === 'Ignoring') {
+        c.next()
+        if (c.name === 'GroupingLabels') {
+            return {
+                Ignoring: treeToModel(c, str)
+            }
+        }
+        return {
+            Ignoring: []
+        }
     }
 }
 

@@ -128,7 +128,7 @@ export default {
     const formState = reactive({
       operator: props.binaryExpr?.operator || '/',
       switchOpen: !!props.binaryExpr?.binModifiers,
-      matchOn: props.binaryExpr?.binModifiers?.OnOrIgnoring.On ? 'on' : 'ignoring',
+      matchOn: props.binaryExpr?.binModifiers?.OnOrIgnoring?.On ? 'on' : 'ignoring',
       ComparisonBehavior: props.binaryExpr?.binModifiers?.Bool ? 'bool' : 'filter',
       ignoreLabels: [] as string[],
       matchType: 'one-to-one',
@@ -250,15 +250,15 @@ export default {
     onMounted(() => {
       let ignoreList = [];
       let includeList = [];
-      if (props.binaryExpr?.binModifiers?.OnOrIgnoring.Ignoring) {
+      if (props.binaryExpr?.binModifiers?.OnOrIgnoring?.Ignoring) {
         ignoreList = props.binaryExpr.binModifiers.OnOrIgnoring.Ignoring
-      } else if (props.binaryExpr?.binModifiers?.OnOrIgnoring.On) {
+      } else if (props.binaryExpr?.binModifiers?.OnOrIgnoring?.On) {
         ignoreList = props.binaryExpr.binModifiers.OnOrIgnoring.On
       }
-      if (props.binaryExpr?.binModifiers?.group.GroupLeft) {
+      if (props.binaryExpr?.binModifiers?.group?.GroupLeft) {
         formState.matchType = 'many-to-one'
         includeList = props.binaryExpr.binModifiers.group.GroupLeft
-      } else if (props.binaryExpr?.binModifiers?.group.GroupRight) {
+      } else if (props.binaryExpr?.binModifiers?.group?.GroupRight) {
         formState.matchType = 'one-to-many'
         includeList = props.binaryExpr.binModifiers.group.GroupRight
       }

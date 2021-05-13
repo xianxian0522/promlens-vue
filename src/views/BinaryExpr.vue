@@ -67,11 +67,11 @@ export default {
     const preview = {
       operator: props.binaryExpr?.operator || '/',
       switchOpen: !!props.binaryExpr?.binModifiers,
-      matchOn: props.binaryExpr?.binModifiers?.OnOrIgnoring.Ignoring ? 'ignoring' : 'on',
+      matchOn: props.binaryExpr?.binModifiers?.OnOrIgnoring?.Ignoring ? 'ignoring' : 'on',
       ComparisonBehavior: props.binaryExpr?.binModifiers?.Bool ? 'bool' : 'filter',
-      ignoreLabels: props.binaryExpr?.binModifiers?.OnOrIgnoring.On || props.binaryExpr?.binModifiers?.OnOrIgnoring.Ignoring,
-      matchType: props.binaryExpr?.binModifiers?.group.GroupLeft ? 'many-to-one' : props.binaryExpr?.binModifiers?.group.GroupRight ? 'one-to-many' : 'one-to-one',
-      includeLabels: props.binaryExpr?.binModifiers?.group.GroupRight || props.binaryExpr?.binModifiers?.group.GroupLeft,
+      ignoreLabels: props.binaryExpr?.binModifiers?.OnOrIgnoring?.On || props.binaryExpr?.binModifiers?.OnOrIgnoring?.Ignoring,
+      matchType: props.binaryExpr?.binModifiers?.group?.GroupLeft ? 'many-to-one' : props.binaryExpr?.binModifiers?.group?.GroupRight ? 'one-to-many' : 'one-to-one',
+      includeLabels: props.binaryExpr?.binModifiers?.group?.GroupRight || props.binaryExpr?.binModifiers?.group?.GroupLeft,
     }
 
     const queryAllData = async () => {
