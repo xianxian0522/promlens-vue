@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import {onMounted, ref} from "vue";
+import {inject, onMounted, ref} from "vue";
 import {PromQLExtension} from "codemirror-promql";
 import {HighlightStyle, tags} from "@codemirror/highlight";
 import {EditorView, keymap, placeholder, ViewUpdate} from "@codemirror/view";
@@ -98,9 +98,9 @@ export default {
     ])
 
     const parseExpr = (v) => {
-      console.log(exprValue.value, '!!!=======返回结果去修改promql', v.state.doc)
+      console.log('返回结果去修改promql 表单查询', v.state.doc)
       const data = exprParser(v.state.doc.text[0])
-      content.emit('codeMirrorUpdate', [data, props.codeId])
+      // content.emit('codeMirrorUpdate', [data, props.codeId])
     }
 
     const inputExpr = (codeId) => {

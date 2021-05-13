@@ -137,7 +137,7 @@ export default {
       metricName: (props.vectorSelector?.metricIdentifier) || undefined,
       labelMatchers: [] as Label[],
       select: props.vectorSelector?.offsetExpr?.offset ? 'range' : 'instance',
-      offset: props.vectorSelector?.matrixSelector.duration || '0s',
+      offset: props.vectorSelector?.matrixSelector?.duration || '0s',
       range: props.vectorSelector?.offsetExpr?.duration || '5m',
     })
     const state = reactive({
@@ -278,7 +278,7 @@ export default {
           labelName: undefined, labelValue: undefined, matchOp: '=', showAdd: true
         }
       }
-      if (props.vectorSelector?.matrixSelector.duration) {
+      if (props.vectorSelector?.matrixSelector?.duration) {
         formState.offset = props.vectorSelector.matrixSelector.duration
       }
 

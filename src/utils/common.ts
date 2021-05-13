@@ -210,8 +210,8 @@ export const exprParser = (value) => {
     print(tr)
     if (tr.children?.length > 0) {
         num = 0
-        // console.log(treeToModel(tr.cursor(), value), '...........')
-        return treeToModel(tr.cursor(), value)
+        console.log(treeToModel(tr.cursor(), value), '...........')
+        // return treeToModel(tr.cursor(), value)
     }
 }
 const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => {
@@ -265,7 +265,7 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
         }
         if (c.name === 'StringLiteral') {
             return {
-                stringLiteral: str.substring(c.from, c.to).slice(1, -1)
+                stringLiteral: (str.substring(c.from, c.to)).slice(1, -1)
             }
         }
         if (c.name === 'SubqueryExpr') {
@@ -343,7 +343,7 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
             return [...xs, x]
         }
     }
-    if (c.name == 'LabelMatcher') {
+    if (c.name === 'LabelMatcher') {
         c.next()
         const labelName = treeToModel(c, str)
         c.next()
@@ -364,7 +364,7 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
         return str.substring(c.from, c.to)
     }
     if (c.name === 'StringLiteral') {
-        return str.substring(c.from, c.to)
+        return (str.substring(c.from, c.to)).slice(1, -1)
     }
     if (c.name === 'MatrixSelector') {
         c.next()
@@ -380,6 +380,40 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
     }
     if (c.name === 'Duration') {
         return str.substring(c.from, c.to)
+    }
+
+    if (c.name === 'FunctionCall') {
+        c.next()
+        const functionIdentifier = treeToModel(c, str)
+        c.next()
+        const functionArgs = treeToModel(c, str)
+        return {
+            functionIdentifier,
+            functionArgs,
+        }
+    }
+    if (c.name === 'FunctionIdentifier') {
+        c.next()
+        return str.substring(c.from, c.to)
+    }
+    if (c.name === 'FunctionCallBody') {
+        c.next()
+        if (c.name === 'FunctionCallArgs') {
+            return treeToModel(c, str)
+        }
+        return []
+    }
+    if (c.name === 'FunctionCallArgs') {
+        c.next()
+        if (c.name === 'Expr') {
+            return [treeToModel(c, str)]
+        }
+        if (c.name === 'FunctionCallArgs') {
+            const xs = treeToModel(c, str)
+            c.next()
+            const x = treeToModel(c, str)
+            return [...xs, x]
+        }
     }
 }
 const treeVectorSelector = (c: any, str: string) => {
