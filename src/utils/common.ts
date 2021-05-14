@@ -202,34 +202,26 @@ export const queryUnary = (value) => {
     return query
 }
 
-
-let num = 0
 export const exprParser = (value) => {
-    // const tr = parser.configure({strict: true}).parse(value)
-    const tr = parser.parse(value)
-    print(tr)
-    if (tr.children?.length > 0) {
-        num = 0
-        console.log(treeToModel(tr.cursor(), value), '...........')
-        // return treeToModel(tr.cursor(), value)
+    try {
+        const tr = parser.configure({strict: true}).parse(value)
+        print(tr)
+        if (tr.children?.length > 0) {
+            console.log(treeToModel(tr.cursor(), value), '...........')
+            // return treeToModel(tr.cursor(), value)
+        }
+    } catch (e) {
+        // console.error(e)
     }
 }
 const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => {
     console.log(c.name, 'ccccc')
     if (c.name === 'PromQL') {
-        num++
-        if (num === 1) {
-            c.next()
-            return treeToModel(c, str, exprStr, length)
-        } else {
-            return
-        }
-        // c.next()
-        // return treeToModel(c, str, exprStr, length)
+        c.next()
+        return treeToModel(c, str, exprStr, length)
     }
     if (c.name === 'Expr') {
         c.next()
-        console.log(c.name, ';;;;00000')
         if (c.name === 'MatrixSelector') {
             return treeToModel(c, str, 'matrixSelector')
         }
@@ -285,13 +277,15 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
     if (c.name === 'VectorSelector') {
         c.next()
         const metricIdentifier = treeToModel(c, str)
+        if (!c.next()) {
+            return {
+                metricIdentifier,
+            }
+        }
         let labelMatchers
-        if (c.to < Number(length)) {
-            c.next()
+        if (c.name === 'LabelMatchers') {
             labelMatchers = treeToModel(c, str)
         }
-        // c.next()
-        // const labelMatchers = treeToModel(c, str)
         let matrixSelector
         if (exprStr === 'matrixSelector') {
             if (c.name === 'Duration') {
@@ -424,11 +418,29 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
         const aggregateOp = treeToModel(c, str)
 
         let functionArgs = []
+        if (!c.next()) {
+            return {
+                aggregateOp,
+                functionArgs,
+            }
+        }
+        // if (c.to + 2 < Number(length)) {
+        //     c.next()
+        //     functionArgs = treeToModel(c, str, exprStr, length)
+        //     c.next()
+        //     aggregateModifier = treeToModel(c, str)
+        // }
+        functionArgs = treeToModel(c, str, exprStr, length)
+        if (!c.next()) {
+            return {
+                aggregateOp,
+                functionArgs,
+            }
+        }
+
+        // 上面!c.next() 已执行next() 下面不需要再执行了
         let aggregateModifier
-        if (c.to + 2 < Number(length)) {
-            c.next()
-            functionArgs = treeToModel(c, str, exprStr, length)
-            c.next()
+        if (c.name === 'By' || c.name === 'Without' || c.name === 'AggregateModifier') {
             aggregateModifier = treeToModel(c, str)
         }
 
@@ -503,13 +515,46 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
     if (c.name === 'BinaryExpr') {
         c.next()
         const left = treeToModel(c, str)
-        c.next()
+
+        // c.next()
         const operator = str.substring(c.from, c.to)
-        c.next()
-        const binModifiers = treeToModel(c, str)
-        c.next()
-        const right = treeToModel(c, str)
-        c.next()
+
+        // c.next()
+        // const binModifiers = treeToModel(c, str)
+
+        if (!c.next()) {
+            return {
+                left,
+                operator,
+            }
+        }
+        let binModifiers
+        let right
+        if (c.name === 'BinModifiers') {
+            c.next()
+            if (c.name === 'Expr') {
+                return {
+                    left,
+                    operator,
+                    right: treeToModel(c, str)
+                }
+            }
+            binModifiers = treeToModel(c, str)
+            if (c.name === 'LabelName') {
+                c.next()
+            }
+            right = treeToModel(c, str)
+        }
+        // if (c.name === 'BinModifiers') {
+        //     c.next()
+        //     if (c.name === 'Bool' || c.name === 'OnOrIgnoring') {
+        //         binModifiers = treeToModel(c, str)
+        //     }
+        // }
+
+        // c.next()
+        // const right = treeToModel(c, str)
+
         return {
             left,
             operator,
@@ -518,12 +563,19 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
         }
     }
     if (c.name === 'BinModifiers') {
-        // c.next()
+        c.next()
+        if (c.name === 'Expr') {
+            return treeToModel(c, str)
+        }
         console.log(c.name, 'ing on si 循环')
         let Bool = false
         if (c.name === 'Bool') {
-            c.next()
+            console.log(c.name, 'ddd ing on si 循环')
+            if (c.name === 'Expr') {
+                return treeToModel(c, str)
+            }
             Bool = true
+            return {Bool}
         }
         let OnOrIgnoring
         if (c.name === 'OnOrIgnoring') {
@@ -531,9 +583,28 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
             OnOrIgnoring = treeToModel(c, str)
         }
         let group
-        if (c.name === '') {
+        if (c.name === 'GroupLeft') {
+            console.log('???????????', c.name)
             c.next()
-            group = treeToModel(c, str)
+            if (c.name === 'GroupingLabels') {
+                group = {
+                    GroupLeft: treeToModel(c, str)
+                }
+            } else {
+                group = {GroupLeft: []}
+            }
+        }
+        if ( c.name === 'GroupRight') {
+            c.next()
+            if (c.name === 'GroupingLabels') {
+                group = {
+                    GroupRight: treeToModel(c, str)
+                }
+            } else {
+                group = {
+                    GroupRight: []
+                }
+            }
         }
         return {
             Bool,
@@ -541,11 +612,12 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
             group,
         }
     }
-    if (c.name === 'OnOrIgnoring'){
-        return treeToModel(c, str)
-    }
+    // if (c.name === 'OnOrIgnoring') {
+    //     return treeToModel(c, str)
+    // }
     if (c.name === 'On') {
         c.next()
+        console.log(',,,,,,,,,', c.name)
         if (c.name === 'GroupingLabels') {
             return {
                 On: treeToModel(c, str)
@@ -564,6 +636,47 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
         }
         return {
             Ignoring: []
+        }
+    }
+    if (c.name === 'GroupLeft') {
+        c.next()
+        if (c.name === 'GroupingLabels') {
+            return {
+                GroupLeft: treeToModel(c, str)
+            }
+        }
+        return {GroupLeft: []}
+    }
+    if ( c.name === 'GroupRight') {
+        c.next()
+        if (c.name === 'GroupingLabels') {
+            return {
+                GroupRight: treeToModel(c, str)
+            }
+        }
+        return {
+            GroupRight: []
+        }
+    }
+    if (c.name === 'Bool') {
+        c.next()
+        const Bool = true
+        if (c.name === 'OnOrIgnoring') {
+            const ignoring = treeToModel(c, str)
+            return {
+                ignoring,
+                Bool,
+            }
+        }
+        console.log(c.name, '/////????.......')
+        return {Bool}
+    }
+    if (c.name === 'OnOrIgnoring') {
+        c.next()
+        console.log(':::::::;;;; 判断有没有group_left/right', c.name)
+        return {
+            OnOrIgnoring: treeToModel(c, str),
+        //     group: treeToModel(c, str)
         }
     }
 }

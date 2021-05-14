@@ -99,8 +99,14 @@ export default {
 
     const parseExpr = (v) => {
       console.log('返回结果去修改promql 表单查询', v.state.doc)
-      const data = exprParser(v.state.doc.text[0])
-      content.emit('codeMirrorUpdate', [data, props.codeId])
+      try {
+        const data = exprParser(v.state.doc.text[0])
+        // if (data) {
+        //   content.emit('codeMirrorUpdate', [data, props.codeId])
+        // }
+      } catch (e) {
+        console.log(e)
+      }
     }
 
     const inputExpr = (codeId) => {
