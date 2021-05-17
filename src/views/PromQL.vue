@@ -15,9 +15,8 @@
                 <EnterOutlined />
               </div>
             </div>
-            <div class="fade parse-error alert alert-danger show" v-if="showError">
-              <strong>Error:</strong>{{ parseError }}
-<!--              Expression incomplete or buggy: 1:43: parse error: missing unit character in duration-->
+            <div class="fade parse-error alert alert-danger show" v-if="parseErr[index].showError">
+              <strong>Error: </strong>{{ parseErr[index].parseError }}
             </div>
           </div>
           <a-button type="link" class="query-top-bar-btn btn btn-light btn-sm"><ReadOutlined /></a-button>
@@ -162,12 +161,9 @@ export default {
     // })
     const state = reactive({
       ql: [{expr: {}}] as PromQL[],
+      parseErr: [{showError: false, parseError: ''}]
     })
     console.log(state.ql);
-    const parseErr = reactive({
-      showError: false,
-      parseError: '',
-    })
 
     const codeMirrorUpdate = (value) => {
       const [v, index] = value
@@ -191,10 +187,12 @@ export default {
 
     const addAnotherQuery = () => {
       state.ql.push({expr: {}})
+      state.parseErr.push({showError: false, parseError: ''})
     }
     const deleteAnotherQuery = (index: number) => {
       if (state.ql.length > 1) {
         state.ql.splice(index, 1)
+        state.parseErr.splice(index, 1)
       }
     }
 
@@ -210,15 +208,15 @@ export default {
       queryLabels()
 
       bus.on('parseError', (value) => {
-        const [show, parse] = value
-        parseErr.showError = show
-        parseErr.parseError = parse
+        const [index, show, parse] = value
+        console.log(index, '?????')
+        state.parseErr[index].showError = show
+        state.parseErr[index].parseError = parse
       })
     })
 
     return {
       // ql,
-      ...toRefs(parseErr),
       ...toRefs(state),
       updateValue,
       codeMirrorUpdate,
