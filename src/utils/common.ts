@@ -547,15 +547,6 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
             console.log('////???????????/', c.name)
             right = treeToModel(c, str)
         }
-        // if (c.name === 'BinModifiers') {
-        //     c.next()
-        //     if (c.name === 'Bool' || c.name === 'OnOrIgnoring') {
-        //         binModifiers = treeToModel(c, str)
-        //     }
-        // }
-
-        // c.next()
-        // const right = treeToModel(c, str)
 
         return {
             left,
@@ -564,59 +555,6 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
             right,
         }
     }
-    if (c.name === 'BinModifiers') {
-        c.next()
-        if (c.name === 'Expr') {
-            return treeToModel(c, str)
-        }
-        console.log(c.name, 'ing on si 循环')
-        let Bool = false
-        if (c.name === 'Bool') {
-            console.log(c.name, 'ddd ing on si 循环')
-            if (c.name === 'Expr') {
-                return treeToModel(c, str)
-            }
-            Bool = true
-            return {Bool}
-        }
-        let OnOrIgnoring
-        if (c.name === 'OnOrIgnoring') {
-            c.next()
-            OnOrIgnoring = treeToModel(c, str)
-        }
-        let group
-        if (c.name === 'GroupLeft') {
-            console.log('???????????', c.name)
-            c.next()
-            if (c.name === 'GroupingLabels') {
-                group = {
-                    GroupLeft: treeToModel(c, str)
-                }
-            } else {
-                group = {GroupLeft: []}
-            }
-        }
-        if ( c.name === 'GroupRight') {
-            c.next()
-            if (c.name === 'GroupingLabels') {
-                group = {
-                    GroupRight: treeToModel(c, str)
-                }
-            } else {
-                group = {
-                    GroupRight: []
-                }
-            }
-        }
-        return {
-            Bool,
-            OnOrIgnoring,
-            group,
-        }
-    }
-    // if (c.name === 'OnOrIgnoring') {
-    //     return treeToModel(c, str)
-    // }
     if (c.name === 'On') {
         c.next()
         console.log(',,,,,,,,,', c.name)
