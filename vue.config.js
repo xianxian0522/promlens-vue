@@ -10,6 +10,10 @@ const vueConfig = {
                 target: 'http://prometheus.proxy.sumscope.com:8000',
                 changeOrigin: true,
             },
+            '/api': {
+                target: 'https://demo.promlens.com',
+                changeOrigin: true,
+            },
         }
     },
     css: {

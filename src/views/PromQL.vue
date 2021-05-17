@@ -15,6 +15,10 @@
                 <EnterOutlined />
               </div>
             </div>
+            <div class="fade parse-error alert alert-danger show" v-if="showError">
+              <strong>Error:</strong>{{ parseError }}
+<!--              Expression incomplete or buggy: 1:43: parse error: missing unit character in duration-->
+            </div>
           </div>
           <a-button type="link" class="query-top-bar-btn btn btn-light btn-sm"><ReadOutlined /></a-button>
           <a-button @click="deleteAnotherQuery(index)" class="query-top-bar-btn btn btn-light btn-sm"><CloseOutlined /></a-button>
@@ -50,6 +54,7 @@ import {onMounted, reactive, ref, toRefs} from "vue";
 import {CloseOutlined, EnterOutlined, PlusOutlined, ReadOutlined, SyncOutlined} from "@ant-design/icons-vue";
 import {metricNameData, promRepository} from "@/api/promRepository";
 import PromQLCodeMirror from "@/views/PromQLCodeMirror.vue";
+import bus from "@/utils/bus";
 
 export default {
   name: "PromQL",
@@ -159,6 +164,10 @@ export default {
       ql: [{expr: {}}] as PromQL[],
     })
     console.log(state.ql);
+    const parseErr = reactive({
+      showError: false,
+      parseError: '',
+    })
 
     const codeMirrorUpdate = (value) => {
       const [v, index] = value
@@ -199,10 +208,17 @@ export default {
     onMounted(() => {
       queryLabelValue()
       queryLabels()
+
+      bus.on('parseError', (value) => {
+        const [show, parse] = value
+        parseErr.showError = show
+        parseErr.parseError = parse
+      })
     })
 
     return {
       // ql,
+      ...toRefs(parseErr),
       ...toRefs(state),
       updateValue,
       codeMirrorUpdate,

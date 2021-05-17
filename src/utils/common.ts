@@ -210,6 +210,7 @@ export const exprParser = (value) => {
         return treeToModel(tr.cursor(), value)
     } catch (e) {
         // console.error(e)
+        // return e
     }
 }
 const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => {

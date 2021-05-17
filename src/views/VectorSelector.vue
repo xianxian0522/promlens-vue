@@ -144,12 +144,21 @@ export default {
       content.emit('updateValue', [value, 'unknown', props.index, props.qlIndex])
     }
 
+
     onMounted(() => {
       queryInfo()
 
-      bus.on('busQuery', (index) => {
-        if (index === props.qlIndex) {
-          queryInfo()
+      bus.on('busQuery', async (data) => {
+        const [index, value] = data
+        bus.emit('parseError', [false, ''])
+        try {
+          await promRepository.queryExprParse({expr: value})
+          if (index === props.qlIndex) {
+            await queryInfo()
+          }
+        } catch (e) {
+          bus.emit('parseError', [true, e.response.data.message])
+          console.log(e.response.data.message, 'err j:::::')
         }
       })
     })

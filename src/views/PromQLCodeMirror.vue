@@ -101,9 +101,10 @@ export default {
     const parseExpr = async (v) => {
       console.log('返回结果去修改promql 表单查询', v.state.doc)
       try {
-        await bus.emit('busQuery', props.codeId)
+        await bus.emit('busQuery', [props.codeId, v.state.doc.text[0]])
         const data = exprParser(v.state.doc.text[0])
         if (data) {
+          // await bus.emit('busQuery', [props.codeId])
           await content.emit('codeMirrorUpdate', [data, props.codeId])
         }
       } catch (e) {
