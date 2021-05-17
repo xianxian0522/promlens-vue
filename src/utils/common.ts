@@ -522,12 +522,7 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
         // c.next()
         // const binModifiers = treeToModel(c, str)
 
-        if (!c.next()) {
-            return {
-                left,
-                operator,
-            }
-        }
+        c.next()
         let binModifiers
         let right
         if (c.name === 'BinModifiers') {
@@ -557,7 +552,6 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
     }
     if (c.name === 'On') {
         c.next()
-        console.log(',,,,,,,,,', c.name)
         if (c.name === 'GroupingLabels') {
             return {
                 On: treeToModel(c, str)
@@ -624,6 +618,51 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
         return {
             OnOrIgnoring,
             group
+        }
+    }
+
+    if (c.name === 'SubqueryExpr') {
+        c.next()
+        const expr = treeToModel(c, str)
+
+        const range = str.substring(c.from, c.to)
+        if (!c.next()) {
+            return {
+                expr,
+                range,
+            }
+        }
+        let step
+        if (c.name === 'Duration') {
+            step = str.substring(c.from, c.to)
+        }
+        if (!c.next()) {
+            return {
+                expr,
+                range,
+                step
+            }
+        }
+
+        const offsetExpr = {
+            offset: true,
+            duration: treeToModel(c, str)
+        }
+        return {
+            expr,
+            range,
+            step,
+            offsetExpr,
+        }
+    }
+    if (c.name === 'UnaryExpr') {
+        c.next()
+        const unaryOp = str.substring(c.from, c.to)
+        c.next()
+        const expr = treeToModel(c, str)
+        return {
+            unaryOp,
+            expr,
         }
     }
 }
