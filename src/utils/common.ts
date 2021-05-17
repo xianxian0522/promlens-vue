@@ -206,10 +206,8 @@ export const exprParser = (value) => {
     try {
         const tr = parser.configure({strict: true}).parse(value)
         // print(tr)
-        if (tr.children?.length > 0) {
-            // console.log(treeToModel(tr.cursor(), value), '...........')
-            return treeToModel(tr.cursor(), value)
-        }
+        // console.log(treeToModel(tr.cursor(), value), '...........')
+        return treeToModel(tr.cursor(), value)
     } catch (e) {
         // console.error(e)
     }

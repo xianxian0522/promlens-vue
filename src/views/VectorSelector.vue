@@ -67,6 +67,7 @@ import {inject, onMounted, provide, reactive, ref, watch} from "vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
 import {promRepository} from "@/api/promRepository";
 import {dataInfo, querySelectData} from "@/utils/common";
+import bus from "@/utils/bus";
 
 export default {
   name: "VectorSelector",
@@ -145,6 +146,12 @@ export default {
 
     onMounted(() => {
       queryInfo()
+
+      bus.on('busQuery', (index) => {
+        if (index === props.qlIndex) {
+          queryInfo()
+        }
+      })
     })
 
     return {

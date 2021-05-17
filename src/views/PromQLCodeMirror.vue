@@ -10,6 +10,7 @@ import {EditorView, keymap, placeholder, ViewUpdate} from "@codemirror/view";
 import {EditorState, Prec} from "@codemirror/state";
 import {basicSetup} from "@codemirror/basic-setup";
 import {exprParser, queryExpr} from "@/utils/common";
+import bus from "@/utils/bus";
 
 export default {
   name: "PromQLCodeMirror",
@@ -97,12 +98,13 @@ export default {
       }
     ])
 
-    const parseExpr = (v) => {
+    const parseExpr = async (v) => {
       console.log('返回结果去修改promql 表单查询', v.state.doc)
       try {
+        await bus.emit('busQuery', props.codeId)
         const data = exprParser(v.state.doc.text[0])
         if (data) {
-          content.emit('codeMirrorUpdate', [data, props.codeId])
+          await content.emit('codeMirrorUpdate', [data, props.codeId])
         }
       } catch (e) {
         console.log(e)
