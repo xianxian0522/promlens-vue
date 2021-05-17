@@ -540,9 +540,11 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
                 }
             }
             binModifiers = treeToModel(c, str)
+            console.log('////???????????/', c.name)
             if (c.name === 'LabelName') {
                 c.next()
             }
+            console.log('////???????????/', c.name)
             right = treeToModel(c, str)
         }
         // if (c.name === 'BinModifiers') {
@@ -663,20 +665,27 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
         const Bool = true
         if (c.name === 'OnOrIgnoring') {
             const ignoring = treeToModel(c, str)
-            return {
-                ignoring,
-                Bool,
-            }
+            ignoring.Bool = Bool
+            return ignoring
         }
-        console.log(c.name, '/////????.......')
         return {Bool}
     }
     if (c.name === 'OnOrIgnoring') {
         c.next()
-        console.log(':::::::;;;; 判断有没有group_left/right', c.name)
+        const OnOrIgnoring = treeToModel(c, str)
+        let group
+        if (c.name === 'GroupLeft' || c.name === 'GroupRight') {
+            group = treeToModel(c, str)
+        }
+        if (c.name === 'LabelName') {
+            c.next()
+            if (c.name === 'GroupLeft' || c.name === 'GroupRight') {
+                group = treeToModel(c, str)
+            }
+        }
         return {
-            OnOrIgnoring: treeToModel(c, str),
-        //     group: treeToModel(c, str)
+            OnOrIgnoring,
+            group
         }
     }
 }
