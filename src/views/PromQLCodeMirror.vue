@@ -101,9 +101,9 @@ export default {
       console.log('返回结果去修改promql 表单查询', v.state.doc)
       try {
         const data = exprParser(v.state.doc.text[0])
-        // if (data) {
-        //   content.emit('codeMirrorUpdate', [data, props.codeId])
-        // }
+        if (data) {
+          content.emit('codeMirrorUpdate', [data, props.codeId])
+        }
       } catch (e) {
         console.log(e)
       }

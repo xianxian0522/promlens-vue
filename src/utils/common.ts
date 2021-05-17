@@ -205,17 +205,17 @@ export const queryUnary = (value) => {
 export const exprParser = (value) => {
     try {
         const tr = parser.configure({strict: true}).parse(value)
-        print(tr)
+        // print(tr)
         if (tr.children?.length > 0) {
-            console.log(treeToModel(tr.cursor(), value), '...........')
-            // return treeToModel(tr.cursor(), value)
+            // console.log(treeToModel(tr.cursor(), value), '...........')
+            return treeToModel(tr.cursor(), value)
         }
     } catch (e) {
         // console.error(e)
     }
 }
 const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => {
-    console.log(c.name, 'ccccc')
+    // console.log(c.name, 'ccccc')
     if (c.name === 'PromQL') {
         c.next()
         return treeToModel(c, str, exprStr, length)
