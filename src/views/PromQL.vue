@@ -4,7 +4,7 @@
   <div class="editor-container" id="container"></div>
   <div class="row">
     <div class="col ast-visualizer">
-      <div v-for="(q, index) in ql" :key="index">
+      <div v-for="(q, index) in ql" :key="JSON.stringify(q.expr) + index">
         <div class="query-top-bar">
           <div class="expression-input-wrapper">
             <div class="expression-input expression-input-stale">
@@ -161,7 +161,7 @@ export default {
     // })
     const state = reactive({
       ql: [{expr: {}}] as PromQL[],
-      parseErr: [{showError: false, parseError: ''}]
+      parseErr: [{showError: false, parseError: ''}],
     })
     console.log(state.ql);
 

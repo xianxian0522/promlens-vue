@@ -115,7 +115,7 @@ export default {
   },
   props: ['preview', 'ellipsis'],
   setup(props) {
-    console.log(props.leftPreview, props.rightPreview)
+
     let previewData
     if (props.leftPreview?.functionCall) {
       previewData = {

@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import {inject, onMounted, ref} from "vue";
+import {inject, onMounted, ref, watch} from "vue";
 import {PromQLExtension} from "codemirror-promql";
 import {HighlightStyle, tags} from "@codemirror/highlight";
 import {EditorView, keymap, placeholder, ViewUpdate} from "@codemirror/view";
@@ -101,6 +101,7 @@ export default {
 
     const parseExpr = async (v) => {
       console.log('返回结果去修改promql 表单查询', v.state.doc)
+
       await bus.emit('busQuery', [props.codeId])
       try {
         await promRepository.queryExprParse({expr: v.state.doc.text[0]})
@@ -141,24 +142,23 @@ export default {
               //   console.log('xxx', update.state.doc)
               // })
             ],
-            // doc: exprValue.value,
+            doc: exprValue.value,
           }),
           parent: doc,
         })
       }
     }
 
+
     onMounted(() => {
       console.log(props.expr, 'expr')
-      // exprValue.value = queryExpr(props?.expr)
-      // if (props.expr) {
-      //   exprValue.value = queryExpr(props.expr)
-      // }
+      exprValue.value = queryExpr(props?.expr)
+
       inputExpr(props.codeId)
+
     })
 
     return {
-
     }
 
   }
