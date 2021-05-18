@@ -209,7 +209,6 @@ export default {
 
       bus.on('parseError', (value) => {
         const [index, show, parse] = value
-        console.log(index, '?????')
         state.parseErr[index].showError = show
         state.parseErr[index].parseError = parse
       })

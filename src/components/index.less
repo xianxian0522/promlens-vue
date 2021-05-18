@@ -175,17 +175,17 @@ button:focus {
   margin-top: 15px;
   margin-left: 21px;
 }
-.ast-node-selected {
-  background-color: #f8fbff;
-  border: 1px solid #f1f1f1;
-  box-shadow: 0 6px 8px rgb(102 119 136 / 3%), 0 1px 2px rgb(102 119 136 / 30%);
-}
 .ast-node {
   width: -moz-fit-content;
   width: fit-content;
   margin: 0 5px 0 25px;
   border: 1px solid transparent;
   white-space: nowrap;
+}
+.ast-node-selected {
+  background-color: #f8fbff;
+  border: 1px solid #f1f1f1;
+  box-shadow: 0 6px 8px #66778808, 0 1px 2px #6677884d;
 }
 .ast-node-inner-wrapper {
   position: relative;
@@ -201,10 +201,10 @@ button:focus {
   color: transparent;
   cursor: pointer;
 }
-.ast-node-selected>*>.ast-node-inner.ast-node-inner-placeholder {
+.ast-node-selected * .ast-node-inner.ast-node-inner-placeholder {
   border: 1px dashed #94b0cf;
 }
-.ast-node-selected>*>.ast-node-inner {
+.ast-node-selected * .ast-node-inner {
   border: 1px solid #94b0cf;
   background-color: #fff;
   box-shadow: 1px 1px 2px rgb(102 119 136 / 50%);

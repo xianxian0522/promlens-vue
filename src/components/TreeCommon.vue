@@ -9,7 +9,7 @@
     </div>
 <!--    <PlusOutlined @click="addExpr" class="ast-connector-plus ast-connector-plus-up" />-->
     <slot name="addExpr"></slot>
-    <div class="ast-node-inner ast-node-inner-tree-view" style="opacity: 1;">
+    <div :class="{'ast-node-inner-placeholder': unknown}" class="ast-node-inner ast-node-inner-tree-view" style="opacity: 1;">
       <div class="ast-node-inner-top">
         <div class="ast-node-inner-text">
           <slot name="innerText"></slot>
@@ -72,7 +72,7 @@ export default {
     EditOutlined,
     FormCommon: defineAsyncComponent(() => import('./FormCommon.vue')),
   },
-  props: ['showLeft', 'updateValue', 'outermost', 'isLeft' ],
+  props: ['showLeft', 'updateValue', 'outermost', 'isLeft', 'unknown' ],
   emits: ['nodeRefHeight'],
   setup(props, content) {
     const data = ref(selectData)

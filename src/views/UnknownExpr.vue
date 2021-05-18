@@ -1,6 +1,6 @@
 <template>
 <span>
-  <TreeCommon :outermost="outermost" :isLeft="isLeft" >
+  <TreeCommon :outermost="outermost" :isLeft="isLeft" :unknown="true">
     <template v-slot:innerText>
       <span>start query:</span>
     </template>
