@@ -214,7 +214,7 @@ export const exprParser = (value) => {
     }
 }
 const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => {
-    // console.log(c.name, 'ccccc')
+    console.log(c.name, 'ccccc')
     if (c.name === 'PromQL') {
         c.next()
         return treeToModel(c, str, exprStr, length)
@@ -515,15 +515,19 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
         c.next()
         const left = treeToModel(c, str)
 
-        // c.next()
-        const operator = str.substring(c.from, c.to)
+        let operator = str.substring(c.from, c.to)
 
         // c.next()
         // const binModifiers = treeToModel(c, str)
 
         c.next()
+        // console.log(c.name, '---;;;;;;;;', str.substring(c.from, c.to))
         let binModifiers
         let right
+        if (c.name !== 'BinModifiers') {
+            operator = str.substring(c.from, c.to)
+            c.next()
+        }
         if (c.name === 'BinModifiers') {
             c.next()
             if (c.name === 'Expr') {
@@ -534,13 +538,29 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
                 }
             }
             binModifiers = treeToModel(c, str)
-            console.log('////???????????/', c.name)
             if (c.name === 'LabelName') {
                 c.next()
             }
-            console.log('////???????????/', c.name)
             right = treeToModel(c, str)
         }
+        // else {
+        //     operator = str.substring(c.from, c.to)
+        //     c.next()
+        //     console.log(c.name, '::::')
+        //     c.next()
+        //     if (c.name === 'Expr') {
+        //         return {
+        //             left,
+        //             operator,
+        //             right: treeToModel(c, str)
+        //         }
+        //     }
+        //     binModifiers = treeToModel(c, str)
+        //     if (c.name === 'LabelName') {
+        //         c.next()
+        //     }
+        //     right = treeToModel(c, str)
+        // }
 
         return {
             left,
