@@ -141,7 +141,7 @@ export default {
               //   console.log('xxx', update.state.doc)
               // })
             ],
-            doc: exprValue.value,
+            // doc: exprValue.value,
           }),
           parent: doc,
         })
@@ -150,9 +150,10 @@ export default {
 
     onMounted(() => {
       console.log(props.expr, 'expr')
-      if (props.expr) {
-        exprValue.value = queryExpr(props.expr)
-      }
+      // exprValue.value = queryExpr(props?.expr)
+      // if (props.expr) {
+      //   exprValue.value = queryExpr(props.expr)
+      // }
       inputExpr(props.codeId)
     })
 
