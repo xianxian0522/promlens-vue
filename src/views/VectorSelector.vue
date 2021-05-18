@@ -148,16 +148,18 @@ export default {
     onMounted(() => {
       queryInfo()
 
-      bus.on('busQuery', async (data) => {
-        const [index, value] = data
+      bus.on('busQuery',  (data) => {
+        const [index, err] = data
         if (index === props.qlIndex) {
-          bus.emit('parseError', [props.qlIndex, false, ''])
-          try {
-            await promRepository.queryExprParse({expr: value})
-            await queryInfo()
-          } catch (e) {
-            bus.emit('parseError', [props.qlIndex, true, e.response.data.message])
-            // console.log(e.response.data.message, 'err j:::::')
+          if (err) {
+            if (err === 'success') {
+              bus.emit('parseError', [props.qlIndex, false, ''])
+              queryInfo()
+            } else {
+              bus.emit('parseError', [props.qlIndex, true, err])
+            }
+          } else {
+            bus.emit('parseError', [props.qlIndex, false, ''])
           }
         }
       })

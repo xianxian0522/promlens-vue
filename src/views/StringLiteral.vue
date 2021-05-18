@@ -40,6 +40,7 @@ import PreviewLiteralValue from "@/components/PreviewLiteralValue.vue";
 import {promRepository} from "@/api/promRepository";
 import {onMounted, provide, reactive, ref} from "vue";
 import {stringLiteral} from "@/utils/store";
+import bus from "@/utils/bus";
 
 export default {
   name: "StringLiteral",
@@ -100,6 +101,22 @@ export default {
 
     onMounted(() => {
       queryInfo()
+
+      bus.on('busQuery',  (data) => {
+        const [index, err] = data
+        if (index === props.qlIndex) {
+          if (err) {
+            if (err === 'success') {
+              bus.emit('parseError', [props.qlIndex, false, ''])
+              queryInfo()
+            } else {
+              bus.emit('parseError', [props.qlIndex, true, err])
+            }
+          } else {
+            bus.emit('parseError', [props.qlIndex, false, ''])
+          }
+        }
+      })
     })
 
     return {

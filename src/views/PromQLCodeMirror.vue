@@ -11,6 +11,7 @@ import {EditorState, Prec} from "@codemirror/state";
 import {basicSetup} from "@codemirror/basic-setup";
 import {exprParser, queryExpr} from "@/utils/common";
 import bus from "@/utils/bus";
+import {promRepository} from "@/api/promRepository";
 
 export default {
   name: "PromQLCodeMirror",
@@ -100,15 +101,17 @@ export default {
 
     const parseExpr = async (v) => {
       console.log('返回结果去修改promql 表单查询', v.state.doc)
+      await bus.emit('busQuery', [props.codeId])
       try {
-        await bus.emit('busQuery', [props.codeId, v.state.doc.text[0]])
+        await promRepository.queryExprParse({expr: v.state.doc.text[0]})
         const data = exprParser(v.state.doc.text[0])
         if (data) {
-          // await bus.emit('busQuery', [props.codeId])
+          await bus.emit('busQuery', [props.codeId, 'success'])
           await content.emit('codeMirrorUpdate', [data, props.codeId])
         }
       } catch (e) {
-        console.log(e)
+        const err = e.response.data.message || 'Internal Server Error'
+        await bus.emit('busQuery', [props.codeId, err])
       }
     }
 

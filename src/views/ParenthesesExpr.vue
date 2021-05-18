@@ -33,6 +33,7 @@ import {defineAsyncComponent, onMounted, provide, reactive, ref} from "vue";
 import {promRepository} from "@/api/promRepository";
 import {dataInfo, queryParentheses} from "@/utils/common";
 import CommonInfoLabel from "@/components/CommonInfoLabel.vue";
+import bus from "@/utils/bus";
 
 export default {
   name: "ParenthesesExpr",
@@ -120,6 +121,22 @@ export default {
 
     onMounted(() => {
       queryInfo()
+
+      bus.on('busQuery',  (data) => {
+        const [index, err] = data
+        if (index === props.qlIndex) {
+          if (err) {
+            if (err === 'success') {
+              bus.emit('parseError', [props.qlIndex, false, ''])
+              queryInfo()
+            } else {
+              bus.emit('parseError', [props.qlIndex, true, err])
+            }
+          } else {
+            bus.emit('parseError', [props.qlIndex, false, ''])
+          }
+        }
+      })
     })
 
     return {
