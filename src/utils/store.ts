@@ -1,4 +1,6 @@
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
+
+export const baseUrl = ref<string>('http://prometheus.proxy.sumscope.com:8000/')
 
 export const selectData = reactive({
     status: '',

@@ -1,23 +1,23 @@
 import axios from "axios";
+import {baseUrl} from "@/utils/store";
+
 
 const service = axios.create({
-    baseURL: '/',
+    baseURL: baseUrl.value,
     timeout: 1000000,
 })
 service.defaults.headers.post['Content-Type'] = 'application/json';
 
-// service.interceptors.request.use(config => {
-//     const token = localStorage.getItem('token')
-//     if (token) {
-//         config.headers.Authorization = 'Bearer ' + token
-//     } else {
-//         config.headers['token'] = ''
-//     }
-//     return config
-// }, error => {
-//     return Promise.reject(error);
-// })
-//
+service.interceptors.request.use(config => {
+    if (config.url === '/api/parse') {
+        config.baseURL = 'https://demo.promlens.com/'
+    }
+    return config
+}, error => {
+    return Promise.reject(error);
+})
+
+
 service.interceptors.response.use(response => {
     return response
 }, error => {

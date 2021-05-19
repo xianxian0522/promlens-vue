@@ -9,7 +9,7 @@ const ApiMetadata = '/api/v1/metadata';
 const ApiLabels = '/api/v1/labels';
 const ApiValue = '/api/v1/label';
 const ApiQueryAll = '/api/v1/query';
-const ApiExpr = 'api/parse';
+const ApiExpr = '/api/parse';
 
 const metricNameData = ref();
 const labelNameData = ref();

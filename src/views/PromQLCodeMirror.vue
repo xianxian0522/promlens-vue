@@ -111,7 +111,7 @@ export default {
           await content.emit('codeMirrorUpdate', [data, props.codeId])
         }
       } catch (e) {
-        const err = e.response.data.message || 'Internal Server Error'
+        const err = e.response?.data?.message || 'Internal Server Error'
         await bus.emit('busQuery', [props.codeId, err])
       }
     }

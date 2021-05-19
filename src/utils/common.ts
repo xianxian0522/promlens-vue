@@ -214,7 +214,7 @@ export const exprParser = (value) => {
     }
 }
 const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => {
-    console.log(c.name, 'ccccc')
+    // console.log(c.name, 'ccccc')
     if (c.name === 'PromQL') {
         c.next()
         return treeToModel(c, str, exprStr, length)
