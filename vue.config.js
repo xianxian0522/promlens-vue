@@ -5,16 +5,16 @@ const vueConfig = {
         host: '0.0.0.0',
         port: 4306,
         open: true,
-        // proxy: {
-        //     '/api/v1': {
-        //         target: 'http://prometheus.proxy.sumscope.com:8000',
-        //         changeOrigin: true,
-        //     },
-        //     '/api': {
-        //         target: 'https://demo.promlens.com',
-        //         changeOrigin: true,
-        //     },
-        // }
+        proxy: {
+            '/api/v1': {
+                target: 'http://prometheus.proxy.sumscope.com:8000',
+                changeOrigin: true,
+            },
+            '/api': {
+                target: 'https://demo.promlens.com',
+                changeOrigin: true,
+            },
+        }
     },
     css: {
         loaderOptions: {

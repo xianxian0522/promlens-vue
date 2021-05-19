@@ -106,16 +106,21 @@ export default {
       try {
         await promRepository.queryExprParse({expr: v.state.doc.text[0]})
         const data = exprParser(v.state.doc.text[0])
-        console.log(data, ';;;;;')
         if (data) {
           await bus.emit('busQuery', [props.codeId, 'success'])
           await content.emit('codeMirrorUpdate', [data, props.codeId])
         }
       } catch (e) {
-        console.log(e, '??????')
         const err = e.response?.data?.message || 'Internal Server Error'
         await bus.emit('busQuery', [props.codeId, err])
       }
+      // try {
+      //   const data = exprParser(v.state.doc.text[0])
+      //   await bus.emit('busQuery', [props.codeId, 'success'])
+      //   await content.emit('codeMirrorUpdate', [data, props.codeId])
+      // } catch (e) {
+      //   await bus.emit('busQuery', [props.codeId, e.toString()])
+      // }
     }
 
     const inputExpr = (codeId) => {

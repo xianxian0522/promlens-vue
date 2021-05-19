@@ -4,13 +4,14 @@ import {baseUrl} from "@/utils/store";
 
 const service = axios.create({
     baseURL: baseUrl.value,
+    // baseURL: '/',
     timeout: 1000000,
 })
 service.defaults.headers.post['Content-Type'] = 'application/json';
 
 service.interceptors.request.use(config => {
     if (config.url === '/api/parse') {
-        config.baseURL = 'https://demo.promlens.com/'
+        config.baseURL = '/'
     }
     return config
 }, error => {
