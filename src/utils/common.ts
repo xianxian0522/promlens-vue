@@ -214,7 +214,7 @@ export const exprParser = (value) => {
     }
 }
 const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => {
-    // console.log(c.name, 'ccccc')
+    console.log(c.name, 'ccccc')
     if (c.name === 'PromQL') {
         c.next()
         return treeToModel(c, str, exprStr, length)
@@ -430,14 +430,12 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
         //     aggregateModifier = treeToModel(c, str)
         // }
         functionArgs = treeToModel(c, str, exprStr, length)
-        if (!c.next()) {
-            return {
-                aggregateOp,
-                functionArgs,
-            }
+
+        if (c.name === 'AggregateModifier') {
+            c.next()
         }
 
-        // 上面!c.next() 已执行next() 下面不需要再执行了
+        // 上面c.next() 已执行next() 下面不需要再执行了
         let aggregateModifier
         if (c.name === 'By' || c.name === 'Without' || c.name === 'AggregateModifier') {
             aggregateModifier = treeToModel(c, str)
