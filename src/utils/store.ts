@@ -1,6 +1,6 @@
 import {reactive, ref} from "vue";
 
-export const baseUrl = ref<string>('http://prometheus.proxy.sumscope.com:8000/')
+export const baseUrl = ref<string>('http://prometheus.proxy.sumscope.com:8000')
 export const metricNameData = ref();
 export const labelNameData = ref();
 

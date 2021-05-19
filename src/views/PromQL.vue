@@ -1,7 +1,26 @@
 <template>
 <div class="promlens-container container-fluid">
-  <a-button type="primary">Primary</a-button>
-  <div class="editor-container" id="container"></div>
+  <div class="server-settings row no-gutters">
+    <div class="col">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="background-color: white; border-right: 0; border-radius: 0;">
+            <CheckOutlined style="color: green;"/>
+<!--            <CloseOutlined style="color: red;" />-->
+          </span>
+        </div>
+        <a-input v-model:value="baseurl" v-on:press-enter="baseurlChange" class="form-control" style="border-color: #344f7133; border-radius: 0" placeholder="Enter Prometheus server URL or append ?s=<url> to the page URL" />
+      </div>
+      <div v-if="baseErr" class="fade parse-error alert alert-danger show">
+        <strong>Error validating server health: </strong> {{baseErr}}
+      </div>
+    </div>
+    <div class="col-auto">
+      <a-button class="ml-2 btn btn-light"><SettingOutlined /></a-button>
+      <a-button class="ml-2 btn btn-light"><ShareAltOutlined /></a-button>
+      <div class="ml-2 show-hotkeys"> Show hotkeys: ?</div>
+    </div>
+  </div>
   <div class="row">
     <div class="col ast-visualizer">
       <div v-for="(q, index) in ql" :key="JSON.stringify(q.expr) + index">
@@ -50,10 +69,15 @@
 import {PromQL} from "@/utils/tree";
 import Expr from "@/views/Expr.vue";
 import {onMounted, reactive, ref, toRefs, watch} from "vue";
-import {CloseOutlined, EnterOutlined, PlusOutlined, ReadOutlined, SyncOutlined} from "@ant-design/icons-vue";
+import {
+  CloseOutlined, EnterOutlined, PlusOutlined,
+  ReadOutlined, SyncOutlined, CheckOutlined,
+  SettingOutlined, ShareAltOutlined,
+} from "@ant-design/icons-vue";
 import promRepository from "@/api/promRepository";
 import PromQLCodeMirror from "@/views/PromQLCodeMirror.vue";
 import bus from "@/utils/bus";
+import {baseUrl, labelNameData, metricNameData} from "@/utils/store";
 
 export default {
   name: "PromQL",
@@ -65,6 +89,9 @@ export default {
     SyncOutlined,
     EnterOutlined,
     PlusOutlined,
+    CheckOutlined,
+    SettingOutlined,
+    ShareAltOutlined,
   },
   props: ['expr'],
   setup(props: any) {
@@ -164,6 +191,11 @@ export default {
       parseErr: [{showError: false, parseError: ''}],
     })
     console.log(state.ql);
+    const base = reactive({
+      baseurl: baseUrl.value,
+      baseErr: '',
+      baseShowErr: false,
+    })
 
     const codeMirrorUpdate = (value) => {
       const [v, index] = value
@@ -197,10 +229,25 @@ export default {
     }
 
     const queryLabelValue = async () => {
-      await promRepository.queryLabelName()
+      await promRepository.queryLabelName().then((res: any) => {
+        metricNameData.value = res.data
+      }).catch(err => console.error(err))
     }
     const queryLabels = async () => {
-      await promRepository.queryLabel()
+      await promRepository.queryLabel().then((res: any) => {
+        labelNameData.value = res.data
+        base.baseErr = ''
+      }).catch(err => {
+        base.baseErr = 'Failed to fetch'
+      })
+    }
+
+    const baseurlChange = async () => {
+      if (baseUrl.value !== base.baseurl) {
+        baseUrl.value = base.baseurl
+        await queryLabels()
+        base.baseErr = ''
+      }
     }
 
     onMounted(() => {
@@ -218,10 +265,12 @@ export default {
     return {
       // ql,
       ...toRefs(state),
+      ...toRefs(base),
       updateValue,
       codeMirrorUpdate,
       addAnotherQuery,
       deleteAnotherQuery,
+      baseurlChange,
     }
   }
 }

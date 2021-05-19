@@ -20,20 +20,20 @@ const storeState = reactive({
 
 const promRepository: any = {};
 promRepository.queryLabelName = (params?: any) => request.get(`${ApiLabelName}`, params)
-    .then((res: any) => {
-        metricNameData.value = res.data
-        storeState.metricNameData = res.data
-    }).catch(err => console.error(err))
+    // .then((res: any) => {
+    //     metricNameData.value = res.data
+    //     storeState.metricNameData = res.data
+    // }).catch(err => console.error(err))
 
 promRepository.query = (params?: any) => request.get(`${ApiQuery}`, params).catch(err => console.error(err))
 
 promRepository.queryMetadata = (params?: any) => request.get(`${ApiMetadata}`, params).catch(err => console.error(err))
 
 promRepository.queryLabel = (params?: any) => request.get(`${ApiLabels}`, params)
-    .then((res: any) => {
-        labelNameData.value = res.data
-        storeState.labelNameData = res.data
-    }).catch(err => console.error(err))
+    // .then((res: any) => {
+    //     labelNameData.value = res.data
+    //     storeState.labelNameData = res.data
+    // }).catch(err => console.error(err))
 
 promRepository.queryValueByLabelName = (labelName: string) => request.get(`${ApiValue}/${labelName}/values`).catch(err => console.error(err))
 

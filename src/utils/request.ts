@@ -3,15 +3,19 @@ import {baseUrl} from "@/utils/store";
 
 
 const service = axios.create({
-    baseURL: baseUrl.value,
-    // baseURL: '/',
+    // baseURL: baseUrl.value,
+    baseURL: '/',
     timeout: 1000000,
 })
 service.defaults.headers.post['Content-Type'] = 'application/json';
 
 service.interceptors.request.use(config => {
-    if (config.url === '/api/parse') {
-        config.baseURL = '/'
+    // config.baseURL = baseUrl.value
+    // if (config.url === '/api/parse') {
+    //     config.baseURL = '/'
+    // }
+    if (config.url !== '/api/parse') {
+        config.baseURL = baseUrl.value
     }
     return config
 }, error => {
