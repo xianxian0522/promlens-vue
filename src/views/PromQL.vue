@@ -5,13 +5,14 @@
       <div class="input-group">
         <div class="input-group-prepend">
           <span class="input-group-text" style="background-color: white; border-right: 0; border-radius: 0;">
-            <CheckOutlined style="color: green;"/>
-<!--            <CloseOutlined style="color: red;" />-->
+            <CheckOutlined v-if="baseShowState === 'success'" style="color: green;"/>
+            <CloseOutlined v-else-if="baseShowState === 'error'" style="color: red;" />
+            <span v-else><a-spin size="small" /></span>
           </span>
         </div>
         <a-input v-model:value="baseurl" v-on:press-enter="baseurlChange" class="form-control" style="border-color: #344f7133; border-radius: 0" placeholder="Enter Prometheus server URL or append ?s=<url> to the page URL" />
       </div>
-      <div v-if="baseErr" class="fade parse-error alert alert-danger show">
+      <div v-if="baseErr" class="fade parse-error alert alert-danger show" style="text-align: left">
         <strong>Error validating server health: </strong> {{baseErr}}
       </div>
     </div>
@@ -68,7 +69,7 @@
 <script lang="ts">
 import {PromQL} from "@/utils/tree";
 import Expr from "@/views/Expr.vue";
-import {onMounted, reactive, ref, toRefs, watch} from "vue";
+import {onBeforeUnmount, onMounted, reactive, ref, toRefs, watch} from "vue";
 import {
   CloseOutlined, EnterOutlined, PlusOutlined,
   ReadOutlined, SyncOutlined, CheckOutlined,
@@ -194,7 +195,7 @@ export default {
     const base = reactive({
       baseurl: baseUrl.value,
       baseErr: '',
-      baseShowErr: false,
+      baseShowState: 'load',
     })
 
     const codeMirrorUpdate = (value) => {
@@ -237,16 +238,19 @@ export default {
       await promRepository.queryLabel().then((res: any) => {
         labelNameData.value = res.data
         base.baseErr = ''
+        base.baseShowState = 'success'
       }).catch(err => {
         base.baseErr = 'Failed to fetch'
+        base.baseShowState = 'error'
       })
     }
 
     const baseurlChange = async () => {
       if (baseUrl.value !== base.baseurl) {
         baseUrl.value = base.baseurl
-        await queryLabels()
         base.baseErr = ''
+        base.baseShowState = 'load'
+        await queryLabels()
       }
     }
 
@@ -260,6 +264,9 @@ export default {
         state.parseErr[index].parseError = parse
       })
 
+    })
+    onBeforeUnmount(() => {
+      bus.all.clear()
     })
 
     return {
