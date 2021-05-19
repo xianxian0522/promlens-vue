@@ -51,7 +51,7 @@ import {PromQL} from "@/utils/tree";
 import Expr from "@/views/Expr.vue";
 import {onMounted, reactive, ref, toRefs, watch} from "vue";
 import {CloseOutlined, EnterOutlined, PlusOutlined, ReadOutlined, SyncOutlined} from "@ant-design/icons-vue";
-import {metricNameData, promRepository} from "@/api/promRepository";
+import promRepository from "@/api/promRepository";
 import PromQLCodeMirror from "@/views/PromQLCodeMirror.vue";
 import bus from "@/utils/bus";
 

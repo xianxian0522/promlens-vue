@@ -39,7 +39,7 @@ import CommonInfoLabel from "@/components/CommonInfoLabel.vue";
 import PreviewBinary from "@/components/PreviewBinary.vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
 import {binaryOperation} from "@/utils/store";
-import {promRepository} from "@/api/promRepository";
+import promRepository from "@/api/promRepository";
 import {dataInfo, queryBinary} from "@/utils/common";
 import bus from "@/utils/bus";
 

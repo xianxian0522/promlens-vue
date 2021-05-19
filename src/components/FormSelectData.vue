@@ -105,8 +105,9 @@
 <script lang="ts">
 import {QuestionCircleOutlined, DeleteOutlined, PlusOutlined, CheckOutlined, } from '@ant-design/icons-vue'
 import {onMounted, reactive, ref, toRefs, watch, readonly, toRaw, inject} from "vue";
-import {labelNameData, metricNameData, promRepository} from "@/api/promRepository";
 import {dataInfo, querySelectData, validatorRule} from "@/utils/common";
+import {labelNameData, metricNameData} from "@/utils/store";
+import promRepository from "@/api/promRepository";
 
 export interface Label {
   labelName: string;

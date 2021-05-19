@@ -38,7 +38,7 @@ import TreeCommon from "@/components/TreeCommon.vue";
 import PreviewLiteralValue from "@/components/PreviewLiteralValue.vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
 import {inject, onMounted, provide, reactive, ref} from "vue";
-import {promRepository} from "@/api/promRepository";
+import promRepository from "@/api/promRepository";
 import {numberLiteral} from "@/utils/store";
 import bus from "@/utils/bus";
 

@@ -1,7 +1,7 @@
 import request from "@/utils/request";
 import {reactive, ref, toRefs} from "vue";
 import {dataInfo} from "@/utils/common";
-import {numberLiteral, selectData, stringLiteral} from "@/utils/store";
+import {numberLiteral, selectData, stringLiteral, metricNameData, labelNameData} from "@/utils/store";
 
 const ApiQuery = '/api/v1/query_range';
 const ApiLabelName = '/api/v1/label/__name__/values';
@@ -11,8 +11,8 @@ const ApiValue = '/api/v1/label';
 const ApiQueryAll = '/api/v1/query';
 const ApiExpr = '/api/parse';
 
-const metricNameData = ref();
-const labelNameData = ref();
+// const metricNameData = ref();
+// const labelNameData = ref();
 const storeState = reactive({
     metricNameData: [],
     labelNameData: [],
@@ -106,5 +106,4 @@ promRepository.queryLiteral = (str: string, params?: any) => {
 // promRepository.queryStringLiteral = (params?: any) => {
 
 
-// export default promRepository
-export {promRepository, metricNameData, labelNameData}
+export default promRepository

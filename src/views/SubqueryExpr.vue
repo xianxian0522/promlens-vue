@@ -33,7 +33,7 @@ import CommonInfoLabel from "@/components/CommonInfoLabel.vue";
 import PreviewSubQuery from "@/components/PreviewSubQuery.vue";
 import {defineAsyncComponent, onMounted, provide, reactive, ref} from "vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
-import {promRepository} from "@/api/promRepository";
+import promRepository from "@/api/promRepository";
 import {dataInfo, querySubquery} from "@/utils/common";
 import bus from "@/utils/bus";
 

@@ -64,9 +64,9 @@ import CommonInfoLabel from "@/components/CommonInfoLabel.vue";
 import PreviewAggregate from "@/components/PreviewAggregate.vue";
 import {PlusOutlined} from '@ant-design/icons-vue'
 import {defineAsyncComponent, onMounted, provide, reactive, ref} from "vue";
-import {promRepository} from "@/api/promRepository";
 import {dataInfo, queryAggregate} from "@/utils/common";
 import bus from "@/utils/bus";
+import promRepository from "@/api/promRepository";
 
 export default {
   name: "AggregateExpr",

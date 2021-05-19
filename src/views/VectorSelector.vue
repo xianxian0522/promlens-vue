@@ -65,7 +65,7 @@ import CommonInfoLabel from "@/components/CommonInfoLabel.vue";
 import PreviewSelectData from "@/components/PreviewSelectData.vue";
 import {inject, onMounted, provide, reactive, ref, watch} from "vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
-import {promRepository} from "@/api/promRepository";
+import promRepository from "@/api/promRepository";
 import {dataInfo, querySelectData} from "@/utils/common";
 import bus from "@/utils/bus";
 

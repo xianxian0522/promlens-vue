@@ -23,7 +23,7 @@
 <script lang="ts">
 import {inject, onMounted, reactive, watch} from "vue";
 import {CheckOutlined} from "@ant-design/icons-vue";
-import {promRepository} from "@/api/promRepository";
+import promRepository from "@/api/promRepository";
 
 export default {
   name: "FormLiteralValue",

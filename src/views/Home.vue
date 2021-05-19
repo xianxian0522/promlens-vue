@@ -65,7 +65,7 @@
 <script lang="ts">
 
 import {ref, reactive, toRefs, toRaw, onMounted, watch} from 'vue'
-import {promRepository} from "@/api/promRepository";
+import promRepository from "@/api/promRepository";
 import { ReadOutlined, CloseOutlined, SyncOutlined, EnterOutlined, PlusOutlined,
   SwapOutlined, EditOutlined, QuestionCircleOutlined, CheckOutlined } from '@ant-design/icons-vue'
 import FormCommon from "@/components/FormCommon.vue";
