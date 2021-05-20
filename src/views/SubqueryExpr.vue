@@ -31,7 +31,7 @@
 import TreeCommon from '@/components/TreeCommon.vue'
 import CommonInfoLabel from "@/components/CommonInfoLabel.vue";
 import PreviewSubQuery from "@/components/PreviewSubQuery.vue";
-import {defineAsyncComponent, onMounted, provide, reactive, ref} from "vue";
+import {defineAsyncComponent, onBeforeUnmount, onMounted, provide, reactive, ref} from "vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
 import promRepository from "@/api/promRepository";
 import {dataInfo, querySubquery} from "@/utils/common";
@@ -126,24 +126,29 @@ export default {
       await queryInfo()
     }
 
+    const parseEmitQuery = (data) => {
+      const [index, err] = data
+      if (index === props.qlIndex) {
+        if (err) {
+          if (err === 'success') {
+            bus.emit('parseError', [props.qlIndex, false, ''])
+            queryInfo()
+          } else {
+            bus.emit('parseError', [props.qlIndex, true, err])
+          }
+        } else {
+          bus.emit('parseError', [props.qlIndex, false, ''])
+        }
+      }
+    }
+
     onMounted(() => {
       queryInfo()
 
-      bus.on('busQuery',  (data) => {
-        const [index, err] = data
-        if (index === props.qlIndex) {
-          if (err) {
-            if (err === 'success') {
-              bus.emit('parseError', [props.qlIndex, false, ''])
-              queryInfo()
-            } else {
-              bus.emit('parseError', [props.qlIndex, true, err])
-            }
-          } else {
-            bus.emit('parseError', [props.qlIndex, false, ''])
-          }
-        }
-      })
+      bus.on('busQuery',  parseEmitQuery)
+    })
+    onBeforeUnmount(() => {
+      bus.off('busQuery', parseEmitQuery)
     })
 
     return {

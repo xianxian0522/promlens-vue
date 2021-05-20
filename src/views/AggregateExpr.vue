@@ -63,7 +63,7 @@ import TreeCommon from "@/components/TreeCommon.vue";
 import CommonInfoLabel from "@/components/CommonInfoLabel.vue";
 import PreviewAggregate from "@/components/PreviewAggregate.vue";
 import {PlusOutlined} from '@ant-design/icons-vue'
-import {defineAsyncComponent, onMounted, provide, reactive, ref} from "vue";
+import {defineAsyncComponent, onBeforeUnmount, onMounted, provide, reactive, ref} from "vue";
 import {dataInfo, queryAggregate} from "@/utils/common";
 import bus from "@/utils/bus";
 import promRepository from "@/api/promRepository";
@@ -167,24 +167,29 @@ export default {
       await queryInfo()
     }
 
+    const parseEmitQuery = (data) => {
+      const [index, err] = data
+      if (index === props.qlIndex) {
+        if (err) {
+          if (err === 'success') {
+            bus.emit('parseError', [props.qlIndex, false, ''])
+            queryInfo()
+          } else {
+            bus.emit('parseError', [props.qlIndex, true, err])
+          }
+        } else {
+          bus.emit('parseError', [props.qlIndex, false, ''])
+        }
+      }
+    }
+
     onMounted(() => {
       queryInfo()
 
-      bus.on('busQuery',  (data) => {
-        const [index, err] = data
-        if (index === props.qlIndex) {
-          if (err) {
-            if (err === 'success') {
-              bus.emit('parseError', [props.qlIndex, false, ''])
-              queryInfo()
-            } else {
-              bus.emit('parseError', [props.qlIndex, true, err])
-            }
-          } else {
-            bus.emit('parseError', [props.qlIndex, false, ''])
-          }
-        }
-      })
+      bus.on('busQuery',  parseEmitQuery)
+    })
+    onBeforeUnmount(() => {
+      bus.off('busQuery', parseEmitQuery)
     })
 
     return {

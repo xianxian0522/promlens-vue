@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import {defineAsyncComponent, inject, onMounted, provide, reactive, ref} from "vue";
+import {defineAsyncComponent, inject, onBeforeUnmount, onMounted, provide, reactive, ref} from "vue";
 import TreeCommon from "@/components/TreeCommon.vue";
 import CommonInfoLabel from "@/components/CommonInfoLabel.vue";
 import PreviewBinary from "@/components/PreviewBinary.vue";
@@ -152,24 +152,29 @@ export default {
       content.emit('updateValue', [value, 'unknown', props.index, props.qlIndex])
     }
 
+    const parseEmitQuery = (data) => {
+      const [index, err] = data
+      if (index === props.qlIndex) {
+        if (err) {
+          if (err === 'success') {
+            bus.emit('parseError', [props.qlIndex, false, ''])
+            queryInfo()
+          } else {
+            bus.emit('parseError', [props.qlIndex, true, err])
+          }
+        } else {
+          bus.emit('parseError', [props.qlIndex, false, ''])
+        }
+      }
+    }
+
     onMounted(() => {
       queryInfo()
 
-      bus.on('busQuery',  (data) => {
-        const [index, err] = data
-        if (index === props.qlIndex) {
-          if (err) {
-            if (err === 'success') {
-              bus.emit('parseError', [props.qlIndex, false, ''])
-              queryInfo()
-            } else {
-              bus.emit('parseError', [props.qlIndex, true, err])
-            }
-          } else {
-            bus.emit('parseError', [props.qlIndex, false, ''])
-          }
-        }
-      })
+      bus.on('busQuery',  parseEmitQuery)
+    })
+    onBeforeUnmount(() => {
+      bus.off('busQuery', parseEmitQuery)
     })
 
     return {

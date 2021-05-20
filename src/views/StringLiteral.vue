@@ -38,7 +38,7 @@ import TreeCommon from "@/components/TreeCommon.vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
 import PreviewLiteralValue from "@/components/PreviewLiteralValue.vue";
 import promRepository from "@/api/promRepository";
-import {onMounted, provide, reactive, ref} from "vue";
+import {onBeforeUnmount, onMounted, provide, reactive, ref} from "vue";
 import {stringLiteral} from "@/utils/store";
 import bus from "@/utils/bus";
 
@@ -99,24 +99,29 @@ export default {
       content.emit('updateValue', [data, 'unknown', props.index, props.qlIndex])
     }
 
+    const parseEmitQuery = (data) => {
+      const [index, err] = data
+      if (index === props.qlIndex) {
+        if (err) {
+          if (err === 'success') {
+            bus.emit('parseError', [props.qlIndex, false, ''])
+            queryInfo()
+          } else {
+            bus.emit('parseError', [props.qlIndex, true, err])
+          }
+        } else {
+          bus.emit('parseError', [props.qlIndex, false, ''])
+        }
+      }
+    }
+
     onMounted(() => {
       queryInfo()
 
-      bus.on('busQuery',  (data) => {
-        const [index, err] = data
-        if (index === props.qlIndex) {
-          if (err) {
-            if (err === 'success') {
-              bus.emit('parseError', [props.qlIndex, false, ''])
-              queryInfo()
-            } else {
-              bus.emit('parseError', [props.qlIndex, true, err])
-            }
-          } else {
-            bus.emit('parseError', [props.qlIndex, false, ''])
-          }
-        }
-      })
+      bus.on('busQuery',  parseEmitQuery)
+    })
+    onBeforeUnmount(() => {
+      bus.off('busQuery', parseEmitQuery)
     })
 
     return {
