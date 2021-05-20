@@ -10,7 +10,7 @@
 
 export default {
   name: "MatrixSelector",
-  props: ['matrixSelector'],
+  props: [],
   components: {},
   setup(props: any) {
     console.log(props, 'matrix')
