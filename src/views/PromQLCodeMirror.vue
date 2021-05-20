@@ -12,6 +12,7 @@ import {basicSetup} from "@codemirror/basic-setup";
 import {exprParser, queryExpr} from "@/utils/common";
 import bus from "@/utils/bus";
 import promRepository from "@/api/promRepository";
+import {baseUrl} from "@/utils/store";
 
 export default {
   name: "PromQLCodeMirror",
@@ -21,7 +22,8 @@ export default {
     const exprValue = ref()
     const promQL = new PromQLExtension().setComplete({
       remote: {
-        url: 'http://prometheus.proxy.sumscope.com:8000',
+        // url: 'http://prometheus.proxy.sumscope.com:8000',
+        url: baseUrl.value
       }
     })
     const promQLHighlightMaterialTheme = HighlightStyle.define([
@@ -154,6 +156,14 @@ export default {
           parent: doc,
         })
       }
+    }
+
+    const updatePromqlUrl = () => {
+      promQL.setComplete({
+        remote: {
+          url: baseUrl.value
+        }
+      })
     }
 
 

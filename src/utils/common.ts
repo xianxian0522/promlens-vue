@@ -438,7 +438,7 @@ const treeToModel = (c: any, str: string, exprStr?: string, length?: number) => 
 
         // 上面c.next() 已执行next() 下面不需要再执行了
         let aggregateModifier
-        if (c.name === 'By' || c.name === 'Without' || c.name === 'AggregateModifier') {
+        if (c.name === 'By' || c.name === 'Without') {
             aggregateModifier = treeToModel(c, str)
         }
 

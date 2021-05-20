@@ -254,19 +254,22 @@ export default {
       }
     }
 
+    const updateError = (value) => {
+      const [index, show, parse] = value
+      state.parseErr[index].showError = show
+      state.parseErr[index].parseError = parse
+    }
+
     onMounted(() => {
       queryLabelValue()
       queryLabels()
 
-      bus.on('parseError', (value) => {
-        const [index, show, parse] = value
-        state.parseErr[index].showError = show
-        state.parseErr[index].parseError = parse
-      })
+      bus.on('parseError', updateError)
 
     })
     onBeforeUnmount(() => {
-      bus.all.clear()
+      // bus.all.clear()
+      bus.off('parseError', updateError)
     })
 
     return {
