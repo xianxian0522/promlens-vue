@@ -30,7 +30,7 @@
             <div class="expression-input expression-input-stale">
               <a-button class="expression-input-sync-btn btn btn-light btn-sm"><SyncOutlined /></a-button>
 <!--              <div class="cm-expression-input" :id="'editor' + index"></div>-->
-              <PromQLCodeMirror :codeId="index" :expr="q.expr" @codeMirrorUpdate="codeMirrorUpdate" />
+              <PromQLCodeMirror :codeId="index" :expr="q.expr" @codeMirrorUpdate="codeMirrorUpdate" :updateUrl="childUrl" />
               <div class="expression-input-enter" style="color: #bbbbbb">
                 <EnterOutlined />
               </div>
@@ -196,6 +196,7 @@ export default {
       baseurl: baseUrl.value,
       baseErr: '',
       baseShowState: 'load',
+      childUrl: 0,
     })
 
     const codeMirrorUpdate = (value) => {
@@ -234,11 +235,14 @@ export default {
         metricNameData.value = res.data
       }).catch(err => console.error(err))
     }
-    const queryLabels = async () => {
+    const queryLabels = async (urlChange?) => {
       await promRepository.queryLabel().then((res: any) => {
         labelNameData.value = res.data
         base.baseErr = ''
         base.baseShowState = 'success'
+        if (urlChange === 'url') {
+          base.childUrl = new Date().getTime()
+        }
       }).catch(err => {
         base.baseErr = 'Failed to fetch'
         base.baseShowState = 'error'
@@ -250,7 +254,7 @@ export default {
         baseUrl.value = base.baseurl
         base.baseErr = ''
         base.baseShowState = 'load'
-        await queryLabels()
+        await queryLabels('url')
       }
     }
 

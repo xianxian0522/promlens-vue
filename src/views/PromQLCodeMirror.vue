@@ -16,7 +16,7 @@ import {baseUrl} from "@/utils/store";
 
 export default {
   name: "PromQLCodeMirror",
-  props: ['codeId', 'expr'],
+  props: ['codeId', 'expr', 'updateUrl'],
   emits: ['codeMirrorUpdate'],
   setup(props, content) {
     const exprValue = ref()
@@ -165,10 +165,11 @@ export default {
         }
       })
     }
-
+    watch(() => props.updateUrl, () => {
+      updatePromqlUrl()
+    })
 
     onMounted(() => {
-      console.log(props.expr, 'expr')
       exprValue.value = queryExpr(props?.expr)
 
       inputExpr(props.codeId)
