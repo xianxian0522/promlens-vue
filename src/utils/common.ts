@@ -16,18 +16,35 @@ export const validatorRule = async (rule, value) => {
 export const dataInfo = (data) => {
     const value = {}
     const dataInfo: any = []
+    // data.forEach(item => {
+    //     Object.keys(item.metric).filter(key => key !== '__name__').map((key) => {
+    //         value[key] = []
+    //     })
+    // })
+    // data.forEach((item) => {
+    //     Object.keys(item.metric).filter(key => key !== '__name__').map(key => {
+    //         value[key].push(item.metric[key])
+    //     })
+    // })
+    // Object.keys(value).map((key, index) => {
+    //     value[key] = Array.from(new Set(value[key]))
+    //     dataInfo.push({
+    //         name: key,
+    //         value: value[key].length
+    //     })
+    // })
+
     data.forEach(item => {
-        Object.keys(item.metric).filter(key => key !== '__name__').map((key) => {
-            value[key] = []
-        })
-    })
-    data.forEach((item) => {
         Object.keys(item.metric).filter(key => key !== '__name__').map(key => {
-            value[key].push(item.metric[key])
+            if (value[key]) {
+                value[key].push(item.metric[key])
+                value[key] = Array.from(new Set(value[key]))
+            } else {
+                value[key] = []
+            }
         })
     })
-    Object.keys(value).map((key, index) => {
-        value[key] = Array.from(new Set(value[key]))
+    Object.keys(value).map(key => {
         dataInfo.push({
             name: key,
             value: value[key].length
