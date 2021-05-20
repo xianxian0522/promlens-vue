@@ -42,6 +42,7 @@
           <a-button type="link" class="query-top-bar-btn btn btn-light btn-sm"><ReadOutlined /></a-button>
           <a-button @click="deleteAnotherQuery(index)" class="query-top-bar-btn btn btn-light btn-sm"><CloseOutlined /></a-button>
         </div>
+        <MetricsExplorer />
         <div class="row">
           <div class="col">
             <div class="ast-node ast-node-selected ast-node-root">
@@ -77,12 +78,14 @@ import {
 } from "@ant-design/icons-vue";
 import promRepository from "@/api/promRepository";
 import PromQLCodeMirror from "@/views/PromQLCodeMirror.vue";
+import MetricsExplorer from "@/views/MetricsExplorer.vue";
 import bus from "@/utils/bus";
 import {baseUrl, labelNameData, metricNameData} from "@/utils/store";
 
 export default {
   name: "PromQL",
   components: {
+    MetricsExplorer,
     PromQLCodeMirror,
     Expr,
     ReadOutlined,
