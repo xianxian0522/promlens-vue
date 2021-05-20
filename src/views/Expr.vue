@@ -44,7 +44,6 @@
 
 <script lang="ts">
 import FunctionCall from "@/views/FunctionCall.vue";
-import MatrixSelector from "@/views/MatrixSelector.vue";
 import VectorSelector from "@/views/VectorSelector.vue";
 import BinaryExpr from "@/views/BinaryExpr.vue";
 import NumberLiteral from "@/views/NumberLiteral.vue";
