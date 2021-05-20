@@ -39,10 +39,10 @@
               <strong>Error: </strong>{{ parseErr[index].parseError }}
             </div>
           </div>
-          <a-button type="link" class="query-top-bar-btn btn btn-light btn-sm"><ReadOutlined /></a-button>
+          <a-button @click="showMetadata(index)" type="link" class="query-top-bar-btn btn btn-light btn-sm"><ReadOutlined /></a-button>
           <a-button @click="deleteAnotherQuery(index)" class="query-top-bar-btn btn btn-light btn-sm"><CloseOutlined /></a-button>
         </div>
-        <MetricsExplorer />
+        <MetricsExplorer v-if="metadata[index].showMeta" :metaIndex="index" @updateMeta="updateMeta" />
         <div class="row">
           <div class="col">
             <div class="ast-node ast-node-selected ast-node-root">
@@ -193,6 +193,7 @@ export default {
     const state = reactive({
       ql: [{expr: {}}] as PromQL[],
       parseErr: [{showError: false, parseError: ''}],
+      metadata: [{showMeta: false}],
     })
     console.log(state.ql);
     const base = reactive({
@@ -222,15 +223,25 @@ export default {
       console.log(v, str, 'update promql', state.ql[qlIndex].expr)
     }
 
+    const updateMeta = (value) => {
+      const [index, v] = value
+      state.metadata[index].showMeta = v
+    }
+
     const addAnotherQuery = () => {
       state.ql.push({expr: {}})
       state.parseErr.push({showError: false, parseError: ''})
+      state.metadata.push({showMeta: false})
     }
     const deleteAnotherQuery = (index: number) => {
       if (state.ql.length > 1) {
         state.ql.splice(index, 1)
         state.parseErr.splice(index, 1)
+        state.metadata.splice(index, 1)
       }
+    }
+    const showMetadata = (index: number) => {
+      state.metadata[index].showMeta = !state.metadata[index].showMeta
     }
 
     const queryLabelValue = async () => {
@@ -288,6 +299,8 @@ export default {
       addAnotherQuery,
       deleteAnotherQuery,
       baseurlChange,
+      showMetadata,
+      updateMeta,
     }
   }
 }

@@ -3,15 +3,15 @@
 <!--  <div class="fade alert alert-warning show">-->
 <!--    <strong>Couldn't load metric metadata: </strong>-->
 <!--  </div>-->
-  <div class="fade alert alert-secondary show ">
+  <div v-if="isLoading" class="fade alert alert-secondary show ">
     <strong>Loading metric metadata: </strong>
   </div>
-  <div>
+  <div v-else>
     <div class="form-group">
       <label class="form-label">Filter metrics by:</label>
       <div style="display: flex; align-items: flex-start;">
         <a-input v-model:value="searchMata" class="metric-name-filter form-control form-control-sm" placeholder="Enter text to filter metric names by..."/>
-        <a-button style="font-size: 0.75rem; margin-left: 5px;" class="btn btn-light btn-sm"><CloseOutlined /></a-button>
+        <a-button @click="closeMeta" style="font-size: 0.75rem; margin-left: 5px;" class="btn btn-light btn-sm"><CloseOutlined /></a-button>
       </div>
     </div>
     <table class="data-table table table-sm table-bordered table-hover">
@@ -54,16 +54,20 @@ export default {
     UploadOutlined,
     ImportOutlined,
   },
-  props: [],
-  setup() {
+  props: ['metaIndex'],
+  emits: ['updateMeta'],
+  setup(props, content) {
     const state = reactive({
+      isLoading: false,
       searchMata: '',
       metadata: [] as metaItem[],
     })
 
     const queryMeta = async () => {
+      state.isLoading = true
       try {
         const data = await promRepository.queryMetadata()
+        state.isLoading = false
         Object.keys(data?.data).map(key => {
           state.metadata.push({
             name: key,
@@ -71,8 +75,12 @@ export default {
           })
         })
       } catch (e) {
+        state.isLoading = false
         // console.error(e)
       }
+    }
+    const closeMeta = () => {
+      content.emit('updateMeta', [props.metaIndex, false])
     }
 
     onMounted(() => {
@@ -81,6 +89,7 @@ export default {
 
     return {
       ...toRefs(state),
+      closeMeta,
     }
   },
 }
