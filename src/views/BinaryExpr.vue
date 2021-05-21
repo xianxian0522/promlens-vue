@@ -9,7 +9,7 @@
       </div>
     </template>
     <template v-slot:innerText>
-      <span class="promql-code" @click="queryInfo">
+      <span class="promql-code" @click="changeQueryInfo">
         <PreviewBinary :preview="binaryExpr" :ellipsis="false" />
       </span>
 <!--      <div>{{ binaryExpr.operator }}</div>-->
@@ -38,7 +38,7 @@ import TreeCommon from "@/components/TreeCommon.vue";
 import CommonInfoLabel from "@/components/CommonInfoLabel.vue";
 import PreviewBinary from "@/components/PreviewBinary.vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
-import {binaryOperation} from "@/utils/store";
+import {binaryOperation, graphData} from "@/utils/store";
 import promRepository from "@/api/promRepository";
 import {dataInfo, queryBinary} from "@/utils/common";
 import bus from "@/utils/bus";
@@ -90,6 +90,8 @@ export default {
                   data.status = res.status
                   data.data = res.data.result
                   data.isLoading = false
+                  graphData.data = data.data
+                  graphData.state = 'data'
                   data.keyInfo = dataInfo(data.data)
                 })
                 .catch(err => {
@@ -107,6 +109,17 @@ export default {
         }
       } else {
         showTips.value = true
+      }
+    }
+
+    const changeQueryInfo = () => {
+      if (graphData.data?.length > 0) {
+        graphData.data = []
+        graphData.state = 'noQuery'
+        bus.emit('selectNodeChange', [props.qlIndex, false])
+      } else {
+        queryInfo()
+        bus.emit('selectNodeChange', [props.qlIndex, true])
       }
     }
 
@@ -183,7 +196,7 @@ export default {
       // preview,
       updateValue,
       addExpr,
-      queryInfo,
+      changeQueryInfo,
     }
   },
 }

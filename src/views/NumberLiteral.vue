@@ -5,7 +5,7 @@
       <PlusOutlined @click.stop="addExpr" class="ast-connector-plus ast-connector-plus-up" />
     </template>
     <template v-slot:innerText>
-      <span class="promql-code" @click="queryInfo">
+      <span class="promql-code" @click="changeQueryInfo">
         <PreviewLiteralValue :preview="numberLiteral" numOrStr="numberLiteral" />
 <!--          <span class="promql-keyword">{{numberLiteral}}</span>-->
       </span>
@@ -39,7 +39,7 @@ import PreviewLiteralValue from "@/components/PreviewLiteralValue.vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
 import {inject, onBeforeUnmount, onMounted, provide, reactive, ref} from "vue";
 import promRepository from "@/api/promRepository";
-import {numberLiteral} from "@/utils/store";
+import {graphData, numberLiteral} from "@/utils/store";
 import bus from "@/utils/bus";
 
 export default {
@@ -74,6 +74,8 @@ export default {
               data.status = res.status
               data.data = res.data.result
               data.isLoading = false
+              graphData.data = data.data
+              graphData.state = 'data'
             })
             .catch(err => {
               const value = {...err.response?.data}
@@ -83,6 +85,17 @@ export default {
             })
       } catch (err) {
         console.error(err)
+      }
+    }
+
+    const changeQueryInfo = () => {
+      if (graphData.data?.length > 0) {
+        graphData.data = []
+        graphData.state = 'noQuery'
+        bus.emit('selectNodeChange', [props.qlIndex, false])
+      } else {
+        queryInfo()
+        bus.emit('selectNodeChange', [props.qlIndex, true])
       }
     }
 
@@ -128,7 +141,7 @@ export default {
     return {
       data,
       addExpr,
-      queryInfo,
+      changeQueryInfo,
     }
   }
 }

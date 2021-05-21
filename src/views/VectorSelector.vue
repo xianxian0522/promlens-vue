@@ -11,7 +11,7 @@
       <PlusOutlined @click.stop="addExpr" class="ast-connector-plus ast-connector-plus-up" />
     </template>
     <template v-slot:innerText>
-      <span class="promql-code" @click="queryInfo">
+      <span class="promql-code" @click="changeQueryInfo">
         <PreviewSelectData :preview="vectorSelector"/>
 <!--        <span class="promql-metric-name">{{vectorSelector.metricIdentifier}}</span>-->
 <!--        <span class="promql-metric-name" v-if="vectorSelector.labelMatchers.length > 0">-->
@@ -68,6 +68,7 @@ import {PlusOutlined} from "@ant-design/icons-vue";
 import promRepository from "@/api/promRepository";
 import {dataInfo, querySelectData} from "@/utils/common";
 import bus from "@/utils/bus";
+import {graphData} from "@/utils/store";
 
 export default {
   name: "VectorSelector",
@@ -113,6 +114,8 @@ export default {
               data.status = res.status
               data.data = res.data.result
               data.isLoading = false
+              graphData.data = data.data
+              graphData.state = 'data'
               data.keyInfo = dataInfo(data.data)
             })
             .catch(err => {
@@ -123,6 +126,17 @@ export default {
             })
       } catch (err) {
         console.error(err)
+      }
+    }
+
+    const changeQueryInfo = () => {
+      if (graphData.data?.length > 0) {
+        graphData.data = []
+        graphData.state = 'noQuery'
+        bus.emit('selectNodeChange', [props.qlIndex, false])
+      } else {
+        queryInfo()
+        bus.emit('selectNodeChange', [props.qlIndex, true])
       }
     }
 
@@ -175,7 +189,7 @@ export default {
       data,
       nodeRef,
       addExpr,
-      queryInfo,
+      changeQueryInfo,
       nodeRefHeight,
     }
   }

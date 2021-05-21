@@ -12,7 +12,7 @@
       <PlusOutlined @click.stop="addExpr" class="ast-connector-plus ast-connector-plus-up" />
     </template>
     <template v-slot:innerText>
-      <span class="promql-code" @click="queryInfo">
+      <span class="promql-code" @click="changeQueryInfo">
         <PreviewAggregate :preview="aggregateExpr" :isShowExpr="true"/>
       </span>
     </template>
@@ -67,6 +67,7 @@ import {defineAsyncComponent, onBeforeUnmount, onMounted, provide, reactive, ref
 import {dataInfo, queryAggregate} from "@/utils/common";
 import bus from "@/utils/bus";
 import promRepository from "@/api/promRepository";
+import {graphData} from "@/utils/store";
 
 export default {
   name: "AggregateExpr",
@@ -111,6 +112,8 @@ export default {
                   data.status = res.status
                   data.data = res.data.result
                   data.isLoading = false
+                  graphData.data = data.data
+                  graphData.state = 'data'
                   data.keyInfo = dataInfo(data.data)
                 })
                 .catch(err => {
@@ -128,6 +131,17 @@ export default {
         }
       } else {
         showTips.value = true
+      }
+    }
+
+    const changeQueryInfo = () => {
+      if (graphData.data?.length > 0) {
+        graphData.data = []
+        graphData.state = 'noQuery'
+        bus.emit('selectNodeChange', [props.qlIndex, false])
+      } else {
+        queryInfo()
+        bus.emit('selectNodeChange', [props.qlIndex, true])
       }
     }
 
@@ -198,7 +212,7 @@ export default {
       // preview,
       updateValue,
       addExpr,
-      queryInfo,
+      changeQueryInfo,
     }
   }
 }

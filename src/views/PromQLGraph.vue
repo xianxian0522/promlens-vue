@@ -36,7 +36,7 @@
 
 <script lang="ts">
 
-import {reactive, ref, toRefs} from "vue";
+import {reactive, ref, toRefs, watch} from "vue";
 import {graphData} from "@/utils/store";
 
 export default {
@@ -49,6 +49,10 @@ export default {
     const state = reactive({
       data: graphData.data,
       state: graphData.state,
+    })
+
+    watch(() => graphData.state, () => {
+      state.state = graphData.state
     })
 
     return {

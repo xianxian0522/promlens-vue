@@ -45,7 +45,7 @@
         <MetricsExplorer v-if="metadata[index].showMeta" :metaIndex="index" @updateMeta="updateMeta" />
         <div class="row">
           <div class="col">
-            <div class="ast-node ast-node-selected ast-node-root">
+            <div :class="{'ast-node-selected': selectNode[index].select}" class="ast-node ast-node-root">
               <Expr v-if="q.expr" :expr="q.expr" :qlIndex="index" outermost="true" @updateValue="updateValue" />
             </div>
           </div>
@@ -82,7 +82,7 @@ import PromQLCodeMirror from "@/views/PromQLCodeMirror.vue";
 import MetricsExplorer from "@/views/MetricsExplorer.vue";
 import PromQLGraph from "@/views/PromQLGraph.vue";
 import bus from "@/utils/bus";
-import {baseUrl, labelNameData, metricNameData} from "@/utils/store";
+import {baseUrl, graphData, labelNameData, metricNameData} from "@/utils/store";
 
 export default {
   name: "PromQL",
@@ -197,6 +197,7 @@ export default {
       ql: [{expr: {}}] as PromQL[],
       parseErr: [{showError: false, parseError: ''}],
       metadata: [{showMeta: false}],
+      selectNode: [{select: true}]
     })
     console.log(state.ql);
     const base = reactive({
@@ -235,12 +236,15 @@ export default {
       state.ql.push({expr: {}})
       state.parseErr.push({showError: false, parseError: ''})
       state.metadata.push({showMeta: false})
+      state.selectNode.push({select: true})
+      graphData.state = 'init'
     }
     const deleteAnotherQuery = (index: number) => {
       if (state.ql.length > 1) {
         state.ql.splice(index, 1)
         state.parseErr.splice(index, 1)
         state.metadata.splice(index, 1)
+        state.selectNode.splice(index, 1)
       }
     }
     const showMetadata = (index: number) => {
@@ -280,17 +284,23 @@ export default {
       state.parseErr[index].showError = show
       state.parseErr[index].parseError = parse
     }
+    const selectIndexChange = (value) => {
+      const [index, select] = value
+      state.selectNode[index].select = select
+    }
 
     onMounted(() => {
       queryLabelValue()
       queryLabels()
 
       bus.on('parseError', updateError)
+      bus.on('selectNodeChange', selectIndexChange)
 
     })
     onBeforeUnmount(() => {
       // bus.all.clear()
       bus.off('parseError', updateError)
+      bus.on('selectNodeChange', selectIndexChange)
     })
 
     return {

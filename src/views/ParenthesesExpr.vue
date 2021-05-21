@@ -11,7 +11,7 @@
       <PlusOutlined @click.stop="addExpr" class="ast-connector-plus ast-connector-plus-up" />
     </template>
     <template v-slot:innerText>
-      <span class="promql-code" @click="queryInfo">
+      <span class="promql-code" @click="changeQueryInfo">
         <span class="promql-paren">()</span>
       </span>
     </template>
@@ -34,6 +34,7 @@ import promRepository from "@/api/promRepository";
 import {dataInfo, queryParentheses} from "@/utils/common";
 import CommonInfoLabel from "@/components/CommonInfoLabel.vue";
 import bus from "@/utils/bus";
+import {graphData} from "@/utils/store";
 
 export default {
   name: "ParenthesesExpr",
@@ -72,6 +73,8 @@ export default {
                   data.status = res.status
                   data.data = res.data.result
                   data.isLoading = false
+                  graphData.data = data.data
+                  graphData.state = 'data'
                   data.keyInfo = dataInfo(data.data)
                 })
                 .catch(err => {
@@ -89,6 +92,17 @@ export default {
         }
       } else {
         showTips.value = true
+      }
+    }
+
+    const changeQueryInfo = () => {
+      if (graphData.data?.length > 0) {
+        graphData.data = []
+        graphData.state = 'noQuery'
+        bus.emit('selectNodeChange', [props.qlIndex, false])
+      } else {
+        queryInfo()
+        bus.emit('selectNodeChange', [props.qlIndex, true])
       }
     }
 
@@ -149,7 +163,7 @@ export default {
       showTips,
       addExpr,
       updateValue,
-      queryInfo,
+      changeQueryInfo,
     }
   }
 }

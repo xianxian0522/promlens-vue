@@ -11,7 +11,7 @@
       <PlusOutlined @click.stop="addExpr" class="ast-connector-plus ast-connector-plus-up" />
     </template>
     <template v-slot:innerText>
-      <span class="promql-code" @click="queryInfo">{{ unaryExpr.unaryOp }}</span>
+      <span class="promql-code" @click="changeQueryInfo">{{ unaryExpr.unaryOp }}</span>
     </template>
     <template v-slot:infoLabel>
       <CommonInfoLabel :data="data" :showTips="showTips" />
@@ -32,6 +32,7 @@ import CommonInfoLabel from "@/components/CommonInfoLabel.vue";
 import promRepository from "@/api/promRepository";
 import {dataInfo, queryUnary} from "@/utils/common";
 import bus from "@/utils/bus";
+import {graphData} from "@/utils/store";
 
 export default {
   name: "UnaryExpression",
@@ -74,6 +75,8 @@ export default {
                   data.status = res.status
                   data.data = res.data.result
                   data.isLoading = false
+                  graphData.data = data.data
+                  graphData.state = 'data'
                   data.keyInfo = dataInfo(data.data)
                 })
                 .catch(err => {
@@ -91,6 +94,17 @@ export default {
         }
       } else {
         showTips.value = true
+      }
+    }
+
+    const changeQueryInfo = () => {
+      if (graphData.data?.length > 0) {
+        graphData.data = []
+        graphData.state = 'noQuery'
+        bus.emit('selectNodeChange', [props.qlIndex, false])
+      } else {
+        queryInfo()
+        bus.emit('selectNodeChange', [props.qlIndex, true])
       }
     }
 
@@ -153,7 +167,7 @@ export default {
       // parenExpr,
       addExpr,
       updateValue,
-      queryInfo,
+      changeQueryInfo,
     }
   },
 }

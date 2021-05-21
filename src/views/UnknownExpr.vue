@@ -2,7 +2,7 @@
 <span>
   <TreeCommon :outermost="outermost" :isLeft="isLeft" :unknown="true">
     <template v-slot:innerText>
-      <span>start query:</span>
+      <span @click="graphStateChange">start query:</span>
     </template>
     <template v-slot:addExpr>
       <PlusOutlined @click.stop="addExpr" class="ast-connector-plus ast-connector-plus-up" />
@@ -22,8 +22,10 @@
 
 <script lang="ts">
 import TreeCommon from "@/components/TreeCommon.vue";
-import {defineAsyncComponent, inject, provide} from "vue";
+import {defineAsyncComponent, inject, provide, ref} from "vue";
 import {PlusOutlined} from "@ant-design/icons-vue";
+import {graphData} from "@/utils/store";
+import bus from "@/utils/bus";
 export default {
   name: "UnknownExpr",
   props: ['unknownExpr', 'showLeft', 'isLeft', 'index', 'outermost', 'qlIndex'],
@@ -34,6 +36,8 @@ export default {
     Expr: defineAsyncComponent(() => import('./Expr.vue'))
   },
   setup(props, content) {
+
+    const isQuery = ref(true)
 
     const queryAllData = async () => {
       // console.log( '+++============')
@@ -65,9 +69,17 @@ export default {
       content.emit('updateValue', [data, 'unknownExpr', index, qlIndex])
     }
 
+    const graphStateChange = () => {
+      graphData.state = isQuery.value ? 'noQuery' : 'init'
+      graphData.data = []
+      isQuery.value ? bus.emit('selectNodeChange', [props.qlIndex, false]) : bus.emit('selectNodeChange', [props.qlIndex, true])
+      isQuery.value = !isQuery.value
+    }
+
     return {
       addExpr,
       updateValue,
+      graphStateChange,
     }
   }
 }
