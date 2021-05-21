@@ -91,6 +91,7 @@ export default {
       isLoading: false,
       resultType: '',
     })
+    const isQuery = ref(true)
     const nodeRef = ref()
 
     // const preview = {
@@ -130,12 +131,16 @@ export default {
     }
 
     const changeQueryInfo = () => {
-      if (graphData.data?.length > 0) {
+      if (isQuery.value) {
         graphData.data = []
         graphData.state = 'noQuery'
+        isQuery.value = false
         bus.emit('selectNodeChange', [props.qlIndex, false])
       } else {
-        queryInfo()
+        // queryInfo()
+        isQuery.value = true
+        const query = querySelectData(props.vectorSelector)
+        bus.emit('queryGraph', query)
         bus.emit('selectNodeChange', [props.qlIndex, true])
       }
     }

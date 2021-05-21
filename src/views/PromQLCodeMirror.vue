@@ -171,6 +171,7 @@ export default {
 
     onMounted(() => {
       exprValue.value = queryExpr(props?.expr)
+      bus.emit('queryGraph', exprValue.value)
 
       inputExpr(props.codeId)
 
