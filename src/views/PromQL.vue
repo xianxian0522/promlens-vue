@@ -64,6 +64,7 @@
     </div>
   </div>
 <!--  <Expr v-if="ql.expr" :expr="ql.expr" outermost="true" @updateValue="updateValue" />-->
+  <PromQLGraph />
 </div>
 </template>
 
@@ -79,12 +80,14 @@ import {
 import promRepository from "@/api/promRepository";
 import PromQLCodeMirror from "@/views/PromQLCodeMirror.vue";
 import MetricsExplorer from "@/views/MetricsExplorer.vue";
+import PromQLGraph from "@/views/PromQLGraph.vue";
 import bus from "@/utils/bus";
 import {baseUrl, labelNameData, metricNameData} from "@/utils/store";
 
 export default {
   name: "PromQL",
   components: {
+    PromQLGraph,
     MetricsExplorer,
     PromQLCodeMirror,
     Expr,
