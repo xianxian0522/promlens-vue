@@ -419,9 +419,16 @@ p {
 .ast-keyword {
   color: teal;
 }
+.time-input {
+  width: 272px !important;
+}
 .input-group {
   position: relative;
+  display: -webkit-flex;
   display: flex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-align-items: stretch;
   align-items: stretch;
   width: 100%;
 }
@@ -437,6 +444,21 @@ p {
 }
 .tab-content .ant-form-item .ant-switch {
   margin: 2px 5px 4px 0;
+}
+.input-group-sm>.input-group-append>.btn, .input-group-sm>.input-group-prepend>.btn {
+  padding: .25rem .5rem;
+  font-size: .875rem;
+  line-height: 1.5;
+  border-radius: .2rem;
+}
+.input-group .input-group-append .btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.input-group .input-group-prepend .btn {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  margin-right: -1px;
 }
 .switch-open {
   border-radius: 3px;
@@ -697,4 +719,7 @@ label {
 }
 .data-table .promql-code {
   font-size: .8em;
+}
+.btn-svg svg {
+  margin-top: -6px;
 }

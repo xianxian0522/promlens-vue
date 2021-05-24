@@ -5,7 +5,15 @@
       <div v-else-if="state === 'noQuery'" class="fade alert alert-light show">Select part of a query above to visualize it.</div>
       <div v-else>
         <div class="table-controls">
-          <a-date-picker v-model:value="startTime" format="YYYY-MM-DD HH:mm:ss" show-time placeholder="Select Time" @ok="selectTime" @change="changeTime" />
+          <div class="time-input input-group input-group-sm">
+            <div class="input-group-prepend">
+              <a-button @click="forwardTime" class="btn btn-outline-secondary btn-svg"><LeftOutlined /></a-button>
+            </div>
+            <a-date-picker v-model:value="startTime" format="YYYY-MM-DD HH:mm:ss" show-time placeholder="Select Time" @ok="selectTime" @change="changeTime" />
+            <div class="input-group-append">
+              <a-button @click="backwardTime" class="btn btn-outline-secondary btn-svg"><RightOutlined /></a-button>
+            </div>
+          </div>
         </div>
         <div v-if="loadingState === 'success'">
           <div v-if="data.length === 0" class="fade alert alert-secondary show">Empty query result.</div>
@@ -48,7 +56,7 @@
           </div>
         </div>
         <div v-else-if="loadingState === 'load'" class="fade alert alert-secondary show ">Loading...</div>
-        <div v-else class="fade parse-error alert alert-danger show">Error:</div>
+        <div v-else class="fade alert alert-danger show ">Error:</div>
       </div>
     </div>
   </div>
@@ -60,6 +68,7 @@ import {graphData} from "@/utils/store";
 import moment, {Moment} from "moment";
 import promRepository from "@/api/promRepository";
 import bus from "@/utils/bus";
+import {LeftOutlined, RightOutlined, } from '@ant-design/icons-vue'
 
 export interface QueryParams {
   query: string;
@@ -68,6 +77,10 @@ export interface QueryParams {
 
 export default {
   name: "TabPaneTable",
+  components: {
+    LeftOutlined,
+    RightOutlined,
+  },
   setup() {
     const state = reactive({
       data: graphData.data,
@@ -75,13 +88,14 @@ export default {
       loadingState: 'success',
       time: 0,
       resultType: graphData.resultType,
+      query: '',
     })
     const startTime = ref<Moment>()
 
-    const queryGraphData = async (value) => {
+    const queryGraphData = async () => {
       state.loadingState = 'load'
       const params: QueryParams = {
-        query: value,
+        query: state.query,
       }
       if (state.time) {
         params.time = state.time
@@ -90,9 +104,14 @@ export default {
       try {
         const data = await promRepository.queryDataAll(params)
         if (data.status === 'success') {
-          graphData.data = data.data.result
-          graphData.resultType = data.data.resultType
-          graphData.state = 'data'
+          if (graphData.state === 'data') {
+            state.data = data.data.result
+            state.resultType = data.data.resultType
+          } else {
+            graphData.data = data.data.result
+            graphData.resultType = data.data.resultType
+            graphData.state = 'data'
+          }
           state.loadingState = 'success'
         } else {
           state.loadingState = 'error'
@@ -105,12 +124,30 @@ export default {
 
     const selectTime = (value: Moment) => {
       state.time = moment(value).valueOf()
+      queryGraphData()
     }
 
     const changeTime = (value: Moment) => {
       if (!value) {
         state.time = 0
+        queryGraphData()
       }
+    }
+    const getStateTime = (i) => {
+      if (state.time) {
+        state.time += i * 0.5 * 60 * 60 * 1000
+        startTime.value = moment(state.time)
+      } else {
+        state.time = moment().valueOf() + i * 0.5 * 60 * 60 * 1000
+        startTime.value = moment(state.time)
+      }
+      queryGraphData()
+    }
+    const forwardTime = () => {
+      getStateTime(-1)
+    }
+    const backwardTime = () => {
+      getStateTime(1)
     }
     const getItemMetric = (item) => {
       const arr: any = []
@@ -129,11 +166,16 @@ export default {
       state.resultType = graphData.resultType
     })
 
+    const QueryGraph = (value) => {
+      state.query = value
+      queryGraphData()
+    }
+
     onMounted(() => {
-      bus.on('queryGraph', queryGraphData)
+      bus.on('queryGraph', QueryGraph)
     })
     onBeforeUnmount(() => {
-      bus.off('queryGraph', queryGraphData)
+      bus.off('queryGraph', QueryGraph)
     })
 
     return {
@@ -142,6 +184,8 @@ export default {
       selectTime,
       changeTime,
       getItemMetric,
+      forwardTime,
+      backwardTime,
     }
   }
 }
