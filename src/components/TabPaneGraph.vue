@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import {onBeforeUnmount, onMounted, reactive, ref, toRefs} from "vue";
+import {onBeforeUnmount, onMounted, reactive, ref, toRefs, watch} from "vue";
 import {graphData} from "@/utils/store";
 import {LeftOutlined, RightOutlined, PlusOutlined, MinusOutlined, } from '@ant-design/icons-vue'
 import bus from "@/utils/bus";
@@ -67,8 +67,10 @@ export default {
     const timeSteps = ['1s', '10s', '1m', '5m', '15m', '30m', '1h', '2h', '6h', '12h', '1d', '2d', '1w']
 
     const queryGraphData = async () => {
-      const endTime = state.time || moment().valueOf()
-      const startTime: number = endTime - (getTimeStep() as number) * 1000
+      state.loadingState = 'load'
+      const time = state.time || moment().valueOf()
+      const endTime = time / 1000
+      const startTime = endTime - (getTimeStep() as number)
       const params = {
         query: state.query,
         start: startTime,
@@ -169,16 +171,22 @@ export default {
       queryGraphData()
     }
 
+    watch(() => graphData.state, () => {
+      state.state = graphData.state
+      state.data = graphData.data
+      state.resultType = graphData.resultType
+    })
+
     const QueryGraph = (value) => {
       state.query = value
       queryGraphData()
     }
 
     onMounted(() => {
-      bus.on('queryGraph', QueryGraph)
+      bus.on('childGraph', QueryGraph)
     })
     onBeforeUnmount(() => {
-      bus.off('queryGraph', QueryGraph)
+      bus.off('childGraph', QueryGraph)
     })
 
     return {

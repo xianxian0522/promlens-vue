@@ -67,12 +67,36 @@ export default {
       state: graphData.state,
       loadingState: 'success',
       time: 0,
+      query: '',
     })
 
-
+    const QueryGraph = (value) => {
+      state.query = value
+      tabPaneActive()
+    }
+    const tabPaneActive = () => {
+      if (state.query) {
+        if (activeKey.value === '1') {
+          bus.emit('childTable', state.query)
+        }
+        if (activeKey.value === '2') {
+          bus.emit('childGraph', state.query)
+        }
+      }
+    }
     watch(() => graphData.state, () => {
       state.state = graphData.state
       state.data = graphData.data
+    })
+    watch(activeKey, () => {
+      tabPaneActive()
+    })
+
+    onMounted(() => {
+      bus.on('queryGraph', QueryGraph)
+    })
+    onBeforeUnmount(() => {
+      bus.off('queryGraph', QueryGraph)
     })
 
     return {

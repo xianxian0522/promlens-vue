@@ -172,10 +172,10 @@ export default {
     }
 
     onMounted(() => {
-      bus.on('queryGraph', QueryGraph)
+      bus.on('childTable', QueryGraph)
     })
     onBeforeUnmount(() => {
-      bus.off('queryGraph', QueryGraph)
+      bus.off('childTable', QueryGraph)
     })
 
     return {
