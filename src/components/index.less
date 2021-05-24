@@ -711,6 +711,14 @@ label {
 .graph-controls, .table-controls {
   margin-bottom: 15px;
 }
+.form-inline {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  flex-flow: row wrap;
+  -webkit-align-items: center;
+  align-items: center;
+}
 .data-table .promql-label-name, .graph-legend .promql-label-name {
   color: #000;
 }
@@ -722,4 +730,19 @@ label {
 }
 .btn-svg svg {
   margin-top: -6px;
+}
+.graph-controls .range-input input {
+  width: 55px;
+}
+.form-inline .custom-select, .form-inline .input-group {
+  width: auto;
+}
+.graph-controls>:not(:first-child) {
+  margin-left: 20px;
+}
+.graph-controls .ant-input-number-input {
+  height: auto;
+}
+.graph-controls .resolution-input {
+  width: 100px;
 }

@@ -10,6 +10,7 @@ const ApiLabels = '/api/v1/labels';
 const ApiValue = '/api/v1/label';
 const ApiQueryAll = '/api/v1/query';
 const ApiExpr = '/api/parse';
+const ApiQueryGraph = '/api/v1/query_range'
 
 // const metricNameData = ref();
 // const labelNameData = ref();
@@ -40,6 +41,8 @@ promRepository.queryValueByLabelName = (labelName: string) => request.get(`${Api
 promRepository.queryDataAll = (params?: any) => request.get(`${ApiQueryAll}`, params)
 
 promRepository.queryExprParse = (params?: any) => request.get(`${ApiExpr}`, params)
+
+promRepository.queryGraphData = (params?: any) => request.get(`${ApiQueryGraph}`, params)
 
 // promRepository.queryDataAll = (str: string, params?: any) => {
 //     if (str === 'vector') {

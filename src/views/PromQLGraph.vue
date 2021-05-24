@@ -23,13 +23,14 @@
 <!--          </div>-->
         </a-tab-pane>
         <a-tab-pane key="2" tab="Graph">
-          <div class="tab-content">
-            <div class="fade tab-pane active show">
-              <div v-if="state === 'init'" class="fade alert alert-light show">Selected query is incomplete. To visualize it, please fill out the placeholders.</div>
-              <div v-else-if="state === 'noQuery'" class="fade alert alert-light show">Select part of a query above to visualize it.</div>
-              <div v-else>xxx</div>
-            </div>
-          </div>
+          <TabPaneGraph />
+<!--          <div class="tab-content">-->
+<!--            <div class="fade tab-pane active show">-->
+<!--              <div v-if="state === 'init'" class="fade alert alert-light show">Selected query is incomplete. To visualize it, please fill out the placeholders.</div>-->
+<!--              <div v-else-if="state === 'noQuery'" class="fade alert alert-light show">Select part of a query above to visualize it.</div>-->
+<!--              <div v-else>xxx</div>-->
+<!--            </div>-->
+<!--          </div>-->
         </a-tab-pane>
         <a-tab-pane key="3" tab="Explain">
           <div class="tab-content">
@@ -53,16 +54,12 @@ import bus from "@/utils/bus";
 import promRepository from "@/api/promRepository";
 import moment, {Moment} from "moment";
 import TabPaneTable from "@/components/TabPaneTable.vue";
-
-export interface QueryParams {
-  query: string;
-  time?: number;
-}
+import TabPaneGraph from "@/components/TabPaneGraph.vue";
 
 export default {
   name: "PromQLGraph",
   props: [],
-  components: {TabPaneTable},
+  components: {TabPaneTable, TabPaneGraph},
   setup(props: any) {
     const activeKey = ref('1')
     const state = reactive({
@@ -71,42 +68,7 @@ export default {
       loadingState: 'success',
       time: 0,
     })
-    const startTime = ref<Moment>()
 
-    const queryGraphData = async (value) => {
-      state.loadingState = 'load'
-      const params: QueryParams = {
-        query: value,
-      }
-      if (state.time) {
-        params.time = state.time
-      }
-      console.log(params, 'qqqqq')
-      try {
-        const data = await promRepository.queryDataAll(params)
-        if (data.status === 'success') {
-          state.loadingState = 'success'
-          graphData.state = 'data'
-          graphData.data = data.data.result
-        } else {
-          state.loadingState = 'error'
-        }
-      } catch (e) {
-        state.loadingState = 'error'
-        console.error(e)
-      }
-    }
-
-    const selectTime = (value: Moment) => {
-      state.time = moment(value).valueOf()
-      console.log(state.time, '[[[[', value)
-    }
-
-    const changeTime = (value: Moment) => {
-      if (!value) {
-        state.time = 0
-      }
-    }
 
     watch(() => graphData.state, () => {
       state.state = graphData.state
@@ -114,11 +76,8 @@ export default {
     })
 
     return {
-      startTime,
       activeKey,
       ...toRefs(state),
-      // selectTime,
-      // changeTime,
     }
   }
 }
