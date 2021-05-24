@@ -48,13 +48,14 @@
 
 <script lang="ts">
 
-import {onBeforeUnmount, onMounted, reactive, ref, toRefs, watch} from "vue";
+import {onBeforeUnmount, onMounted, provide, reactive, ref, toRefs, watch} from "vue";
 import {graphData} from "@/utils/store";
 import bus from "@/utils/bus";
 import promRepository from "@/api/promRepository";
 import moment, {Moment} from "moment";
 import TabPaneTable from "@/components/TabPaneTable.vue";
 import TabPaneGraph from "@/components/TabPaneGraph.vue";
+import * as echarts from 'echarts'
 
 export default {
   name: "PromQLGraph",
@@ -69,6 +70,7 @@ export default {
       time: 0,
       query: '',
     })
+    provide('ec', echarts)
 
     const QueryGraph = (value) => {
       state.query = value

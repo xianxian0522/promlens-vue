@@ -27,22 +27,22 @@
               </thead>
               <tbody>
               <template v-if="resultType === 'vector'">
-                <tr v-for="(item, index) in data" :key="JSON.stringify(item) + index">
+                <tr v-for="(item, index) in metricData" :key="JSON.stringify(item.metric) + index">
                   <td>
-                    <span class="promql-code" v-if="item?.metric">
-                      <span class="promql-metric-name">{{item?.metric?.__name__}}</span>
-                      <span v-if="getItemMetric(item.metric).length > 0">
+                    <span class="promql-code">
+                      <span class="promql-metric-name">{{item?.name}}</span>
+                      <span v-if="item?.metric?.length > 0">
                         <span class="promql-brace">{</span>
-                        <span v-for="(t, i) in getItemMetric(item.metric)" :key="t.name">
+                        <span v-for="(t, i) in item?.metric" :key="t.name">
                           <span class="promql-label-name">{{t.name}}</span>=
                           <span class="promql-string">"{{t.value}}"</span>
-                          <span v-if="getItemMetric(item.metric).length >1 && i !== (getItemMetric(item.metric).length - 1) ">,</span>
+                          <span v-if="item?.metric?.length > 1 && i !== (item?.metric?.length - 1) ">,</span>
                         </span>
                         <span class="promql-brace">}</span>
                       </span>
                     </span>
                   </td>
-                  <td>{{ item.value[1] }}</td>
+                  <td>{{ item.value }}</td>
                 </tr>
               </template>
               <template v-else>
@@ -74,6 +74,11 @@ export interface QueryParams {
   query: string;
   time?: number;
 }
+export interface MetricItem {
+  metric: any;
+  name: string;
+  value: number;
+}
 
 export default {
   name: "TabPaneTable",
@@ -89,6 +94,7 @@ export default {
       time: 0,
       resultType: graphData.resultType,
       query: '',
+      metricData: [] as MetricItem[],
     })
     const startTime = ref<Moment>()
 
@@ -104,15 +110,19 @@ export default {
       try {
         const data = await promRepository.queryDataAll(params)
         if (data.status === 'success') {
-          if (graphData.state === 'data') {
-            state.data = data.data.result
-            state.resultType = data.data.resultType
-          } else {
-            graphData.data = data.data.result
-            graphData.resultType = data.data.resultType
-            graphData.state = 'data'
-          }
+          // if (graphData.state === 'data') {
+          //   state.data = data.data.result
+          //   state.resultType = data.data.resultType
+          // } else {
+          //   graphData.data = data.data.result
+          //   graphData.resultType = data.data.resultType
+          //   graphData.state = 'data'
+          // }
+          state.data = data.data.result
+          state.resultType = data.data.resultType
+          graphData.state = 'data'
           state.loadingState = 'success'
+          getMetricData()
         } else {
           state.loadingState = 'error'
         }
@@ -149,6 +159,7 @@ export default {
     const backwardTime = () => {
       getStateTime(1)
     }
+
     const getItemMetric = (item) => {
       const arr: any = []
       Object.keys(item).filter(key => key !== '__name__').map(k => {
@@ -159,11 +170,23 @@ export default {
       })
       return arr
     }
+    const getMetricData = () => {
+      const data = state.data
+      if (state.resultType === 'vector' && state.state === 'data') {
+        state.metricData = data.map((item: any) => {
+          return ({
+            name: item.metric.__name__,
+            metric: getItemMetric(item?.metric),
+            value: item.value[1]
+          })
+        })
+      }
+    }
 
     watch(() => graphData.state, () => {
       state.state = graphData.state
-      state.data = graphData.data
-      state.resultType = graphData.resultType
+      // state.data = graphData.data
+      // state.resultType = graphData.resultType
     })
 
     const QueryGraph = (value) => {

@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import {onBeforeUnmount, onMounted, reactive, ref, toRefs, watch} from "vue";
+import {inject, onBeforeUnmount, onMounted, reactive, ref, toRefs, watch} from "vue";
 import {graphData} from "@/utils/store";
 import {LeftOutlined, RightOutlined, PlusOutlined, MinusOutlined, } from '@ant-design/icons-vue'
 import bus from "@/utils/bus";
@@ -52,7 +52,7 @@ export default {
     MinusOutlined,
   },
   setup() {
-
+    const echarts = inject('ec')
     const state = reactive({
       data: graphData.data,
       state: graphData.state,
@@ -80,14 +80,17 @@ export default {
       try {
         const data = await promRepository.queryGraphData(params)
         if (data.status === 'success') {
-          if (graphData.state === 'data') {
-            state.data = data.data.result
-            state.resultType = data.data.resultType
-          } else {
-            graphData.data = data.data.result
-            graphData.resultType = data.data.resultType
-            graphData.state = 'data'
-          }
+          // if (graphData.state === 'data') {
+          //   state.data = data.data.result
+          //   state.resultType = data.data.resultType
+          // } else {
+          //   graphData.data = data.data.result
+          //   graphData.resultType = data.data.resultType
+          //   graphData.state = 'data'
+          // }
+          state.data = data.data.result
+          state.resultType = data.data.resultType
+          graphData.state = 'data'
           state.loadingState = 'success'
         } else {
           state.loadingState = 'error'
@@ -173,8 +176,8 @@ export default {
 
     watch(() => graphData.state, () => {
       state.state = graphData.state
-      state.data = graphData.data
-      state.resultType = graphData.resultType
+      // state.data = graphData.data
+      // state.resultType = graphData.resultType
     })
 
     const QueryGraph = (value) => {
