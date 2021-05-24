@@ -25,12 +25,10 @@
           </div>
           <a-input-number @blur="stepChange" v-model:value="step" placeholder="Res. (s)" class="resolution-input form-control form-control-sm" />
         </div>
-        <div v-if="loadingState === 'success'">
-          <div id="graph"></div>
-        </div>
-        <div v-else-if="loadingState === 'load'" class="fade alert alert-secondary show ">Loading...</div>
-        <div v-else class="fade alert alert-danger show ">Error:</div>
+        <div v-if="loadingState === 'load'" class="fade alert alert-secondary show ">Loading...</div>
+        <div v-else-if="loadingState === 'error'" class="fade alert alert-danger show ">Error:</div>
       </div>
+      <div id="graph">;;;;</div>
     </div>
   </div>
 </template>
@@ -96,8 +94,8 @@ export default {
 
     const getEchartsData = () => {
       const data = state.data
-      const myChart = echarts.init(document.getElementById('graph'))
-      console.log(data, ';;;;;', myChart)
+      // const myChart = echarts.init(document.getElementById('graph'))
+      console.log(data, '-----;;;;;', document.getElementById('graph'))
     }
 
     const getTimeStep = () => {
