@@ -59,6 +59,7 @@ export default {
       error: '',
       isLoading: false,
     })
+    const isQuery = ref(true)
 
     const queryAllData = async () => {
       await queryInfo()
@@ -76,6 +77,7 @@ export default {
               data.isLoading = false
               graphData.data = data.data
               graphData.state = 'data'
+              graphData.resultType = res.data.resultType
             })
             .catch(err => {
               const value = {...err.response?.data}
@@ -89,12 +91,16 @@ export default {
     }
 
     const changeQueryInfo = () => {
-      if (graphData.data?.length > 0) {
+      if (isQuery.value) {
         graphData.data = []
         graphData.state = 'noQuery'
+        isQuery.value = false
         bus.emit('selectNodeChange', [props.qlIndex, false])
       } else {
-        queryInfo()
+        // queryInfo()
+        isQuery.value = true
+        const query = props.numberLiteral
+        bus.emit('queryGraph', query)
         bus.emit('selectNodeChange', [props.qlIndex, true])
       }
     }

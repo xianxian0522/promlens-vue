@@ -117,6 +117,7 @@ export default {
               data.isLoading = false
               graphData.data = data.data
               graphData.state = 'data'
+              graphData.resultType = res.data.resultType
               data.keyInfo = dataInfo(data.data)
             })
             .catch(err => {

@@ -6,6 +6,7 @@ export const labelNameData = ref();
 export const graphData = reactive({
     data: [],
     state: 'init',
+    resultType: '',
 })
 
 export const selectData = reactive({

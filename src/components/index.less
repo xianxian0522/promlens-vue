@@ -637,6 +637,64 @@ label {
   background-color: #fefefe;
   border-color: #fdfdfe;
 }
+.data-table.table {
+  margin: 5px 0 0;
+  border: none;
+}
+.table-bordered, .table-bordered td, .table-bordered th {
+  border: 1px solid #dee2e6;
+}
+.table {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: #212529;
+  border-collapse: collapse;
+}
+.table tr td:first-child {
+  min-width: 600px;
+}
+.metrics-explorer .data-table td.metadata-help, .metrics-explorer .data-table td.metadata-type, .parse-error {
+  font-family: "Open Sans","Lucida Sans Unicode","Lucida Grande",sans-serif;
+}
+.metrics-explorer .data-table td.metadata-help {
+  color: maroon;
+}
+.metrics-explorer .data-table td.metadata-type {
+  font-style: italic;
+  color: teal;
+}
+.data-table>tbody>tr:first-child>td {
+  border-top: none;
+}
+.data-table>tbody>tr>td {
+  border-bottom: 1px solid #eee;
+  border-right: 1px solid #eee;
+  padding: 5px 18px;
+  //font-size: .8em;
+  vertical-align: middle;
+  white-space: pre-wrap;
+  font-family: "DejaVu Sans Mono",monospace;
+}
+.table-bordered, .table-bordered td, .table-bordered th {
+  border: 1px solid #dee2e6;
+}
+.table-sm td, .table-sm th {
+  padding: .3rem;
+}
+.table td, .table th {
+  padding: .75rem;
+  vertical-align: top;
+  border-top: 1px solid #dee2e6;
+}
 .graph-controls, .table-controls {
   margin-bottom: 15px;
+}
+.data-table .promql-label-name, .graph-legend .promql-label-name {
+  color: #000;
+}
+.node-visualizer-wrapper .promql-string {
+  color: #026b02;
+}
+.data-table .promql-code {
+  font-size: .8em;
 }

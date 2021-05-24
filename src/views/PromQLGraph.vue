@@ -3,23 +3,24 @@
     <div class="col node-editor">
       <a-tabs v-model:activeKey="activeKey" type="card">
         <a-tab-pane key="1" tab="Table">
-          <div class="tab-content">
-            <div class="fade tab-pane active show">
-              <div v-if="state === 'init'" class="fade alert alert-light show">Selected query is incomplete. To visualize it, please fill out the placeholders.</div>
-              <div v-else-if="state === 'noQuery'" class="fade alert alert-light show">Select part of a query above to visualize it.</div>
-              <div v-else>
-                <div class="table-controls">
-                  <a-date-picker v-model:value="startTime" format="YYYY-MM-DD HH:mm:ss" show-time placeholder="Select Time" @ok="selectTime" @change="changeTime" />
-                </div>
-                <div v-if="loadingState === 'success'">
-                  <div v-if="data.length === 0" class="fade alert alert-secondary show">Empty query result.</div>
-                  <div v-else>[[[[</div>
-                </div>
-                <div v-else-if="loadingState === 'load'" class="fade alert alert-secondary show ">Loading...</div>
-                <div v-else class="fade parse-error alert alert-danger show">Error:</div>
-              </div>
-            </div>
-          </div>
+          <TabPaneTable />
+<!--          <div class="tab-content">-->
+<!--            <div class="fade tab-pane active show">-->
+<!--              <div v-if="state === 'init'" class="fade alert alert-light show">Selected query is incomplete. To visualize it, please fill out the placeholders.</div>-->
+<!--              <div v-else-if="state === 'noQuery'" class="fade alert alert-light show">Select part of a query above to visualize it.</div>-->
+<!--              <div v-else>-->
+<!--                <div class="table-controls">-->
+<!--                  <a-date-picker v-model:value="startTime" format="YYYY-MM-DD HH:mm:ss" show-time placeholder="Select Time" @ok="selectTime" @change="changeTime" />-->
+<!--                </div>-->
+<!--                <div v-if="loadingState === 'success'">-->
+<!--                  <div v-if="data.length === 0" class="fade alert alert-secondary show">Empty query result.</div>-->
+<!--                  <div v-else>[[[[</div>-->
+<!--                </div>-->
+<!--                <div v-else-if="loadingState === 'load'" class="fade alert alert-secondary show ">Loading...</div>-->
+<!--                <div v-else class="fade parse-error alert alert-danger show">Error:</div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
         </a-tab-pane>
         <a-tab-pane key="2" tab="Graph">
           <div class="tab-content">
@@ -51,6 +52,7 @@ import {graphData} from "@/utils/store";
 import bus from "@/utils/bus";
 import promRepository from "@/api/promRepository";
 import moment, {Moment} from "moment";
+import TabPaneTable from "@/components/TabPaneTable.vue";
 
 export interface QueryParams {
   query: string;
@@ -60,9 +62,8 @@ export interface QueryParams {
 export default {
   name: "PromQLGraph",
   props: [],
-  components: {},
+  components: {TabPaneTable},
   setup(props: any) {
-    console.log(props, 'matrix')
     const activeKey = ref('1')
     const state = reactive({
       data: graphData.data,
@@ -112,19 +113,12 @@ export default {
       state.data = graphData.data
     })
 
-    onMounted(() => {
-      bus.on('queryGraph', queryGraphData)
-    })
-    onBeforeUnmount(() => {
-      bus.off('queryGraph', queryGraphData)
-    })
-
     return {
       startTime,
       activeKey,
       ...toRefs(state),
-      selectTime,
-      changeTime,
+      // selectTime,
+      // changeTime,
     }
   }
 }

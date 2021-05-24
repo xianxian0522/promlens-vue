@@ -65,6 +65,8 @@ export default {
       isLoading: false,
     })
     const showTips = ref(true)
+    const isQuery = ref(true)
+
     const preview = {
       operator: props.binaryExpr?.operator || '/',
       switchOpen: !!props.binaryExpr?.binModifiers,
@@ -92,6 +94,7 @@ export default {
                   data.isLoading = false
                   graphData.data = data.data
                   graphData.state = 'data'
+                  graphData.resultType = res.data.resultType
                   data.keyInfo = dataInfo(data.data)
                 })
                 .catch(err => {
@@ -113,12 +116,16 @@ export default {
     }
 
     const changeQueryInfo = () => {
-      if (graphData.data?.length > 0) {
+      if (isQuery.value) {
         graphData.data = []
         graphData.state = 'noQuery'
+        isQuery.value = false
         bus.emit('selectNodeChange', [props.qlIndex, false])
       } else {
-        queryInfo()
+        // queryInfo()
+        isQuery.value = true
+        const query = queryBinary(props.binaryExpr)
+        bus.emit('queryGraph', query)
         bus.emit('selectNodeChange', [props.qlIndex, true])
       }
     }
