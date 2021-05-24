@@ -26,7 +26,7 @@
           <a-input-number @blur="stepChange" v-model:value="step" placeholder="Res. (s)" class="resolution-input form-control form-control-sm" />
         </div>
         <div v-if="loadingState === 'success'">
-          <div></div>
+          <div id="graph"></div>
         </div>
         <div v-else-if="loadingState === 'load'" class="fade alert alert-secondary show ">Loading...</div>
         <div v-else class="fade alert alert-danger show ">Error:</div>
@@ -52,7 +52,7 @@ export default {
     MinusOutlined,
   },
   setup() {
-    const echarts = inject('ec')
+    const echarts: any = inject('ec')
     const state = reactive({
       data: graphData.data,
       state: graphData.state,
@@ -80,18 +80,11 @@ export default {
       try {
         const data = await promRepository.queryGraphData(params)
         if (data.status === 'success') {
-          // if (graphData.state === 'data') {
-          //   state.data = data.data.result
-          //   state.resultType = data.data.resultType
-          // } else {
-          //   graphData.data = data.data.result
-          //   graphData.resultType = data.data.resultType
-          //   graphData.state = 'data'
-          // }
           state.data = data.data.result
           state.resultType = data.data.resultType
           graphData.state = 'data'
           state.loadingState = 'success'
+          getEchartsData()
         } else {
           state.loadingState = 'error'
         }
@@ -99,6 +92,12 @@ export default {
         state.loadingState = 'error'
         console.error(e)
       }
+    }
+
+    const getEchartsData = () => {
+      const data = state.data
+      const myChart = echarts.init(document.getElementById('graph'))
+      console.log(data, ';;;;;', myChart)
     }
 
     const getTimeStep = () => {
@@ -176,8 +175,6 @@ export default {
 
     watch(() => graphData.state, () => {
       state.state = graphData.state
-      // state.data = graphData.data
-      // state.resultType = graphData.resultType
     })
 
     const QueryGraph = (value) => {

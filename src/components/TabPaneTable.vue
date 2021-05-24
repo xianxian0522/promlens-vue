@@ -180,6 +180,7 @@ export default {
             value: item.value[1]
           })
         })
+        // console.log(state.metricData, ';;;;')
       }
     }
 
@@ -187,6 +188,9 @@ export default {
       state.state = graphData.state
       // state.data = graphData.data
       // state.resultType = graphData.resultType
+      if (state.state === 'data') {
+        getMetricData()
+      }
     })
 
     const QueryGraph = (value) => {
