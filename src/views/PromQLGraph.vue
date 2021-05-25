@@ -55,7 +55,6 @@ import promRepository from "@/api/promRepository";
 import moment, {Moment} from "moment";
 import TabPaneTable from "@/components/TabPaneTable.vue";
 import TabPaneGraph from "@/components/TabPaneGraph.vue";
-import * as echarts from 'echarts'
 
 export default {
   name: "PromQLGraph",
@@ -70,7 +69,6 @@ export default {
       time: 0,
       query: '',
     })
-    provide('ec', echarts)
 
     const QueryGraph = (value) => {
       state.query = value

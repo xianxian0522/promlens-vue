@@ -28,7 +28,7 @@
         <div v-if="loadingState === 'load'" class="fade alert alert-secondary show ">Loading...</div>
         <div v-else-if="loadingState === 'error'" class="fade alert alert-danger show ">Error:</div>
       </div>
-      <div id="graph">;;;;</div>
+      <div id="graph" style="height: 1px; width: 100%;"></div>
     </div>
   </div>
 </template>
@@ -40,6 +40,7 @@ import {LeftOutlined, RightOutlined, PlusOutlined, MinusOutlined, } from '@ant-d
 import bus from "@/utils/bus";
 import moment, {Moment} from "moment";
 import promRepository from "@/api/promRepository";
+import * as echarts from 'echarts'
 
 export default {
   name: "TabPaneGraph",
@@ -50,7 +51,6 @@ export default {
     MinusOutlined,
   },
   setup() {
-    const echarts: any = inject('ec')
     const state = reactive({
       data: graphData.data,
       state: graphData.state,
@@ -94,8 +94,48 @@ export default {
 
     const getEchartsData = () => {
       const data = state.data
-      // const myChart = echarts.init(document.getElementById('graph'))
-      console.log(data, '-----;;;;;', document.getElementById('graph'))
+      const dom = document.getElementById("graph")
+      if (dom && state.state === 'data') {
+        let myChart = echarts.getInstanceByDom(dom)
+        if (!myChart) { // 如果不存在，就进行初始化
+          myChart = echarts.init(dom);
+        }
+        dom.style.setProperty('height', '500px')
+        // const myChart = echarts.init(document.getElementById('graph'))
+        // console.log(data, '-----;;;;;')
+        const names = data.map((s: any) => {
+          const name = s.metric.__name__ ? s.metric.__name__ : ''
+          return `${name}{${Object.keys(s.metric).filter(key => key !== '__name__').sort().map(k => `${k}="${s.metric[k]}"`).join(',')}}`
+        })
+        const values = data.map((s: any) => {
+          return s.values.map(v => [moment(v[0] * 1000).format('YYYY-MM-DD HH:mm:ss'), v[1]])
+        })
+        // console.log( values)
+
+        const option = {
+          tooltip: {},
+          // legend: {
+          //   bottom: 0,
+          //   // orient: 'vertical',
+          //   type: 'scroll',
+          // },
+          xAxis: {
+            type: 'time',
+          },
+          yAxis: {
+            scale: true,
+          },
+          series: values.map((v: any, i: number) => ({
+            name: names[i],
+            type: 'line',
+            data: v
+          }))
+        }
+        console.log(option)
+        myChart.resize()
+        myChart.setOption(option)
+      }
+
     }
 
     const getTimeStep = () => {
@@ -182,6 +222,8 @@ export default {
 
     onMounted(() => {
       bus.on('childGraph', QueryGraph)
+
+      getEchartsData()
     })
     onBeforeUnmount(() => {
       bus.off('childGraph', QueryGraph)
@@ -204,4 +246,7 @@ export default {
 
 <style scoped lang="less">
 @import "index.less";
+#graph canvas {
+  height: 500px !important;
+}
 </style>
