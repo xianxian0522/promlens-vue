@@ -50,14 +50,15 @@ export default {
     PlusOutlined,
     MinusOutlined,
   },
-  setup() {
+  props: ['query'],
+  setup(props) {
     const state = reactive({
       data: graphData.data,
       state: graphData.state,
       loadingState: 'success',
       resultType: graphData.resultType,
       time: 0,
-      query: '',
+      query: props?.query,
       timeStep: '1h',
       step: 60,
     })
@@ -101,33 +102,62 @@ export default {
           myChart = echarts.init(dom);
         }
         dom.style.setProperty('height', '500px')
-        // const myChart = echarts.init(document.getElementById('graph'))
-        // console.log(data, '-----;;;;;')
         const names = data.map((s: any) => {
           const name = s.metric.__name__ ? s.metric.__name__ : ''
           return `${name}{${Object.keys(s.metric).filter(key => key !== '__name__').sort().map(k => `${k}="${s.metric[k]}"`).join(',')}}`
         })
+        // const names = data.map((s: any) => {
+        //   const name = s.metric.__name__ ? s.metric.__name__ : ''
+        //   return ({
+        //     name: name,
+        //     metric: Object.keys(s.metric).filter(key => key !== '__name__').sort().map(k => ({name: k, value: s.metric[k]}))
+        //   })
+        // })
         const values = data.map((s: any) => {
           return s.values.map(v => [moment(v[0] * 1000).format('YYYY-MM-DD HH:mm:ss'), v[1]])
         })
         // console.log( values)
 
         const option = {
-          tooltip: {},
-          // legend: {
-          //   bottom: 0,
-          //   // orient: 'vertical',
-          //   type: 'scroll',
-          // },
+          tooltip: {
+            axisPointer: {
+              type: 'cross',
+            },
+            backgroundColor: 'rgba(0, 0, 0, .8)',
+            borderColor: '#000',
+            textStyle: {
+              color: '#fff',
+              fontSize: 12,
+            },
+            formatter: (params) => {
+              const name = params.seriesName?.split('{')[0]
+              const metric = (params.seriesName?.split('{')[1]).slice(0, -1).split(',')
+              let metricHtml = ''
+              metric.forEach(m => {
+                metricHtml += `<span>${m.split('=')[0]}: ${m.split('=')[1].slice(1, -1)}</span><br/>`
+              })
+              return `<div>${params.data[0]}</div>
+<div style="display: flex; align-items: center"><div style="background-color: ${params.color}; width: 10px; height: 10px; margin-right: 3px"></div><div>${name}: ${params.data[1]}</div></div>
+${metricHtml}`
+            }
+          },
           xAxis: {
             type: 'time',
           },
           yAxis: {
+            type: 'value',
             scale: true,
           },
           series: values.map((v: any, i: number) => ({
             name: names[i],
             type: 'line',
+            emphasis: {
+              focus: 'series'
+            },
+            symbolSize: 0.5,
+            // markPoint: {
+            //   symbol: 'circle'
+            // },
             data: v
           }))
         }
@@ -217,13 +247,16 @@ export default {
 
     const QueryGraph = (value) => {
       state.query = value
+
       queryGraphData()
     }
 
     onMounted(() => {
       bus.on('childGraph', QueryGraph)
 
-      getEchartsData()
+      if (state.query) {
+        queryGraphData()
+      }
     })
     onBeforeUnmount(() => {
       bus.off('childGraph', QueryGraph)

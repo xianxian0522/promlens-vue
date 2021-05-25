@@ -23,7 +23,7 @@
 <!--          </div>-->
         </a-tab-pane>
         <a-tab-pane key="2" tab="Graph">
-          <TabPaneGraph />
+          <TabPaneGraph :query="query"/>
 <!--          <div class="tab-content">-->
 <!--            <div class="fade tab-pane active show">-->
 <!--              <div v-if="state === 'init'" class="fade alert alert-light show">Selected query is incomplete. To visualize it, please fill out the placeholders.</div>-->
