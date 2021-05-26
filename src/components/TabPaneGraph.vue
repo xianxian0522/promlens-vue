@@ -237,7 +237,6 @@ ${metricHtml}`
           series.push((optionSeries.value as object)[index])
         }
         option.series = series
-        const notMerge = true
         domLegend.value?.setOption(option, {notMerge: true})
       }
 
