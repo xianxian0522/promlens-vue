@@ -24,6 +24,10 @@
             </div>
           </div>
           <a-input-number @blur="stepChange" v-model:value="step" placeholder="Res. (s)" class="resolution-input form-control form-control-sm" />
+          <div class="stacked-input btn-group btn-group-sm">
+            <a-button @click="line = true" :class="{active: line}" class="btn btn-outline-secondary btn-svg"><LineChartOutlined /></a-button>
+            <a-button @click="line = false" :class="{active: !line}" class="btn btn-outline-secondary btn-svg"><AreaChartOutlined /></a-button>
+          </div>
         </div>
         <div v-if="loadingState === 'load'" class="fade alert alert-secondary show ">Loading...</div>
         <div v-else-if="loadingState === 'error'" class="fade alert alert-danger show ">Error:</div>
@@ -36,7 +40,7 @@
 <script lang="ts">
 import {inject, onBeforeUnmount, onMounted, reactive, ref, toRefs, watch} from "vue";
 import {graphData} from "@/utils/store";
-import {LeftOutlined, RightOutlined, PlusOutlined, MinusOutlined, } from '@ant-design/icons-vue'
+import {LeftOutlined, RightOutlined, PlusOutlined, MinusOutlined, LineChartOutlined, AreaChartOutlined} from '@ant-design/icons-vue'
 import bus from "@/utils/bus";
 import moment, {Moment} from "moment";
 import promRepository from "@/api/promRepository";
@@ -49,6 +53,8 @@ export default {
     RightOutlined,
     PlusOutlined,
     MinusOutlined,
+    LineChartOutlined,
+    AreaChartOutlined,
   },
   props: ['query'],
   setup(props) {
@@ -61,6 +67,7 @@ export default {
       query: props?.query,
       timeStep: '1h',
       step: 60,
+      line: true,
     })
     const startTime = ref<Moment>()
     const timeSteps = ['1s', '10s', '1m', '5m', '15m', '30m', '1h', '2h', '6h', '12h', '1d', '2d', '1w']
@@ -130,6 +137,7 @@ export default {
               fontSize: 12,
             },
             formatter: (params) => {
+              // console.log(params, `{b1}`)
               const name = params.seriesName?.split('{')[0]
               const metric = (params.seriesName?.split('{')[1]).slice(0, -1).split(',')
               let metricHtml = ''
@@ -151,13 +159,11 @@ ${metricHtml}`
           series: values.map((v: any, i: number) => ({
             name: names[i],
             type: 'line',
-            emphasis: {
-              focus: 'series'
-            },
-            symbolSize: 0.5,
-            // markPoint: {
-            //   symbol: 'circle'
+            areaStyle: state.line ? null : {},
+            // emphasis: {
+            //   focus: 'series'
             // },
+            symbolSize: 0.5,
             data: v
           }))
         }
@@ -243,6 +249,9 @@ ${metricHtml}`
 
     watch(() => graphData.state, () => {
       state.state = graphData.state
+    })
+    watch(() => state.line, () => {
+      getEchartsData()
     })
 
     const QueryGraph = (value) => {
