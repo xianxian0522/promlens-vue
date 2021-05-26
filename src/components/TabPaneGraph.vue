@@ -33,6 +33,21 @@
         <div v-else-if="loadingState === 'error'" class="fade alert alert-danger show ">Error:</div>
       </div>
       <div id="graph" style="height: 1px; width: 100%;"></div>
+      <div class="graph-legend" >
+        <div class="legend-item" @click="legendItem(item, index)" v-for="(item, index) in legendData" :key="JSON.stringify(item) + index">
+          <span class="legend-swatch"></span>
+          <span class="promql-code">
+            <span class="promql-metric-name">{{ item.name }}</span>
+            <span class="promql-brace">{</span>
+            <span v-for="(t, i) in item?.metric" :key="t.name">
+              <span class="promql-label-name">{{t.name}}</span>=
+              <span class="promql-string">"{{t.value}}"</span>
+              <span v-if="item?.metric?.length > 1 && i !== (item?.metric?.length - 1) ">,</span>
+            </span>
+            <span class="promql-brace">}</span>
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -45,6 +60,12 @@ import bus from "@/utils/bus";
 import moment, {Moment} from "moment";
 import promRepository from "@/api/promRepository";
 import * as echarts from 'echarts'
+import {EChartsType} from "echarts";
+
+export interface LegendItem {
+  name: string;
+  metric: any;
+}
 
 export default {
   name: "TabPaneGraph",
@@ -68,9 +89,14 @@ export default {
       timeStep: '1h',
       step: 60,
       line: true,
+      legendData: [] as LegendItem[],
     })
     const startTime = ref<Moment>()
     const timeSteps = ['1s', '10s', '1m', '5m', '15m', '30m', '1h', '2h', '6h', '12h', '1d', '2d', '1w']
+    const color = ['#edc240', '#afd8f8', '#cb4b4b', '#4da74d', '#9440ed', '#bd9b33', '#8cacc6', '#a23c3c', '#3d853d', '#7633bd']
+    const domLegend = ref<EChartsType>()
+    const currentItem: any = {}
+    const optionSeries = ref()
 
     const queryGraphData = async () => {
       state.loadingState = 'load'
@@ -108,22 +134,34 @@ export default {
         if (!myChart) { // 如果不存在，就进行初始化
           myChart = echarts.init(dom);
         }
+        domLegend.value = myChart
         dom.style.setProperty('height', '500px')
         const names = data.map((s: any) => {
           const name = s.metric.__name__ ? s.metric.__name__ : ''
           return `${name}{${Object.keys(s.metric).filter(key => key !== '__name__').sort().map(k => `${k}="${s.metric[k]}"`).join(',')}}`
         })
-        // const names = data.map((s: any) => {
-        //   const name = s.metric.__name__ ? s.metric.__name__ : ''
-        //   return ({
-        //     name: name,
-        //     metric: Object.keys(s.metric).filter(key => key !== '__name__').sort().map(k => ({name: k, value: s.metric[k]}))
-        //   })
-        // })
+        state.legendData = data.map((s: any) => {
+          const name = s.metric.__name__ ? s.metric.__name__ : ''
+          return ({
+            name: name,
+            metric: Object.keys(s.metric).filter(key => key !== '__name__').sort().map(k => ({name: k, value: s.metric[k]}))
+          })
+        })
         const values = data.map((s: any) => {
           return s.values.map(v => [moment(v[0] * 1000).format('YYYY-MM-DD HH:mm:ss'), v[1]])
         })
         // console.log( values)
+
+        optionSeries.value = values.map((v: any, i: number) => ({
+          name: names[i],
+          type: 'line',
+          areaStyle: state.line ? null : {},
+          // emphasis: {
+          //   focus: 'series'
+          // },
+          symbolSize: 0.5,
+          data: v
+        }))
 
         const option = {
           tooltip: {
@@ -156,22 +194,61 @@ ${metricHtml}`
             type: 'value',
             scale: true,
           },
-          series: values.map((v: any, i: number) => ({
-            name: names[i],
-            type: 'line',
-            areaStyle: state.line ? null : {},
-            // emphasis: {
-            //   focus: 'series'
-            // },
-            symbolSize: 0.5,
-            data: v
-          }))
+          legend: {
+            type: 'scroll',
+            orient: 'vertical',
+            align: 'left',
+            itemGap: 2.5,
+            itemHeight: 12,
+            height: 200,
+            bottom: 0,
+          },
+          grid: {
+            bottom: '50%',
+          },
+          // series: values.map((v: any, i: number) => ({
+          //   name: names[i],
+          //   type: 'line',
+          //   areaStyle: state.line ? null : {},
+          //   // emphasis: {
+          //   //   focus: 'series'
+          //   // },
+          //   symbolSize: 0.5,
+          //   data: v
+          // }))
+          series: optionSeries.value
         }
-        console.log(option)
+        // console.log(option.series)
         myChart.resize()
         myChart.setOption(option)
       }
 
+    }
+
+    const legendItem = (item, index) => {
+      const option = domLegend.value?.getOption()
+      if (option) {
+        let series: any = []
+        if (item === currentItem.item) {
+          series = optionSeries.value
+          currentItem.item = {}
+        } else {
+          currentItem.item = item
+          series.push((optionSeries.value as object)[index])
+        }
+        option.series = series
+        const notMerge = true
+        domLegend.value?.setOption(option, {notMerge: true})
+      }
+
+      // domLegend.value?.dispatchAction({
+      //   type: 'legendSelect',
+      //   name: `${item.name}{${item.metric.sort().map(k => `${k.name}="${k.value}"`).join(',')}}`
+      // })
+      // domLegend.value?.dispatchAction({
+      //   type: 'downplay',
+      //   seriesIndex: state.legendData.map((item, idx) => (idx)).filter(i => i !== index)
+      // })
     }
 
     const getTimeStep = () => {
@@ -281,6 +358,7 @@ ${metricHtml}`
       forwardStep,
       backwardStep,
       stepChange,
+      legendItem,
     }
   }
 }
