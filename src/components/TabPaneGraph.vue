@@ -35,7 +35,7 @@
       <div id="graph" style="height: 1px; width: 100%;"></div>
       <div class="graph-legend" v-if="state === 'data'">
         <div class="legend-item" @mouseleave="legendUnHighlight(index)" @mouseenter="legendHighlight(item, index)" @click="legendItem(item, index)" v-for="(item, index) in legendData" :key="JSON.stringify(item) + index">
-          <span class="legend-swatch"></span>
+          <span class="legend-swatch" :style="{'background-color': item.color}"></span>
           <span class="promql-code">
             <span class="promql-metric-name">{{ item.name }}</span>
             <span class="promql-brace">{</span>
@@ -65,6 +65,8 @@ import {EChartsType} from "echarts";
 export interface LegendItem {
   name: string;
   metric: any;
+  seriesName: string;
+  color?: string;
 }
 
 export default {
@@ -93,7 +95,8 @@ export default {
     })
     const startTime = ref<Moment>()
     const timeSteps = ['1s', '10s', '1m', '5m', '15m', '30m', '1h', '2h', '6h', '12h', '1d', '2d', '1w']
-    const color = ['#edc240', '#afd8f8', '#cb4b4b', '#4da74d', '#9440ed', '#bd9b33', '#8cacc6', '#a23c3c', '#3d853d', '#7633bd']
+    const color = ['#edc240', '#afd8f8', '#cb4b4b', '#4da74d', '#9440ed', '#bd9b33', '#8cacc6', '#a23c3c', '#3d853d', '#7633bd',
+      '#ffe84c', '#d2ffff', '#f35a5a', '#5cc85c', '#b14cff', '#8e7426', '#698194', '#792d2d', '#2e642e', '#58268e', '#ffff59']
     const domLegend = ref<EChartsType>()
     const currentItem: any = {}
     const optionSeries = ref()
@@ -136,15 +139,24 @@ export default {
         }
         domLegend.value = myChart
         dom.style.setProperty('height', '500px')
-        const names = data.map((s: any) => {
-          const name = s.metric.__name__ ? s.metric.__name__ : ''
-          return `${name}{${Object.keys(s.metric).filter(key => key !== '__name__').sort().map(k => `${k}="${s.metric[k]}"`).join(',')}}`
-        })
-        state.legendData = data.map((s: any) => {
+        const colors = color
+        if (data.length > colors.length) {
+          const num = data.length - colors.length
+          for (let i = 0; i < num; i++) {
+            colors.push(colors[i])
+          }
+        }
+        // const names = data.map((s: any) => {
+        //   const name = s.metric.__name__ ? s.metric.__name__ : ''
+        //   return `${name}{${Object.keys(s.metric).filter(key => key !== '__name__').sort().map(k => `${k}="${s.metric[k]}"`).join(',')}}`
+        // })
+        state.legendData = data.map((s: any, index: number) => {
           const name = s.metric.__name__ ? s.metric.__name__ : ''
           return ({
             name: name,
-            metric: Object.keys(s.metric).filter(key => key !== '__name__').sort().map(k => ({name: k, value: s.metric[k]}))
+            metric: Object.keys(s.metric).filter(key => key !== '__name__').sort().map(k => ({name: k, value: s.metric[k]})),
+            seriesName: `${name}{${Object.keys(s.metric).filter(key => key !== '__name__').sort().map(k => `${k}="${s.metric[k]}"`).join(',')}}`,
+            color: colors[index]
           })
         })
         const values = data.map((s: any) => {
@@ -153,9 +165,14 @@ export default {
         // console.log( values)
 
         optionSeries.value = values.map((v: any, i: number) => ({
-          name: names[i],
+          name: state.legendData[i].seriesName,
           type: 'line',
           areaStyle: state.line ? null : {},
+          itemStyle: {
+            normal: {
+              color: colors[i],
+            },
+          },
           // emphasis: {
           //   focus: 'series'
           // },
