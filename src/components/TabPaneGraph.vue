@@ -33,7 +33,7 @@
         <div v-else-if="loadingState === 'error'" class="fade alert alert-danger show ">Error:</div>
       </div>
       <div id="graph" style="height: 1px; width: 100%;"></div>
-      <div class="graph-legend" >
+      <div class="graph-legend" v-if="state === 'data'">
         <div class="legend-item" @mouseleave="legendUnHighlight(index)" @mouseenter="legendHighlight(item, index)" @click="legendItem(item, index)" v-for="(item, index) in legendData" :key="JSON.stringify(item) + index">
           <span class="legend-swatch"></span>
           <span class="promql-code">
@@ -218,9 +218,9 @@ ${metricHtml}`
           // }))
           series: optionSeries.value
         }
-        // console.log(option.series)
+        console.log(option.series, ';;;;;;;;;;')
         myChart.resize()
-        myChart.setOption(option)
+        myChart.setOption(option, {notMerge: true})
       }
 
     }
@@ -349,6 +349,12 @@ ${metricHtml}`
 
     watch(() => graphData.state, () => {
       state.state = graphData.state
+      if (graphData.state === 'data') {
+        getEchartsData()
+      } else {
+        document.getElementById("graph")?.style?.setProperty('height', '1px')
+        domLegend.value?.setOption({option: {}, notMerge: true})
+      }
     })
     watch(() => state.line, () => {
       getEchartsData()
