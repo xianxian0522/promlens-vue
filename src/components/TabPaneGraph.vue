@@ -167,9 +167,10 @@ export default {
             })
           })
           const values = data.map((s: any) => {
-            return s.values.map(v => [moment(v[0] * 1000).format('YYYY-MM-DD HH:mm:ss'), v[1]])
+            // return s.values.map(v => [moment(v[0] * 1000).format('YYYY-MM-DD HH:mm:ss'), v[1]])
+            return s.values.map(v => [moment(v[0] * 1000).valueOf(), v[1]])
           })
-          // console.log( values)
+          console.log( values)
 
           optionSeries.value = values.map((v: any, i: number) => ({
             name: state.legendData[i].seriesName,
@@ -204,13 +205,18 @@ export default {
                 metric.forEach(m => {
                   metricHtml += `<span>${m.split('=')[0]}: ${m.split('=')[1].slice(1, -1)}</span><br/>`
                 })
-                return `<div>${params.data[0]}</div>
+                return `<div>${moment(params.data[0]).format('ddd, DD MMM YYYY HH:mm:ss')}</div>
 <div style="display: flex; align-items: center"><div style="background-color: ${params.color}; width: 10px; height: 10px; margin-right: 3px"></div><div>${name}: ${params.data[1]}</div></div>
 ${metricHtml}`
               }
             },
             xAxis: {
               type: 'time',
+              axisLabel: {
+                formatter: {
+                  day: '{MMM} {dd}'
+                },
+              },
             },
             yAxis: {
               type: 'value',
