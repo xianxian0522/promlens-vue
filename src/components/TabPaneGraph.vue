@@ -31,7 +31,9 @@
         </div>
         <div v-if="loadingState === 'load'" class="fade alert alert-secondary show ">Loading...</div>
         <div v-else-if="loadingState === 'error'" class="fade alert alert-danger show ">Error:</div>
-        <div v-if="state === 'data' && data.length === 0" class="fade alert alert-secondary show ">Empty query result.</div>
+        <div v-else>
+          <div v-if="data.length === 0" class="fade alert alert-secondary show ">Empty query result.</div>
+        </div>
       </div>
       <div id="graph" style="height: 1px; width: 100%;"></div>
       <div class="graph-legend" v-if="state === 'data' && data.length > 0">
@@ -238,7 +240,7 @@ ${metricHtml}`
             // }))
             series: optionSeries.value
           }
-          console.log(option.series, ';;;;;;;;;;')
+
           myChart.resize()
           myChart.setOption(option, {notMerge: true})
         }
@@ -276,7 +278,7 @@ ${metricHtml}`
         option.series = (option.series as any).map((s, idx) => {
           return {
             itemStyle: {opacity: idx === index ? 1 : 0.25},
-            // lineStyle: {opacity: idx === index ? 1 : 0.25}
+            lineStyle: {opacity: idx === index ? 1 : 0.25}
           }
         })
         domLegend.value?.setOption(option)
@@ -288,7 +290,7 @@ ${metricHtml}`
         option.series = (option.series as any).map((s, idx) => {
           return {
             itemStyle: {opacity: 1},
-            // lineStyle: {opacity: 1}
+            lineStyle: {opacity: 1}
           }
         })
         domLegend.value?.setOption(option)
