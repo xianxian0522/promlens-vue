@@ -34,7 +34,7 @@
       </div>
       <div id="graph" style="height: 1px; width: 100%;"></div>
       <div class="graph-legend" >
-        <div class="legend-item" @click="legendItem(item, index)" v-for="(item, index) in legendData" :key="JSON.stringify(item) + index">
+        <div class="legend-item" @mouseleave="legendUnHighlight(index)" @mouseenter="legendHighlight(item, index)" @click="legendItem(item, index)" v-for="(item, index) in legendData" :key="JSON.stringify(item) + index">
           <span class="legend-swatch"></span>
           <span class="promql-code">
             <span class="promql-metric-name">{{ item.name }}</span>
@@ -194,18 +194,18 @@ ${metricHtml}`
             type: 'value',
             scale: true,
           },
-          legend: {
-            type: 'scroll',
-            orient: 'vertical',
-            align: 'left',
-            itemGap: 2.5,
-            itemHeight: 12,
-            height: 200,
-            bottom: 0,
-          },
-          grid: {
-            bottom: '50%',
-          },
+          // legend: {
+          //   type: 'scroll',
+          //   orient: 'vertical',
+          //   align: 'left',
+          //   itemGap: 2.5,
+          //   itemHeight: 12,
+          //   height: 200,
+          //   bottom: 0,
+          // },
+          // grid: {
+          //   bottom: '50%',
+          // },
           // series: values.map((v: any, i: number) => ({
           //   name: names[i],
           //   type: 'line',
@@ -248,6 +248,30 @@ ${metricHtml}`
       //   type: 'downplay',
       //   seriesIndex: state.legendData.map((item, idx) => (idx)).filter(i => i !== index)
       // })
+    }
+    const legendHighlight = (item, index) => {
+      const option = domLegend.value?.getOption()
+      if (option) {
+        option.series = (option.series as any).map((s, idx) => {
+          return {
+            itemStyle: {opacity: idx === index ? 1 : 0.25},
+            lineStyle: {opacity: idx === index ? 1 : 0.25}
+          }
+        })
+        domLegend.value?.setOption(option)
+      }
+    }
+    const legendUnHighlight = (index) => {
+      const option = domLegend.value?.getOption()
+      if (option) {
+        option.series = (option.series as any).map((s, idx) => {
+          return {
+            itemStyle: {opacity: 1},
+            lineStyle: {opacity: 1}
+          }
+        })
+        domLegend.value?.setOption(option)
+      }
     }
 
     const getTimeStep = () => {
@@ -358,6 +382,8 @@ ${metricHtml}`
       backwardStep,
       stepChange,
       legendItem,
+      legendHighlight,
+      legendUnHighlight,
     }
   }
 }
