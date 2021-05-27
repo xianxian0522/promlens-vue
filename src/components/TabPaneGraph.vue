@@ -31,9 +31,10 @@
         </div>
         <div v-if="loadingState === 'load'" class="fade alert alert-secondary show ">Loading...</div>
         <div v-else-if="loadingState === 'error'" class="fade alert alert-danger show ">Error:</div>
+        <div v-if="state === 'data' && data.length === 0" class="fade alert alert-secondary show ">Empty query result.</div>
       </div>
       <div id="graph" style="height: 1px; width: 100%;"></div>
-      <div class="graph-legend" v-if="state === 'data'">
+      <div class="graph-legend" v-if="state === 'data' && data.length > 0">
         <div class="legend-item" @mouseleave="legendUnHighlight(index)" @mouseenter="legendHighlight(item, index)" @click="legendItem(item, index)" v-for="(item, index) in legendData" :key="JSON.stringify(item) + index">
           <span class="legend-swatch" :style="{'background-color': item.color}"></span>
           <span class="promql-code">
@@ -138,106 +139,109 @@ export default {
           myChart = echarts.init(dom);
         }
         domLegend.value = myChart
-        dom.style.setProperty('height', '500px')
-        const colors = color
-        if (data.length > colors.length) {
-          const num = data.length - colors.length
-          for (let i = 0; i < num; i++) {
-            colors.push(colors[i])
+        if (data.length === 0) {
+          dom.style.setProperty('height', '1px')
+          domLegend.value.setOption({option: {}, notMerge: true})
+        } else {
+          dom.style.setProperty('height', '500px')
+          const colors = color
+          if (data.length > colors.length) {
+            const num = data.length - colors.length
+            for (let i = 0; i < num; i++) {
+              colors.push(colors[i])
+            }
           }
-        }
-        // const names = data.map((s: any) => {
-        //   const name = s.metric.__name__ ? s.metric.__name__ : ''
-        //   return `${name}{${Object.keys(s.metric).filter(key => key !== '__name__').sort().map(k => `${k}="${s.metric[k]}"`).join(',')}}`
-        // })
-        state.legendData = data.map((s: any, index: number) => {
-          const name = s.metric.__name__ ? s.metric.__name__ : ''
-          return ({
-            name: name,
-            metric: Object.keys(s.metric).filter(key => key !== '__name__').sort().map(k => ({name: k, value: s.metric[k]})),
-            seriesName: `${name}{${Object.keys(s.metric).filter(key => key !== '__name__').sort().map(k => `${k}="${s.metric[k]}"`).join(',')}}`,
-            color: colors[index]
+          // const names = data.map((s: any) => {
+          //   const name = s.metric.__name__ ? s.metric.__name__ : ''
+          //   return `${name}{${Object.keys(s.metric).filter(key => key !== '__name__').sort().map(k => `${k}="${s.metric[k]}"`).join(',')}}`
+          // })
+          state.legendData = data.map((s: any, index: number) => {
+            const name = s.metric.__name__ ? s.metric.__name__ : ''
+            return ({
+              name: name,
+              metric: Object.keys(s.metric).filter(key => key !== '__name__').sort().map(k => ({name: k, value: s.metric[k]})),
+              seriesName: `${name}{${Object.keys(s.metric).filter(key => key !== '__name__').sort().map(k => `${k}="${s.metric[k]}"`).join(',')}}`,
+              color: colors[index]
+            })
           })
-        })
-        const values = data.map((s: any) => {
-          return s.values.map(v => [moment(v[0] * 1000).format('YYYY-MM-DD HH:mm:ss'), v[1]])
-        })
-        // console.log( values)
+          const values = data.map((s: any) => {
+            return s.values.map(v => [moment(v[0] * 1000).format('YYYY-MM-DD HH:mm:ss'), v[1]])
+          })
+          // console.log( values)
 
-        optionSeries.value = values.map((v: any, i: number) => ({
-          name: state.legendData[i].seriesName,
-          type: 'line',
-          areaStyle: state.line ? null : {},
-          itemStyle: {
-            normal: {
+          optionSeries.value = values.map((v: any, i: number) => ({
+            name: state.legendData[i].seriesName,
+            type: 'line',
+            areaStyle: state.line ? null : {},
+            itemStyle: {
               color: colors[i],
             },
-          },
-          // emphasis: {
-          //   focus: 'series'
-          // },
-          symbolSize: 0.5,
-          data: v
-        }))
+            // emphasis: {
+            //   focus: 'series'
+            // },
+            symbolSize: 0.5,
+            data: v
+          }))
 
-        const option = {
-          tooltip: {
-            axisPointer: {
-              type: 'cross',
-            },
-            backgroundColor: 'rgba(0, 0, 0, .8)',
-            borderColor: '#000',
-            textStyle: {
-              color: '#fff',
-              fontSize: 12,
-            },
-            formatter: (params) => {
-              // console.log(params, `{b1}`)
-              const name = params.seriesName?.split('{')[0]
-              const metric = (params.seriesName?.split('{')[1]).slice(0, -1).split(',')
-              let metricHtml = ''
-              metric.forEach(m => {
-                metricHtml += `<span>${m.split('=')[0]}: ${m.split('=')[1].slice(1, -1)}</span><br/>`
-              })
-              return `<div>${params.data[0]}</div>
+          const option = {
+            tooltip: {
+              axisPointer: {
+                type: 'cross',
+              },
+              backgroundColor: 'rgba(0, 0, 0, .8)',
+              borderColor: '#000',
+              textStyle: {
+                color: '#fff',
+                fontSize: 12,
+              },
+              formatter: (params) => {
+                // console.log(params, `{b1}`)
+                const name = params.seriesName?.split('{')[0]
+                const metric = (params.seriesName?.split('{')[1]).slice(0, -1).split(',')
+                let metricHtml = ''
+                metric.forEach(m => {
+                  metricHtml += `<span>${m.split('=')[0]}: ${m.split('=')[1].slice(1, -1)}</span><br/>`
+                })
+                return `<div>${params.data[0]}</div>
 <div style="display: flex; align-items: center"><div style="background-color: ${params.color}; width: 10px; height: 10px; margin-right: 3px"></div><div>${name}: ${params.data[1]}</div></div>
 ${metricHtml}`
-            }
-          },
-          xAxis: {
-            type: 'time',
-          },
-          yAxis: {
-            type: 'value',
-            scale: true,
-          },
-          // legend: {
-          //   type: 'scroll',
-          //   orient: 'vertical',
-          //   align: 'left',
-          //   itemGap: 2.5,
-          //   itemHeight: 12,
-          //   height: 200,
-          //   bottom: 0,
-          // },
-          // grid: {
-          //   bottom: '50%',
-          // },
-          // series: values.map((v: any, i: number) => ({
-          //   name: names[i],
-          //   type: 'line',
-          //   areaStyle: state.line ? null : {},
-          //   // emphasis: {
-          //   //   focus: 'series'
-          //   // },
-          //   symbolSize: 0.5,
-          //   data: v
-          // }))
-          series: optionSeries.value
+              }
+            },
+            xAxis: {
+              type: 'time',
+            },
+            yAxis: {
+              type: 'value',
+              scale: true,
+            },
+            // legend: {
+            //   type: 'scroll',
+            //   orient: 'vertical',
+            //   align: 'left',
+            //   itemGap: 2.5,
+            //   itemHeight: 12,
+            //   height: 200,
+            //   bottom: 0,
+            // },
+            // grid: {
+            //   bottom: '50%',
+            // },
+            // series: values.map((v: any, i: number) => ({
+            //   name: names[i],
+            //   type: 'line',
+            //   areaStyle: state.line ? null : {},
+            //   // emphasis: {
+            //   //   focus: 'series'
+            //   // },
+            //   symbolSize: 0.5,
+            //   data: v
+            // }))
+            series: optionSeries.value
+          }
+          console.log(option.series, ';;;;;;;;;;')
+          myChart.resize()
+          myChart.setOption(option, {notMerge: true})
         }
-        console.log(option.series, ';;;;;;;;;;')
-        myChart.resize()
-        myChart.setOption(option, {notMerge: true})
       }
 
     }
@@ -272,7 +276,7 @@ ${metricHtml}`
         option.series = (option.series as any).map((s, idx) => {
           return {
             itemStyle: {opacity: idx === index ? 1 : 0.25},
-            lineStyle: {opacity: idx === index ? 1 : 0.25}
+            // lineStyle: {opacity: idx === index ? 1 : 0.25}
           }
         })
         domLegend.value?.setOption(option)
@@ -284,7 +288,7 @@ ${metricHtml}`
         option.series = (option.series as any).map((s, idx) => {
           return {
             itemStyle: {opacity: 1},
-            lineStyle: {opacity: 1}
+            // lineStyle: {opacity: 1}
           }
         })
         domLegend.value?.setOption(option)
