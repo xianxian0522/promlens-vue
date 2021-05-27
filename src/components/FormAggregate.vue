@@ -27,8 +27,8 @@
     <a-form-item>
       <label class="label-svg">Grouping labels: <QuestionCircleOutlined /></label>
       <div class="input-group my-bottom" v-for="(group, index) in groupingLabels" :key="index">
-        <a-input v-model:value="group.value" class="pending-input-item" placeholder="add label name"></a-input>
-        <div class="input-group-append">
+        <a-input v-model:value="group.value" class="pending-input-item form-control form-control-sm" placeholder="add label name"></a-input>
+        <div class="input-group-append" style="margin-left: 0">
           <a-button v-if="group.isShow" @click="addGroupingLabels(group, index)" class="btn btn-outline-secondary btn-sm" style="padding: 4px 8px">
             <PlusOutlined style="font-size: 18px;" />
           </a-button>

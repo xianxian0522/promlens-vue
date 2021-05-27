@@ -47,8 +47,8 @@
           <a-form-item>
             <label class="label-svg">Ignore labels: <QuestionCircleOutlined /></label>
             <div class="input-group my-bottom" v-for="(ignore, index) in ignoreLabels" :key="index">
-              <a-input v-model:value="ignore.name" class="pending-input-item" placeholder="add label name"></a-input>
-              <div class="input-group-append">
+              <a-input v-model:value="ignore.name" class="pending-input-item form-control form-control-sm" placeholder="add label name"></a-input>
+              <div class="input-group-append" style="margin-left: 0">
                 <a-button v-if="ignore.isShow" @click="addIgnoreLabel(ignore, index)" class="btn btn-outline-secondary btn-sm" style="padding: 4px 8px">
                   <PlusOutlined style="font-size: 18px;" />
                 </a-button>
@@ -75,8 +75,8 @@
           <a-form-item v-if="formState.matchType !== 'one-to-one'">
             <label class="label-svg">Include labels: <QuestionCircleOutlined /></label>
             <div class="input-group my-bottom" v-for="(include, index) in includeLabels" :key="index">
-              <a-input v-model:value="include.name" class="pending-input-item" placeholder="add label name"></a-input>
-              <div class="input-group-append ">
+              <a-input v-model:value="include.name" class="pending-input-item form-control form-control-sm" placeholder="add label name"></a-input>
+              <div class="input-group-append " style="margin-left: 0">
                 <a-button v-if="include.isShow" @click="addIncludeLabel(include, index)" class="btn btn-outline-secondary btn-sm" style="padding: 4px 8px">
                   <PlusOutlined style="font-size: 18px;" />
                 </a-button>
